@@ -105,4 +105,11 @@ public class Configuration {
         }
         return object.getString("token");
     }
+    public String getYtapi() { 
+        if(!object.has("ytapi")) { 
+            object.put("ytapi", "Mettre token ici"); 
+            save(); 
+        } 
+        return object.getString("ytapi"); 
+    }
 }
