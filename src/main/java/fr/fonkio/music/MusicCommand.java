@@ -265,7 +265,7 @@ public class MusicCommand {
                     .setMaxResults(1L)
                     .setType("video")
                     .setFields("items(id/kind,id/videoId,snippet/title,snippet/thumbnails/default/url)")
-                    .setKey("AIzaSyAPec-7NpMqZm9MSWKV-C_SxnNbVhVTG4M")
+                    .setKey(Inicium.CONFIGURATION.getYtapi())
                     .execute()
                     .getItems();
             if (!result.isEmpty()) {
