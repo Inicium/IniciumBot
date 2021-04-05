@@ -112,4 +112,12 @@ public class Configuration {
         } 
         return object.getString("ytapi"); 
     }
+
+    public String getDCsong() {
+        if(!object.has("dcsong")) {
+            object.put("dcsong", "Mettre son deco ici");
+            save();
+        }
+        return object.getString("dcsong");
+    }
 }

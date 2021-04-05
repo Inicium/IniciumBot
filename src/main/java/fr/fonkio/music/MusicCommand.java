@@ -305,7 +305,7 @@ public class MusicCommand {
         player.getListener().getTracks().clear();
         player.getAudioPlayer().stopTrack();
         if(guild.getId().equals("296520788033404929")) {
-            manager.loadTrack(textChannel, "https://youtu.be/d9rUssodfpg", false);
+            manager.loadTrack(textChannel, Inicium.CONFIGURATION.getDCsong(), false);
             textChannel.sendMessage(iniciumBot.createEmbed("Disconnect", null, "Aurevoir 👋", Color.green, false, guild)).queue((message)->{
                 iniciumBot.stopUpdateBar();
             });
