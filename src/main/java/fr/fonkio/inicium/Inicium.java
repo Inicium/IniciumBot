@@ -8,17 +8,18 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.exceptions.RateLimitedException;
+import net.dv8tion.jda.api.interactions.components.Button;
+import net.dv8tion.jda.api.interactions.components.Component;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.requests.restaction.MessageAction;
 
 import javax.security.auth.login.LoginException;
 import java.awt.*;
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static javax.security.auth.login.Configuration.getConfiguration;
 
 public class Inicium implements Runnable {
     public static String GENERAL;
@@ -116,11 +117,17 @@ public class Inicium implements Runnable {
 
     }
     public void launchUpdateBar(Message message) {
+        if(timerUpdateBar != null) {
+            timerUpdateBar.cancel();
+        }
         TimerTask updateBar = new TimerTask() {
             public void run() {
                 if (iniciumListener.isPause(message.getGuild())) {
                     cancel();
-                } else {
+                } else if (iniciumListener.getCommandMap().getMusicCommand().getManager().getPlayer(message.getGuild()).getAudioPlayer().getPlayingTrack() == null) {
+                    cancel();
+                }
+                else {
                     if (iniciumListener.getQueue(message.getGuild()).size()==0) {
                         cancel();
                     } else {
@@ -129,37 +136,38 @@ public class Inicium implements Runnable {
                             cancel();
                         } else {
                             MessageEmbed me = listMessageEmbeds.get(0);
-                            message.editMessage(createEmbed(me.getTitle(), me.getUrl(), me.getDescription(), me.getColor(), true, message.getGuild())).queue();
+                            MessageAction ma = message.editMessage(createEmbed(me.getTitle(), me.getUrl(), me.getDescription(), me.getColor(), true, message.getGuild()));
+                            addButtons(ma, message.getGuild()).queue();
                         }
                     }
                 }
-
-
             }
+
         };
+
         timerUpdateBar = new Timer("timerUpdateBar");
         long delay  = 5000L;
         long period = 5000L;
         timerUpdateBar.scheduleAtFixedRate(updateBar, delay, period);
     }
 
-    public void addReaction(Message message) {
-        String pausePlayEmote = "";
-        if (iniciumListener.isPause(message.getGuild())) {
-            pausePlayEmote = "U+25B6";
-        } else {
-            pausePlayEmote = "U+23F8";
-        }
-        if (message.getGuild().getAudioManager().isConnected()) {
-            message.addReaction(pausePlayEmote).queue((void0) -> {
-                message.addReaction("U+23ED").queue((void1) -> {
-                    message.addReaction("U+1F5D1").queue((void3) -> {
-                        message.addReaction("U+1F6AA").queue();
-                    });
-                });
-            });
+    public MessageAction addButtons(MessageAction message, Guild guild) {
+        List<Component> buttons = new ArrayList<>();
 
+        if (iniciumListener.isPause(guild)) {
+            buttons.add(Button.success("resume", "▶ Play"));
+            buttons.add(Button.secondary("pause", "⏸ Pause").asDisabled());
+        } else {
+            buttons.add(Button.secondary("resume", "▶ Play").asDisabled());
+            buttons.add(Button.success("pause", "⏸ Pause"));
         }
+        if (guild.getAudioManager().isConnected()) {
+            buttons.add(Button.primary("skip", "⏯ Skip"));
+            buttons.add(Button.danger("clear", "\uD83D\uDDD1 Effacer la liste"));
+            buttons.add(Button.danger("disconnect", "\uD83D\uDEAA Déconnecter"));
+        }
+        message.setActionRow(buttons);
+        return message;
     }
     public MessageEmbed createEmbed(String title, String urlTitle, String description, Color couleur, boolean displayQueue, Guild guild) {
         return createEmbed(title, urlTitle, description, couleur, displayQueue, guild, false);

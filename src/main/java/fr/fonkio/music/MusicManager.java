@@ -10,6 +10,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fr.fonkio.inicium.Inicium;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.requests.restaction.MessageAction;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -50,8 +51,8 @@ public class MusicManager {
                 }
 
                 player.playTrack(track);
-                channel.sendMessage(fonkBot.createEmbed("Play", null, "Ajout de la piste...\n"+track.getInfo().uri+"\n ", Color.green, true, channel.getGuild(), true)).queue((message)->{
-                    fonkBot.addReaction(message);
+                MessageAction ma = channel.sendMessage(fonkBot.createEmbed("Play", null, "Ajout de la piste...\n"+track.getInfo().uri+"\n ", Color.green, true, channel.getGuild(), true));
+                fonkBot.addButtons(ma, player.getGuild()).queue((message)->{
                     fonkBot.stopUpdateBar();
                     fonkBot.launchUpdateBar(message);
                 });
@@ -70,8 +71,8 @@ public class MusicManager {
                     player.playTrack(track);
                 }
 
-                channel.sendMessage(fonkBot.createEmbed("Play", null, builder.toString(), Color.green, true, channel.getGuild(), true)).queue((message)->{
-                    fonkBot.addReaction(message);
+                MessageAction ma = channel.sendMessage(fonkBot.createEmbed("Play", null, builder.toString(), Color.green, true, channel.getGuild(), true));
+                fonkBot.addButtons(ma, player.getGuild()).queue((message)->{
                     fonkBot.stopUpdateBar();
                     fonkBot.launchUpdateBar(message);
                 });
@@ -80,8 +81,8 @@ public class MusicManager {
             @Override
             public void noMatches() {
 
-                channel.sendMessage(fonkBot.createEmbed("Play", null, "La piste "+ source + " n'a pas été trouvée.", Color.red, true, channel.getGuild())).queue((message)->{
-                    fonkBot.addReaction(message);
+                MessageAction ma = channel.sendMessage(fonkBot.createEmbed("Play", null, "La piste "+ source + " n'a pas été trouvée.", Color.red, true, channel.getGuild()));
+                fonkBot.addButtons(ma, player.getGuild()).queue((message)->{
                     fonkBot.stopUpdateBar();
                     fonkBot.launchUpdateBar(message);
                 });
@@ -91,9 +92,9 @@ public class MusicManager {
             @Override
             public void loadFailed(FriendlyException exception) {
                 exception.printStackTrace();
-                channel.sendMessage(fonkBot.createEmbed("Play", null, "Impossible de jouer la piste (raison:" +exception.getMessage()+")\n**SI C'EST UNE MUSIQUE ESSAYE D'AJOUTER \"LYRICS\" A TA RECHERCHE**"
-                        + "Exception :", Color.red, true, channel.getGuild())).queue((message)->{
-                    fonkBot.addReaction(message);
+                MessageAction ma = channel.sendMessage(fonkBot.createEmbed("Play", null, "Impossible de jouer la piste (raison:" +exception.getMessage()+")\n**SI C'EST UNE MUSIQUE ESSAYE D'AJOUTER \"LYRICS\" A TA RECHERCHE**"
+                        + "Exception :", Color.red, true, channel.getGuild()));
+                fonkBot.addButtons(ma, player.getGuild()).queue((message)->{
                     fonkBot.stopUpdateBar();
                     fonkBot.launchUpdateBar(message);
                 });

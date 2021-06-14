@@ -13,6 +13,11 @@ import java.util.*;
 public class CommandMap {
     private final Map<String, SimpleCommand> commands = new HashMap<>();
     private Inicium iniciumBot;
+
+    public MusicCommand getMusicCommand() {
+        return musicCommand;
+    }
+
     private MusicCommand musicCommand;
 
     public CommandMap(Inicium iniciumBot) {
@@ -78,7 +83,7 @@ public class CommandMap {
             }
             return false;
         }
-        if (message != null) {
+        if (message != null && message.getAuthor() != iniciumBot.getJda().getSelfUser()) {
             TimerTask task = new TimerTask() {
                 public void run() {
                     message.addReaction("U+2705").queue();

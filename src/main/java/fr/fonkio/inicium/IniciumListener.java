@@ -9,17 +9,22 @@ import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMoveEvent;
+import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
 import org.json.JSONArray;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class IniciumListener implements EventListener {
+
+    public CommandMap getCommandMap() {
+        return commandMap;
+    }
+
     private final CommandMap commandMap;
     private Inicium iniciumBot;
 
@@ -36,13 +41,34 @@ public class IniciumListener implements EventListener {
             onJoin((GuildMemberJoinEvent)event);
         } else if(event instanceof MessageReceivedEvent) {
             onMessage((MessageReceivedEvent)event);
-        } else if (event instanceof MessageReactionAddEvent) {
-            onReactionAdd((MessageReactionAddEvent)event);
         } else if (event instanceof GuildVoiceMoveEvent) {
             onMove((GuildVoiceMoveEvent)event);
         } else if (event instanceof GuildVoiceLeaveEvent) {
             onDisconnect((GuildVoiceLeaveEvent)event);
+        } else if (event instanceof ButtonClickEvent) {
+            onButtonClicked((ButtonClickEvent)event);
         }
+    }
+
+    private void onButtonClicked(ButtonClickEvent event) {
+        switch (event.getComponentId()) {
+            case "skip" :
+                commandMap.commandUser(event.getMember().getUser(), "skip", event.getMessage());
+                break;
+            case "clear" :
+                commandMap.commandUser(event.getMember().getUser(), "clear", event.getMessage());
+                break;
+            case "resume" :
+                commandMap.commandUser(event.getMember().getUser(), "resume", event.getMessage());
+                break;
+            case "pause" :
+                commandMap.commandUser(event.getMember().getUser(), "pause", event.getMessage());
+                break;
+            case "disconnect" :
+                commandMap.commandUser(event.getMember().getUser(), "disconnect", event.getMessage());
+                break;
+        }
+        event.deferEdit().queue();
     }
 
     private void onDisconnect(GuildVoiceLeaveEvent event) {
@@ -58,33 +84,14 @@ public class IniciumListener implements EventListener {
         if(!guild.getAudioManager().isConnected()) {
             return;
         }
-        if(voiceChannel.getMembers().size() == 1) {
-            commandMap.disconnect(guild);
-
-        }
-    }
-
-    private void onReactionAdd(MessageReactionAddEvent event) {
-        User user = event.getMember().getUser();
-        event.retrieveMessage().queue((message) -> {
-            if (message.getAuthor().equals(iniciumBot.getJda().getSelfUser())) {
-                if (!event.getMember().getUser().equals(iniciumBot.getJda().getSelfUser())) {
-                    event.getReaction().removeReaction(user).queue();
-                    if (event.getReactionEmote().getEmoji().equals("⏭")) {
-                        commandMap.commandUser(event.getMember().getUser(), "skip", message);
-                    } else if (event.getReactionEmote().getEmoji().equals("🗑")) {
-                        commandMap.commandUser(event.getMember().getUser(), "clear", message);
-                    } else if (event.getReactionEmote().getEmoji().equals("▶")) {
-                        commandMap.commandUser(event.getMember().getUser(), "resume", message);
-                    } else if (event.getReactionEmote().getEmoji().equals("⏸")) {
-                        commandMap.commandUser(event.getMember().getUser(), "pause", message);
-                    } else if (event.getReactionEmote().getEmoji().equals("🚪")) {
-                        commandMap.commandUser(event.getMember().getUser(), "disconnect", message);
-                    }
-                }
+        if (voiceChannel.equals(guild.getAudioManager().getConnectedChannel())) { //Si c'est le channel du bot
+            if(voiceChannel.getMembers().size() == 1) {//Si il ne reste plus que le bot
+                commandMap.disconnect(guild);
             }
-        });
+        }
+
     }
+
     private void onLeave(GuildMemberRemoveEvent event) {
         Guild guild = event.getGuild();
         String idTC = Inicium.CONFIGURATION.getQuit(guild.getId());
@@ -104,7 +111,7 @@ public class IniciumListener implements EventListener {
             if (guild.getSelfMember().hasPermission(Permission.MESSAGE_WRITE)) {
                 TextChannel tc = guild.getTextChannelById(idTC);
                 if (tc != null) {
-                    tc.sendMessage(event.getUser().getAsMention() + " a rejoint le serveur "+guild.getName()+".").queue();
+                    tc.sendMessage(event.getUser().getAsMention() + " a rejoint le serveur "+guild.getName()+".").queue((message -> message.addReaction("👋").queue()));
                 }
             }
         }

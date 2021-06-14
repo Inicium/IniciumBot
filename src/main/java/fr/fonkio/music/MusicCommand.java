@@ -12,14 +12,21 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
+import net.dv8tion.jda.api.requests.restaction.MessageAction;
 
 import java.awt.*;
+import java.security.MessageDigest;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class MusicCommand {
     private final YouTube youTube;
+
+    public MusicManager getManager() {
+        return manager;
+    }
+
     private final MusicManager manager;
     private Inicium iniciumBot;
 
@@ -133,8 +140,8 @@ public class MusicCommand {
             textChannel.sendMessage(iniciumBot.createEmbed("Now playing", null, "Il n'y a pas de musique en cours ...", Color.red, false, guild)).queue();
             return;
         }
-        textChannel.sendMessage(iniciumBot.createEmbed("Now playing", null, "⏬⏬ Voici la liste ⏬⏬", Color.green, true, guild)).queue((message) -> {
-            iniciumBot.addReaction(message);
+        MessageAction ma = textChannel.sendMessage(iniciumBot.createEmbed("Now playing", null, "⏬⏬ Voici la liste ⏬⏬", Color.green, true, guild));
+        iniciumBot.addButtons(ma, guild).queue((message) -> {
             iniciumBot.stopUpdateBar();
             iniciumBot.launchUpdateBar(message);
         });
@@ -147,17 +154,14 @@ public class MusicCommand {
         }
         if(manager.getPlayer(guild).isPause()) {
 
-            textChannel.sendMessage(iniciumBot.createEmbed("Pause", null, "Déjà en pause...", Color.red, false, guild)).queue((message) -> {
-                iniciumBot.addReaction(message);
-            });
+            MessageAction ma = textChannel.sendMessage(iniciumBot.createEmbed("Pause", null, "Déjà en pause...", Color.red, false, guild));
+            iniciumBot.addButtons(ma, guild).queue();
             return;
         }
         manager.getPlayer(guild).setPause(true);
 
-        textChannel.sendMessage(iniciumBot.createEmbed("Pause", null, "⏸", Color.green, false, guild)).queue((message) -> {
-            iniciumBot.addReaction(message);
-            iniciumBot.stopUpdateBar();
-        });
+        MessageAction ma = textChannel.sendMessage(iniciumBot.createEmbed("Pause", null, "⏸", Color.green, false, guild));
+        iniciumBot.addButtons(ma, guild).queue((message) -> iniciumBot.stopUpdateBar());
 
     }
     private void resumeExec (Guild guild, TextChannel textChannel) {
@@ -168,20 +172,16 @@ public class MusicCommand {
         }
         if(manager.getPlayer(guild).isPause()) {
             manager.getPlayer(guild).setPause(false);
-
-            textChannel.sendMessage(iniciumBot.createEmbed("Resume", null, "▶", Color.green, true, guild)).queue((message) -> {
-                iniciumBot.addReaction(message);
+            MessageAction ma = textChannel.sendMessage(iniciumBot.createEmbed("Resume", null, "▶", Color.green, true, guild));
+            iniciumBot.addButtons(ma, guild).queue((message) -> {
                 iniciumBot.stopUpdateBar();
                 iniciumBot.launchUpdateBar(message);
             });
             return;
         }
 
-        textChannel.sendMessage(iniciumBot.createEmbed("Resume", null, "Déjà en cours de lecture...", Color.red, false, guild)).queue((message) -> {
-            iniciumBot.addReaction(message);
-        });
-
-
+        MessageAction ma = textChannel.sendMessage(iniciumBot.createEmbed("Resume", null, "Déjà en cours de lecture...", Color.red, false, guild));
+        iniciumBot.addButtons(ma, guild).queue();
     }
 
     private void seekExec(Guild guild, TextChannel textChannel, String command) {
@@ -193,14 +193,13 @@ public class MusicCommand {
         try {
             manager.getPlayer(guild).seekTrack(command.replaceFirst("seek ", ""));
         } catch (IllegalArgumentException e) {
-            textChannel.sendMessage(iniciumBot.createEmbed("Seek", null, "Le temps entré n'est pas valide", Color.red, false, guild)).queue((message)->{
-                iniciumBot.addReaction(message);
-            });
+            MessageAction ma = textChannel.sendMessage(iniciumBot.createEmbed("Seek", null, "Le temps entré n'est pas valide", Color.red, false, guild));
+            iniciumBot.addButtons(ma, guild).queue();
             return;
         }
 
-        textChannel.sendMessage(iniciumBot.createEmbed("Seek", null, "La piste a été avancée à "+command.replaceFirst("seek ", "")+"...", Color.green, true, guild)).queue((message)->{
-            iniciumBot.addReaction(message);
+        MessageAction ma = textChannel.sendMessage(iniciumBot.createEmbed("Seek", null, "La piste a été avancée à "+command.replaceFirst("seek ", "")+"...", Color.green, true, guild));
+        iniciumBot.addButtons(ma, guild).queue((message)->{
             iniciumBot.stopUpdateBar();
             iniciumBot.launchUpdateBar(message);
         });
@@ -284,10 +283,12 @@ public class MusicCommand {
             return;
         }
         manager.getPlayer(guild).skipTrack();
-        textChannel.sendMessage(iniciumBot.createEmbed("Skip", null, "La piste viens d'être passée...", Color.green, true, guild)).queue((message)->{
-            iniciumBot.addReaction(message);
+        MessageAction ma = textChannel.sendMessage(iniciumBot.createEmbed("Skip", null, "La piste viens d'être passée...", Color.green, true, guild));
+        iniciumBot.addButtons(ma, guild).queue((message)->{
             iniciumBot.stopUpdateBar();
-            iniciumBot.launchUpdateBar(message);
+            if (manager.getPlayer(guild).getAudioPlayer().getPlayingTrack() != null) {
+                iniciumBot.launchUpdateBar(message);
+            }
         });
     }
     public void disconnectQuiet(Guild guild) {
@@ -329,12 +330,13 @@ public class MusicCommand {
     }
 
     private void clearExec(TextChannel textChannel) {
-        MusicPlayer player = manager.getPlayer(textChannel.getGuild());
+        Guild guild = textChannel.getGuild();
+        MusicPlayer player = manager.getPlayer(guild);
 
         if(player.getListener().getTracks().isEmpty()) {
 
-            textChannel.sendMessage(iniciumBot.createEmbed("Clear", null, "La liste est déjà vide ...", Color.red, true, textChannel.getGuild())).queue((message)->{
-                iniciumBot.addReaction(message);
+            MessageAction ma = textChannel.sendMessage(iniciumBot.createEmbed("Clear", null, "La liste est déjà vide ...", Color.red, true, guild));
+            iniciumBot.addButtons(ma, guild).queue((message)->{
                 iniciumBot.stopUpdateBar();
                 iniciumBot.launchUpdateBar(message);
             });
@@ -343,8 +345,8 @@ public class MusicCommand {
 
         player.getListener().getTracks().clear();
 
-        textChannel.sendMessage(iniciumBot.createEmbed("Clear", null, "La liste a été effacée !", Color.green, true, textChannel.getGuild())).queue((message)->{
-            iniciumBot.addReaction(message);
+        MessageAction ma = textChannel.sendMessage(iniciumBot.createEmbed("Clear", null, "La liste a été effacée !", Color.green, true, guild));
+        iniciumBot.addButtons(ma, guild).queue((message)->{
             iniciumBot.stopUpdateBar();
             iniciumBot.launchUpdateBar(message);
         });
