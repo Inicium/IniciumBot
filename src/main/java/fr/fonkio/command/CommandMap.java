@@ -26,9 +26,7 @@ public class CommandMap {
         registerCommands(new CommandGeneral(iniciumBot), musicCommand);
     }
 
-    public void disconnect(Guild guild, TextChannel textChannel) {
-        musicCommand.disconnectExec(guild, textChannel);
-    }
+
     public void disconnect(Guild guild) {
         musicCommand.disconnectQuiet(guild);
     }

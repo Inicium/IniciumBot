@@ -202,16 +202,11 @@ public class CommandGeneral {
         eb.addField(prefix+"clear, "+prefix+"clean, "+prefix+"clr", "Effacer la liste d'attente", true);
         eb.addField(prefix+"queue, "+prefix+"np", "Affiche la file des pistes", true);
         eb.addBlankField(false);
-        eb.addField("Réactions", "Vous pouvez réagir aux messages du bot pour effectuer des actions", false);
-        eb.addField("Play", "▶", true);
-        eb.addField("Pause", "⏸", true);
-        eb.addField("Skip", "⏭", true);
-        eb.addField("Clear", "🗑", true);
-        eb.addField("Disconnect", "🚪", true);
-        eb.addBlankField(true);
-        eb.addBlankField(false);
-        eb.addField("Administration", prefix+"help-admin", false);
+        eb.addField("Boutons d'action", "Vous pouvez effectuer des actions avec les boutons d'action", false);
+        eb.setFooter("Pour voir les commandes admin : " + prefix+"help-admin");
         eb.setColor(Color.MAGENTA);
+        eb.setImage("https://cdn.discordapp.com/attachments/297407304871968768/854394142761943060/unknown.png");
+        eb.setAuthor(user.getName(), null, user.getAvatarUrl());
         textChannel.sendMessage(eb.build()).queue();
     }
     @Command(name="help-admin", type= Command.ExecutorType.USER)
@@ -236,6 +231,7 @@ public class CommandGeneral {
         eb.addField(prefix+"blacklist-remove [id-channel]", "Supprime un channel de la blacklist", false);
         eb.addField(prefix+"prefix [nouveau-prefix]", "Change le prefix pour les commandes (Entre 1 et 5 caractères)", false);
         eb.setColor(Color.MAGENTA);
+        eb.setAuthor(user.getName(), null, user.getAvatarUrl());
         textChannel.sendMessage(eb.build()).queue();
     }
 

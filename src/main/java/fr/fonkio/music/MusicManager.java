@@ -51,7 +51,7 @@ public class MusicManager {
                 }
 
                 player.playTrack(track);
-                MessageAction ma = channel.sendMessage(fonkBot.createEmbed("Play", null, "Ajout de la piste...\n"+track.getInfo().uri+"\n ", Color.green, true, channel.getGuild(), true));
+                MessageAction ma = channel.sendMessage(fonkBot.createEmbed("Play", null, "Ajout de la piste...\n"+track.getInfo().uri+"\n ", Color.green, true, channel.getGuild(), null, true));
                 fonkBot.addButtons(ma, player.getGuild()).queue((message)->{
                     fonkBot.stopUpdateBar();
                     fonkBot.launchUpdateBar(message);
@@ -71,7 +71,7 @@ public class MusicManager {
                     player.playTrack(track);
                 }
 
-                MessageAction ma = channel.sendMessage(fonkBot.createEmbed("Play", null, builder.toString(), Color.green, true, channel.getGuild(), true));
+                MessageAction ma = channel.sendMessage(fonkBot.createEmbed("Play", null, builder.toString(), Color.green, true, channel.getGuild(), null, true));
                 fonkBot.addButtons(ma, player.getGuild()).queue((message)->{
                     fonkBot.stopUpdateBar();
                     fonkBot.launchUpdateBar(message);
@@ -81,7 +81,7 @@ public class MusicManager {
             @Override
             public void noMatches() {
 
-                MessageAction ma = channel.sendMessage(fonkBot.createEmbed("Play", null, "La piste "+ source + " n'a pas été trouvée.", Color.red, true, channel.getGuild()));
+                MessageAction ma = channel.sendMessage(fonkBot.createEmbed("Play", null, "La piste "+ source + " n'a pas été trouvée.", Color.red, true, channel.getGuild(), null));
                 fonkBot.addButtons(ma, player.getGuild()).queue((message)->{
                     fonkBot.stopUpdateBar();
                     fonkBot.launchUpdateBar(message);
@@ -93,7 +93,7 @@ public class MusicManager {
             public void loadFailed(FriendlyException exception) {
                 exception.printStackTrace();
                 MessageAction ma = channel.sendMessage(fonkBot.createEmbed("Play", null, "Impossible de jouer la piste (raison:" +exception.getMessage()+")\n**SI C'EST UNE MUSIQUE ESSAYE D'AJOUTER \"LYRICS\" A TA RECHERCHE**"
-                        + "Exception :", Color.red, true, channel.getGuild()));
+                        + "Exception :", Color.red, true, channel.getGuild(), null));
                 fonkBot.addButtons(ma, player.getGuild()).queue((message)->{
                     fonkBot.stopUpdateBar();
                     fonkBot.launchUpdateBar(message);

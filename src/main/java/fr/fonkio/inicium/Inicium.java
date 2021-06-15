@@ -136,7 +136,7 @@ public class Inicium implements Runnable {
                             cancel();
                         } else {
                             MessageEmbed me = listMessageEmbeds.get(0);
-                            MessageAction ma = message.editMessage(createEmbed(me.getTitle(), me.getUrl(), me.getDescription(), me.getColor(), true, message.getGuild()));
+                            MessageAction ma = message.editMessage(createEmbed(me.getTitle(), me.getUrl(), me.getDescription(), me.getColor(), true, message.getGuild(), me.getFooter().getText(), me.getFooter().getIconUrl()));
                             addButtons(ma, message.getGuild()).queue();
                         }
                     }
@@ -169,15 +169,31 @@ public class Inicium implements Runnable {
         message.setActionRow(buttons);
         return message;
     }
-    public MessageEmbed createEmbed(String title, String urlTitle, String description, Color couleur, boolean displayQueue, Guild guild) {
-        return createEmbed(title, urlTitle, description, couleur, displayQueue, guild, false);
+    public MessageEmbed createEmbed(String title, String urlTitle, String description, Color couleur, boolean displayQueue, Guild guild, User user) {
+        return createEmbed(title, urlTitle, description, couleur, displayQueue, guild, user, false);
     }
-    public MessageEmbed createEmbed(String title, String urlTitle, String description, Color couleur, boolean displayQueue, Guild guild, boolean newPlay) {
+
+    public MessageEmbed createEmbed(String title, String urlTitle, String description, Color couleur, boolean displayQueue, Guild guild, String footerString, String footerIcon) {
+        return createEmbed(title, urlTitle, description, couleur, displayQueue, guild, footerString, footerIcon, false);
+    }
+
+    public MessageEmbed createEmbed(String title, String urlTitle, String description, Color couleur, boolean displayQueue, Guild guild, User user, boolean newPlay) {
+        if (user != null) {
+            return createEmbed(title, urlTitle, description, couleur, displayQueue, guild, user.getName(), user.getAvatarUrl(), newPlay);
+        } else {
+            return createEmbed(title, urlTitle, description, couleur, displayQueue, guild, null, null, newPlay);
+        }
+
+    }
+
+    public MessageEmbed createEmbed(String title, String urlTitle, String description, Color couleur, boolean displayQueue, Guild guild, String footerString, String footerIcon, boolean newPlay) {
         EmbedBuilder builder = new EmbedBuilder();
         builder.setAuthor("Bot musique", null, "https://i.pinimg.com/originals/79/ab/9f/79ab9f804b5ebbdd514af3329cad6e0c.gif?size=256");
         builder.setTitle(title, urlTitle);
         builder.setDescription(description);
         builder.setColor(couleur);
+        builder.setFooter(footerString, footerIcon);
+
 
         if (displayQueue) {
             List <AudioTrack> queue = iniciumListener.getQueue(guild);
@@ -186,7 +202,6 @@ public class Inicium implements Runnable {
 
         return builder.build();
     }
-
 
     private void addFields(boolean newPlay, EmbedBuilder builder, List<AudioTrack> queue) {
         if (queue.size()==0) {
