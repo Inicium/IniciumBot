@@ -75,18 +75,14 @@ public class CommandsGeneral {
             return;
         }
         if (!guild.getMember(user).hasPermission(Permission.ADMINISTRATOR)) {
-            message.reply(
-                    EmbedGenerator.generate(user, "Permission", "Vous n'êtes pas administrateur de ce serveur")
-            ).queue();
+            permissionCheck(message, user);
             return;
         }
         JSONArray blackList = Inicium.CONFIGURATION.getBlackList(guild.getId());
         String id = command.replaceFirst("blacklist-add ", "");
         TextChannel tc = guild.getTextChannelById(id);
         if (tc == null) {
-            message.reply(
-                    EmbedGenerator.generate(user, "Ajout blacklist échec", "Channel introuvable ! Vous devez entrer l'ID du channel :\nhttps://support.discord.com/hc/fr/articles/206346498-Où-trouver-l-ID-de-mon-compte-utilisateur-serveur-message-")
-            ).queue();
+            replyEmbed(message, user, "Ajout blacklist échec", "Channel introuvable ! Vous devez entrer l'ID du channel :\nhttps://support.discord.com/hc/fr/articles/206346498-Où-trouver-l-ID-de-mon-compte-utilisateur-serveur-message-");
             return;
         }
         boolean trouve = false;
@@ -96,15 +92,15 @@ public class CommandsGeneral {
             }
         }
         if (trouve) {
-            message.reply(
-                    EmbedGenerator.generate(user, "Ajout blacklist échec", tc.getName()+" est déjà dans la blacklist !")
-            ).queue();
+            replyEmbed(message, user, "Ajout blacklist échec", tc.getName()+" est déjà dans la blacklist !");
             return;
         }
         Inicium.CONFIGURATION.addBlackList(guild.getId(), id);
-        message.reply(
-                EmbedGenerator.generate(user, "Ajout blacklist", tc.getName() + " a été ajouté à la blacklist !")
-        ).queue();
+        replyEmbed(message, user, "Ajout blacklist", tc.getName() + " a été ajouté à la blacklist !");
+    }
+
+    private void permissionCheck(Message message, User user) {
+        replyEmbed(message, user, "Permission", "Vous n'êtes pas administrateur de ce serveur");
     }
 
     private void blacklistRemove(Guild guild, Message message, User user, String command) {
@@ -112,21 +108,15 @@ public class CommandsGeneral {
             return;
         }
         if (!guild.getMember(user).hasPermission(Permission.ADMINISTRATOR)) {
-            message.reply(
-                    EmbedGenerator.generate(user, "Permission", "Vous n'êtes pas administrateur de ce serveur")
-            ).queue();
+            permissionCheck(message, user);
             return;
         }
         String id = command.replaceFirst("blacklist-del ", "");
 
         if (Inicium.CONFIGURATION.delBlacklist(guild.getId(), id)) {
-            message.reply(
-                    EmbedGenerator.generate(user, "Suppression blacklist", "Le channel a été supprimé de la blacklist")
-            ).queue();
+            replyEmbed(message, user, "Suppression blacklist", "Le channel a été supprimé de la blacklist");
         } else {
-            message.reply(
-                    EmbedGenerator.generate(user, "Suppression blacklist échec", "Le channel n'a pas été trouvé dans la blacklist ! Vous devez entrer l'ID du channel :\nhttps://support.discord.com/hc/fr/articles/206346498-Où-trouver-l-ID-de-mon-compte-utilisateur-serveur-message-")
-            ).queue();
+            replyEmbed(message, user, "Suppression blacklist échec", "Le channel n'a pas été trouvé dans la blacklist ! Vous devez entrer l'ID du channel :\nhttps://support.discord.com/hc/fr/articles/206346498-Où-trouver-l-ID-de-mon-compte-utilisateur-serveur-message-");
         }
 
     }
@@ -136,9 +126,7 @@ public class CommandsGeneral {
             return;
         }
         if (!guild.getMember(user).hasPermission(Permission.ADMINISTRATOR)) {
-            message.reply(
-                    EmbedGenerator.generate(user, "Permission", "Vous n'êtes pas administrateur de ce serveur")
-            ).queue();
+            permissionCheck(message, user);
             return;
         }
 
@@ -155,9 +143,7 @@ public class CommandsGeneral {
             }
             listBl.append("\n");
         }
-        message.reply(
-                EmbedGenerator.generate(user, "Blacklist :", listBl.toString())
-        ).queue();
+        replyEmbed(message, user, "Blacklist :", listBl.toString());
     }
 
     public void quitChannel(Guild guild, Message message, User user, String command) {
@@ -165,23 +151,17 @@ public class CommandsGeneral {
             return;
         }
         if (!guild.getMember(user).hasPermission(Permission.ADMINISTRATOR)) {
-            message.reply(
-                    EmbedGenerator.generate(user, "Permission", "Vous n'êtes pas administrateur de ce serveur")
-            ).queue();
+            permissionCheck(message, user);
             return;
         }
         String id = command.replaceFirst("quit-channel ", "");
         TextChannel tc = guild.getTextChannelById(id);
         if (tc == null) {
-            message.reply(
-                    EmbedGenerator.generate(user, "goodbye set échec", "Channel introuvable ! Vous devez entrer l'ID du channel :\nhttps://support.discord.com/hc/fr/articles/206346498-Où-trouver-l-ID-de-mon-compte-utilisateur-serveur-message-")
-            ).queue();
+            replyEmbed(message, user, "goodbye set échec", "Channel introuvable ! Vous devez entrer l'ID du channel :\nhttps://support.discord.com/hc/fr/articles/206346498-Où-trouver-l-ID-de-mon-compte-utilisateur-serveur-message-");
             return;
         }
         Inicium.CONFIGURATION.setQuit(guild.getId(), id);
-        message.reply(
-                EmbedGenerator.generate(user, "goodbye set", "Les messages de leave seront postés sur "+guild.getTextChannelById(id))
-        ).queue();
+        replyEmbed(message, user, "goodbye set", "Les messages de leave seront postés sur "+guild.getTextChannelById(id));
     }
 
     public void setWelcomeChannel(Guild guild, Message message, User user, String command) {
@@ -189,22 +169,22 @@ public class CommandsGeneral {
             return;
         }
         if (!guild.getMember(user).hasPermission(Permission.ADMINISTRATOR)) {
-            message.reply(
-                    EmbedGenerator.generate(user, "Permission", "Vous n'êtes pas administrateur de ce serveur")
-            ).queue();
+            permissionCheck(message, user);
             return;
         }
         String id = command.replaceFirst("welcome-channel ", "");
         TextChannel tc = guild.getTextChannelById(id);
         if (tc == null) {
-            message.reply(
-                    EmbedGenerator.generate(user, "welcome set échec", "Channel introuvable ! Vous devez entrer l'ID du channel :\nhttps://support.discord.com/hc/fr/articles/206346498-Où-trouver-l-ID-de-mon-compte-utilisateur-serveur-message-")
-            ).queue();
+            replyEmbed(message, user, "welcome set échec", "Channel introuvable ! Vous devez entrer l'ID du channel :\nhttps://support.discord.com/hc/fr/articles/206346498-Où-trouver-l-ID-de-mon-compte-utilisateur-serveur-message-");
             return;
         }
         Inicium.CONFIGURATION.setWelcome(guild.getId(), id);
+        replyEmbed(message, user, "welcome set", "Les messages de join seront postés sur "+guild.getTextChannelById(id));
+    }
+
+    private void replyEmbed(Message message, User user, String permission, String s) {
         message.reply(
-                EmbedGenerator.generate(user, "welcome set", "Les messages de join seront postés sur "+guild.getTextChannelById(id))
+                EmbedGenerator.generate(user, permission, s)
         ).queue();
     }
 
@@ -213,16 +193,12 @@ public class CommandsGeneral {
             return;
         }
         if (!guild.getMember(user).hasPermission(Permission.ADMINISTRATOR)) {
-            message.reply(
-                    EmbedGenerator.generate(user, "Permission", "Vous n'êtes pas administrateur de ce serveur")
-            ).queue();
+            permissionCheck(message, user);
             return;
         }
         String prefix = command.replaceFirst("prefix ", "");
         if (prefix.length() <1 || prefix.length() >= 5) {
-            message.reply(
-                    EmbedGenerator.generate(user, "Prefix échec", "Le prefix doit avoir une taille comprise entre 1 et 5 caractères ")
-            ).queue();
+            replyEmbed(message, user, "Prefix échec", "Le prefix doit avoir une taille comprise entre 1 et 5 caractères ");
             return;
         }
         Inicium.CONFIGURATION.setPrefix(guild.getId(), prefix);
@@ -236,15 +212,11 @@ public class CommandsGeneral {
             return;
         }
         if (!guild.getMember(user).hasPermission(Permission.ADMINISTRATOR)) {
-            message.reply(
-                    EmbedGenerator.generate(user, "Permission", "Vous n'êtes pas administrateur de ce serveur")
-            ).queue();
+            permissionCheck(message, user);
             return;
         }
         Inicium.CONFIGURATION.setQuit(guild.getId(), "");
-        message.reply(
-                EmbedGenerator.generate(user, "goodbye remove", "Les messages de leave ne seront plus postés")
-        ).queue();
+        replyEmbed(message, user, "goodbye remove", "Les messages de leave ne seront plus postés");
     }
 
     public void delWelcomeChannel(Guild guild, Message message, User user) {
@@ -252,15 +224,11 @@ public class CommandsGeneral {
             return;
         }
         if (!guild.getMember(user).hasPermission(Permission.ADMINISTRATOR)) {
-            message.reply(
-                    EmbedGenerator.generate(user, "Permission", "Vous n'êtes pas administrateur de ce serveur")
-            ).queue();
+            permissionCheck(message, user);
             return;
         }
         Inicium.CONFIGURATION.setWelcome(guild.getId(), "");
-        message.reply(
-                EmbedGenerator.generate(user, "welcome remove", "Les messages de join sont désormais désactivés")
-        ).queue();
+        replyEmbed(message, user, "welcome remove", "Les messages de join sont désormais désactivés");
     }
 
     public void help(Guild guild, Message message, User user) {
@@ -284,7 +252,7 @@ public class CommandsGeneral {
         eb.addBlankField(false);
         eb.addField("Boutons d'action", "Vous pouvez effectuer des actions avec les boutons d'action", false);
         eb.setFooter("Pour voir les commandes admin : " + prefix+"helpadmin");
-        eb.setColor(Color.BLUE);
+        eb.setColor(Color.GREEN);
         eb.setImage("https://cdn.discordapp.com/attachments/297407304871968768/854394142761943060/unknown.png");
         eb.setAuthor(user.getName(), null, user.getAvatarUrl());
         message.reply(
@@ -297,9 +265,7 @@ public class CommandsGeneral {
             return;
         }
         if (!guild.getMember(user).hasPermission(Permission.ADMINISTRATOR)) {
-            message.reply(
-                    EmbedGenerator.generate(user, "Permission", "Vous n'êtes pas administrateur de ce serveur")
-            ).queue();
+            permissionCheck(message, user);
             return;
         }
         EmbedBuilder eb = new EmbedBuilder();
@@ -310,7 +276,7 @@ public class CommandsGeneral {
         eb.addField(prefix+"goodbye help", "Définir un channel pour l'affichage d'un message lors d'un départ", false);
         eb.addField(prefix+"blacklist help", "Info gestion de la blacklist (Channel ou l'on ne peut pas executer de commande)", false);
         eb.addField(prefix+"prefix [nouveau-prefix]", "Change le prefix pour les commandes (Entre 1 et 5 caractères)", false);
-        eb.setColor(Color.CYAN);
+        eb.setColor(Color.GREEN);
         eb.setAuthor(user.getName(), null, user.getAvatarUrl());
         message.reply(
                 eb.build()

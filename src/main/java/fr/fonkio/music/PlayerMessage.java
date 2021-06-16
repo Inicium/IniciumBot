@@ -55,7 +55,7 @@ public class PlayerMessage {
         builder.setAuthor("Bot musique", null, "https://i.pinimg.com/originals/79/ab/9f/79ab9f804b5ebbdd514af3329cad6e0c.gif?size=256");
         builder.setTitle(this.command);
         builder.setDescription(this.message);
-        builder.setColor(Color.BLUE);
+        builder.setColor(Color.GREEN);
         builder.setFooter(this.author.getName(), this.author.getAvatarUrl());
 
         if (this.afficherQueue) {
@@ -113,6 +113,10 @@ public class PlayerMessage {
     }
 
     public MessageAction addButtons(MessageAction message) {
+        if (musicPlayer.getAudioPlayer().getPlayingTrack() == null) {
+            message.setActionRow(Button.success("done", "Terminé !").asDisabled());
+            return message;
+        }
         List<Component> buttons = new ArrayList<>();
 
         if (musicPlayer.isPause()) {

@@ -13,7 +13,7 @@ public class EmbedGenerator {
         builder.setAuthor(author.getName(), null, author.getAvatarUrl());
         builder.setTitle(command);
         builder.setDescription(message);
-        builder.setColor(Color.BLUE);
+        builder.setColor(Color.GREEN);
         return builder.build();
     }
 
