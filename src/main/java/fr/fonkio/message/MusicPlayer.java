@@ -1,7 +1,10 @@
-package fr.fonkio.music;
+package fr.fonkio.message;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import fr.fonkio.music.AudioHandler;
+import fr.fonkio.music.AudioListener;
+import fr.fonkio.music.PlayerMessage;
 import net.dv8tion.jda.api.entities.Guild;
 
 import java.util.List;
@@ -10,11 +13,13 @@ public class MusicPlayer {
     private final AudioPlayer audioPlayer;
     private final AudioListener listener;
     private final Guild guild;
+    private PlayerMessage playerMessage;
 
     public MusicPlayer(AudioPlayer audioPlayer, Guild guild) {
         this.audioPlayer = audioPlayer;
         this.guild = guild;
         this.listener = new AudioListener(this);
+        this.playerMessage = new PlayerMessage(this);
         audioPlayer.addListener(listener);
     }
 
@@ -76,10 +81,15 @@ public class MusicPlayer {
 
     public void setPause(boolean b) {
         audioPlayer.setPaused(b);
-
     }
 
+    public PlayerMessage getPlayerMessage() {
+        return playerMessage;
+    }
 
+    public void setPlayerMessage(PlayerMessage playerMessage) {
+        this.playerMessage = playerMessage;
+    }
 
 
 }

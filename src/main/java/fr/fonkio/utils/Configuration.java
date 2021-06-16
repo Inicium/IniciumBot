@@ -73,6 +73,12 @@ public class Configuration {
         getServerConfig(key).put("welcome", idTextChannel);
         save();
     }
+
+    public void setServerName(String key, String nom) {
+        getServerConfig(key).put("name", nom);
+        save();
+    }
+
     public String getQuit(String key) {
         return getServerConfig(key).getString("quit");
     }

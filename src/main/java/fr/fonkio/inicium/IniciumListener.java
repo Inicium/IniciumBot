@@ -1,36 +1,31 @@
 package fr.fonkio.inicium;
 
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import fr.fonkio.command.CommandMap;
+import fr.fonkio.command.CommandsGeneral;
+import fr.fonkio.command.CommandsMusic;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.GenericEvent;
+import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMoveEvent;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
 import org.json.JSONArray;
 
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class IniciumListener implements EventListener {
 
-    public CommandMap getCommandMap() {
-        return commandMap;
-    }
+    private final CommandsMusic commandsMusic;
+    private final CommandsGeneral commandsGeneral;
 
-    private final CommandMap commandMap;
-    private Inicium iniciumBot;
-
-    public IniciumListener(CommandMap commandMap, Inicium fonkBot) {
-        this.commandMap = commandMap;
-        this.iniciumBot = fonkBot;
+    public IniciumListener() {
+        this.commandsMusic = new CommandsMusic();
+        this.commandsGeneral = new CommandsGeneral();
     }
 
     @Override
@@ -47,46 +42,166 @@ public class IniciumListener implements EventListener {
             onDisconnect((GuildVoiceLeaveEvent)event);
         } else if (event instanceof ButtonClickEvent) {
             onButtonClicked((ButtonClickEvent)event);
+        } else if (event instanceof GuildJoinEvent) {
+            onServerJoin((GuildJoinEvent)event);
+        }
+    }
+
+    private void onServerJoin(GuildJoinEvent event) {
+        Inicium.CONFIGURATION.setServerName(event.getGuild().getId(), event.getGuild().getName() + " admin : " + event.getGuild().getOwner().getUser().getName() + "#" + event.getGuild().getOwner().getUser().getDiscriminator());
+    }
+
+    private void onMessage(MessageReceivedEvent event) {
+        User user = event.getAuthor();
+        if(user.equals(event.getJDA().getSelfUser())) { //Si le message est du bot
+            return;
+        }
+        Message message = event.getMessage();
+        String command = message.getContentDisplay();
+        String prefix = Inicium.CONFIGURATION.getPrefix(event.getGuild().getId());
+
+        if(command.startsWith(prefix)) {
+            JSONArray blackList = Inicium.CONFIGURATION.getBlackList(event.getGuild().getId());
+            boolean channelAuthorised = true;
+            for(int i = 0; i < blackList.length(); i++) {
+                if (blackList.getString(i).equals(event.getTextChannel().getId())) {
+                    channelAuthorised = false;
+                }
+            }
+            if(channelAuthorised) {
+                command = command.replaceFirst(prefix, "");
+                commandExec(command, event);
+            } else { //Channel blacklisté
+                message.addReaction("U+274C").queue();
+                PrivateChannel pc = user.openPrivateChannel().complete();
+                pc.sendMessage("Tu ne peux envoyer des commandes que dans les channels prévus à cet effet !").queue();
+
+                TimerTask task = new TimerTask() {
+                    public void run() {
+                        message.delete().queue();
+                    }
+                };
+                Timer timer = new Timer("Timer");
+
+                long delay = 1000L;
+                timer.schedule(task, delay);
+            }
+        }
+    }
+
+    private void commandExec(String commandAndArgs, MessageReceivedEvent event) {
+        String command = commandAndArgs.split(" ")[0];
+        Guild guild = event.getGuild();
+        TextChannel textChannel = event.getTextChannel();
+        User user = event.getAuthor();
+        Message message = event.getMessage();
+        String args;
+        switch (command) {
+            case "play":
+                args = commandAndArgs.substring(5);
+                commandsMusic.playExec(guild, textChannel, user, args);
+                break;
+            case "p":
+                args = commandAndArgs.substring(2);
+                commandsMusic.playExec(guild, textChannel, user, args);
+                break;
+            case "ps":
+                args = commandAndArgs.substring(3);
+                commandsMusic.skipExec(user, guild, textChannel);
+                commandsMusic.playExec(guild, textChannel, user, args);
+                break;
+            case "skip":
+            case "s":
+                commandsMusic.skipExec(user, guild, textChannel);
+                break;
+            case "pause":
+                commandsMusic.pauseExec(user, guild, textChannel);
+                break;
+            case "resume":
+                commandsMusic.resumeExec(user, guild, textChannel);
+                break;
+            case "seek":
+                args = commandAndArgs.substring(5);
+                commandsMusic.seekExec(user, guild, textChannel, args);
+                break;
+            case "leave":
+            case "quit":
+            case "disconnect":
+                commandsMusic.disconnectExec(user, guild, textChannel);
+                break;
+            case "clear":
+            case "clean":
+            case "clr":
+                commandsMusic.clearExec(user, textChannel);
+                break;
+            case "queue":
+            case "np":
+                commandsMusic.queueExec(user, guild, textChannel);
+                break;
+            case "helpadmin":
+                commandsGeneral.helpAdmin(guild, message, user);
+                break;
+            case "help":
+                commandsGeneral.help(guild, message, user);
+                break;
+            case "blacklist":
+                args = commandAndArgs.substring(10);
+                commandsGeneral.blacklistExec(user, guild, message, args);
+                break;
+            case "welcome":
+                args = commandAndArgs.substring(8);
+                commandsGeneral.welcomeExec(user, guild, message, args);
+                break;
+            case "goodbye":
+                args = commandAndArgs.substring(8);
+                commandsGeneral.goodbyeExec(user, guild, message, args);
+                break;
+            case "prefix":
+                args = commandAndArgs;
+                commandsGeneral.setPrefix(guild, message, user, args);
+                break;
         }
     }
 
     private void onButtonClicked(ButtonClickEvent event) {
+        User user = event.getUser();
+        Guild guild = event.getGuild();
+        TextChannel textChannel = event.getTextChannel();
+        event.deferEdit().queue();
         switch (event.getComponentId()) {
             case "skip" :
-                commandMap.commandUser(event.getMember().getUser(), "skip", event.getMessage());
+                commandsMusic.skipExec(user, guild, textChannel);
                 break;
             case "clear" :
-                commandMap.commandUser(event.getMember().getUser(), "clear", event.getMessage());
+                commandsMusic.clearExec(user, textChannel);
                 break;
             case "resume" :
-                commandMap.commandUser(event.getMember().getUser(), "resume", event.getMessage());
+                commandsMusic.resumeExec(user, guild, textChannel);
                 break;
             case "pause" :
-                commandMap.commandUser(event.getMember().getUser(), "pause", event.getMessage());
+                commandsMusic.pauseExec(user, guild, textChannel);
                 break;
             case "disconnect" :
-                commandMap.commandUser(event.getMember().getUser(), "disconnect", event.getMessage());
+                commandsMusic.disconnectExec(user, guild, textChannel);
                 break;
         }
-        event.deferEdit().queue();
     }
 
     private void onDisconnect(GuildVoiceLeaveEvent event) {
-        leaveChannel(event.getGuild(), event.getChannelLeft(), event.getMember().getUser());
-
+        checkLeaveIfChannelEmpty(event.getGuild(), event.getChannelLeft(), event.getMember().getUser());
     }
 
     private void onMove(GuildVoiceMoveEvent event) {
-        leaveChannel(event.getGuild(), event.getChannelLeft(), event.getMember().getUser());
+        checkLeaveIfChannelEmpty(event.getGuild(), event.getChannelLeft(), event.getMember().getUser());
     }
 
-    private void leaveChannel(Guild guild, VoiceChannel voiceChannel, User user) {
+    private void checkLeaveIfChannelEmpty(Guild guild, VoiceChannel voiceChannel, User user) {
         if(!guild.getAudioManager().isConnected()) {
             return;
         }
         if (voiceChannel.equals(guild.getAudioManager().getConnectedChannel())) { //Si c'est le channel du bot
             if(voiceChannel.getMembers().size() == 1) {//Si il ne reste plus que le bot
-                commandMap.disconnect(guild);
+                commandsMusic.disconnectQuiet(guild);
             }
         }
 
@@ -115,49 +230,5 @@ public class IniciumListener implements EventListener {
                 }
             }
         }
-    }
-    private void onMessage(MessageReceivedEvent event) {
-        User author = event.getAuthor();
-        if(author.equals(event.getJDA().getSelfUser())) {
-            return;
-        }
-        Message message = event.getMessage();
-        String command = message.getContentDisplay();
-        String prefix = Inicium.CONFIGURATION.getPrefix(event.getGuild().getId());
-        if(command.startsWith(prefix)) {
-            JSONArray blackList = Inicium.CONFIGURATION.getBlackList(event.getGuild().getId());
-            boolean channelAuthorised = true;
-            for(int i = 0; i < blackList.length(); i++) {
-                if (blackList.getString(i).equals(event.getTextChannel().getId())) {
-                    channelAuthorised = false;
-                }
-            }
-            if(channelAuthorised) {
-                command = command.replaceFirst(prefix, "");
-                commandMap.commandUser(author, command, message);
-
-            } else {
-                message.addReaction("U+274C").queue();
-                PrivateChannel pc = author.openPrivateChannel().complete();
-                pc.sendMessage("Tu ne peux envoyer des commandes que dans les channels prévus à cet effet !").queue();
-
-                TimerTask task = new TimerTask() {
-                    public void run() {
-                        message.delete().queue();
-                    }
-                };
-                Timer timer = new Timer("Timer");
-
-                long delay = 5000L;
-                timer.schedule(task, delay);
-            }
-        }
-
-    }
-    public boolean isPause(Guild guild) {
-        return commandMap.isPause(guild);
-    }
-    public List<AudioTrack> getQueue(Guild guild) {
-        return commandMap.getQueue(guild);
     }
 }
