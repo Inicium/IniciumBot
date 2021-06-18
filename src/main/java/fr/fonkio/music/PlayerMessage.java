@@ -127,9 +127,21 @@ public class PlayerMessage {
             buttons.add(Button.success("pause", "⏸ Pause"));
         }
         buttons.add(Button.primary("skip", "⏯ Skip"));
-        buttons.add(Button.danger("clear", "\uD83D\uDDD1 Effacer la liste"));
+        Button button = Button.danger("clear", "\uD83D\uDDD1 Effacer la liste");
+        if (musicPlayer.getQueue().size()<2) {
+            button = button.asDisabled();
+        }
+        buttons.add(button);
         buttons.add(Button.danger("disconnect", "\uD83D\uDEAA Déconnecter"));
 
+        message.setActionRow(buttons);
+        return message;
+    }
+
+    public MessageAction addTrackEndButtons(MessageAction message) {
+        List<Component> buttons = new ArrayList<>();
+        buttons.add(Button.success("done", "Terminé !").asDisabled());
+        buttons.add(Button.danger("disconnect", "\uD83D\uDEAA Déconnecter"));
         message.setActionRow(buttons);
         return message;
     }
@@ -153,10 +165,14 @@ public class PlayerMessage {
             if (musicPlayer.isPause()) {
                 cancel();
             } else if (musicPlayer.getAudioPlayer().getPlayingTrack() == null) {
+                MessageAction ma = messageEnCours.editMessage(getEmbed());
+                addTrackEndButtons(ma).queue();
                 cancel();
             }
             else {
                 if (musicPlayer.getQueue().size()==0) {
+                    MessageAction ma = messageEnCours.editMessage(getEmbed());
+                    addTrackEndButtons(ma).queue();
                     cancel();
                 } else {
                     messageEnCours.editMessage(getEmbed()).queue();

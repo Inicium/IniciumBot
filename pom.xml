@@ -77,7 +77,7 @@
                 <configuration>
                     <transformers>
                         <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                            <mainClass>fr.fonkio.inicium.Inicium</mainClass> <!-- You have to replace this with a path to your main class like my.path.Main -->
+                            <mainClass>fr.fonkio.inicium.Inicium</mainClass>
                         </transformer>
                     </transformers>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
