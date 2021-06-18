@@ -2,6 +2,7 @@ package fr.fonkio.inicium;
 
 import fr.fonkio.command.CommandsGeneral;
 import fr.fonkio.command.CommandsMusic;
+import fr.fonkio.message.EmbedGenerator;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.GenericEvent;
@@ -74,7 +75,7 @@ public class IniciumListener implements EventListener {
             } else { //Channel blacklisté
                 message.addReaction("U+274C").queue();
                 PrivateChannel pc = user.openPrivateChannel().complete();
-                pc.sendMessage("Tu ne peux envoyer des commandes que dans les channels prévus à cet effet !").queue();
+                pc.sendMessage(EmbedGenerator.generate(user, "Pas de commandes dans ce channel", "Tu ne peux envoyer des commandes que dans les channels prévus à cet effet !")).queue();
 
                 TimerTask task = new TimerTask() {
                     public void run() {
@@ -214,7 +215,7 @@ public class IniciumListener implements EventListener {
             if(guild.getSelfMember().hasPermission(Permission.MESSAGE_WRITE)) {
                 TextChannel tc = guild.getTextChannelById(idTC);
                 if (tc != null) {
-                    tc.sendMessage(event.getUser().getName()+" a quitté le serveur "+guild.getName()+".").queue();
+                    tc.sendMessage(EmbedGenerator.generate(event.getUser(), "Leave", event.getUser().getName()+" a quitté le serveur "+guild.getName()+".")).queue();
                 }
             }
         }
@@ -226,7 +227,7 @@ public class IniciumListener implements EventListener {
             if (guild.getSelfMember().hasPermission(Permission.MESSAGE_WRITE)) {
                 TextChannel tc = guild.getTextChannelById(idTC);
                 if (tc != null) {
-                    tc.sendMessage(event.getUser().getAsMention() + " a rejoint le serveur "+guild.getName()+".").queue((message -> message.addReaction("👋").queue()));
+                    tc.sendMessage(EmbedGenerator.generate(event.getUser(), "Bienvenue !", event.getUser().getAsMention() + " a rejoint le serveur "+guild.getName()+".")).queue((message -> message.addReaction("👋").queue()));
                 }
             }
         }
