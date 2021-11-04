@@ -33,7 +33,7 @@ public class PlayerMessage {
     }
 
     public void newMessage(String command, String message, User author, boolean afficherQueue, TextChannel textChannel) {
-        if (messageEnCours != null) {
+        if (messageEnCours != null) { //Suppression des commandes du dernier message
             messageEnCours.editMessage(messageEnCours).setActionRow(Button.success("done", "Terminé !").asDisabled()).queue();
         }
         if(timerTask != null) {
@@ -44,7 +44,7 @@ public class PlayerMessage {
         this.message = message;
         this.afficherQueue = afficherQueue;
         this.author = author;
-        MessageAction ma = textChannel.sendMessage(getEmbed());
+        MessageAction ma = textChannel.sendMessageEmbeds(getEmbed());
         this.messageEnCours = addButtons(ma).complete();
         timerTask = new PlayerUpdater();
         timer.scheduleAtFixedRate(timerTask, DELAY, PERIOD);
@@ -165,17 +165,17 @@ public class PlayerMessage {
             if (musicPlayer.isPause()) {
                 cancel();
             } else if (musicPlayer.getAudioPlayer().getPlayingTrack() == null) {
-                MessageAction ma = messageEnCours.editMessage(getEmbed());
+                MessageAction ma = messageEnCours.editMessageEmbeds(getEmbed());
                 addTrackEndButtons(ma).queue();
                 cancel();
             }
             else {
                 if (musicPlayer.getQueue().size()==0) {
-                    MessageAction ma = messageEnCours.editMessage(getEmbed());
+                    MessageAction ma = messageEnCours.editMessageEmbeds(getEmbed());
                     addTrackEndButtons(ma).queue();
                     cancel();
                 } else {
-                    messageEnCours.editMessage(getEmbed()).queue();
+                    messageEnCours.editMessageEmbeds(getEmbed()).queue();
                 }
             }
         }

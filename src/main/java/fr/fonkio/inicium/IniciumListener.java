@@ -75,7 +75,7 @@ public class IniciumListener implements EventListener {
             } else { //Channel blacklisté
                 message.addReaction("U+274C").queue();
                 PrivateChannel pc = user.openPrivateChannel().complete();
-                pc.sendMessage(EmbedGenerator.generate(user, "Pas de commandes dans ce channel", "Tu ne peux envoyer des commandes que dans les channels prévus à cet effet !")).queue();
+                pc.sendMessageEmbeds(EmbedGenerator.generate(user, "Pas de commandes dans ce channel", "Tu ne peux envoyer des commandes que dans les channels prévus à cet effet !")).queue();
 
                 TimerTask task = new TimerTask() {
                     public void run() {
@@ -96,44 +96,65 @@ public class IniciumListener implements EventListener {
         TextChannel textChannel = event.getTextChannel();
         User user = event.getAuthor();
         Message message = event.getMessage();
+
+        VoiceChannel voiceChannel = guild.getMember(user).getVoiceState().getChannel();
+
         String args;
         switch (command) {
             case "play":
-                args = commandAndArgs.substring(5);
-                commandsMusic.playExec(guild, textChannel, user, args);
+                if (canSendCommand(voiceChannel, guild, user, message)) {
+                    args = commandAndArgs.substring(5);
+                    commandsMusic.playExec(guild, textChannel, user, args);
+                }
                 break;
             case "p":
-                args = commandAndArgs.substring(2);
-                commandsMusic.playExec(guild, textChannel, user, args);
+                if (canSendCommand(voiceChannel, guild, user, message)) {
+                    args = commandAndArgs.substring(2);
+                    commandsMusic.playExec(guild, textChannel, user, args);
+                }
                 break;
             case "ps":
-                args = commandAndArgs.substring(3);
-                commandsMusic.skipExec(user, guild, textChannel);
-                commandsMusic.playExec(guild, textChannel, user, args);
+                if (canSendCommand(voiceChannel, guild, user, message)) {
+                    args = commandAndArgs.substring(3);
+                    commandsMusic.skipExec(user, guild, textChannel);
+                    commandsMusic.playExec(guild, textChannel, user, args);
+                }
                 break;
             case "skip":
             case "s":
-                commandsMusic.skipExec(user, guild, textChannel);
+                if (canSendCommand(voiceChannel, guild, user, message)) {
+                    commandsMusic.skipExec(user, guild, textChannel);
+                }
                 break;
             case "pause":
-                commandsMusic.pauseExec(user, guild, textChannel);
+                if (canSendCommand(voiceChannel, guild, user, message)) {
+                    commandsMusic.pauseExec(user, guild, textChannel);
+                }
                 break;
             case "resume":
-                commandsMusic.resumeExec(user, guild, textChannel);
+                if (canSendCommand(voiceChannel, guild, user, message)) {
+                    commandsMusic.resumeExec(user, guild, textChannel);
+                }
                 break;
             case "seek":
-                args = commandAndArgs.substring(5);
-                commandsMusic.seekExec(user, guild, textChannel, args);
+                if (canSendCommand(voiceChannel, guild, user, message)) {
+                    args = commandAndArgs.substring(5);
+                    commandsMusic.seekExec(user, guild, textChannel, args);
+                }
                 break;
             case "leave":
             case "quit":
             case "disconnect":
-                commandsMusic.disconnectExec(user, guild, textChannel);
+                if (canSendCommand(voiceChannel, guild, user, message)) {
+                    commandsMusic.disconnectExec(user, guild, textChannel);
+                }
                 break;
             case "clear":
             case "clean":
             case "clr":
-                commandsMusic.clearExec(user, textChannel);
+                if (canSendCommand(voiceChannel, guild, user, message)) {
+                    commandsMusic.clearExec(user, textChannel);
+                }
                 break;
             case "queue":
             case "np":
@@ -164,11 +185,53 @@ public class IniciumListener implements EventListener {
         }
     }
 
+    private boolean canSendCommand(VoiceChannel userVoiceChannel, Guild guild, User user, Message message) {
+        Member self = guild.getMember(Inicium.getJda().getSelfUser());
+        VoiceChannel botVoiceChannel = self.getVoiceState().getChannel();
+        MessageEmbed messageEmbed = null;
+
+        if (userVoiceChannel == null) {
+            messageEmbed = EmbedGenerator.generate(user, "Tu dois être connecté", "Tu peux envoyer des commandes uniquement si tu es connecté !");
+        } else {
+            if (botVoiceChannel == null) {
+                return true;
+            }
+            String idBotVoiceChannel = botVoiceChannel.getId();
+            if (!userVoiceChannel.getId().equals(idBotVoiceChannel)) {
+                messageEmbed = EmbedGenerator.generate(user, "Bot occupé", "Le bot est déjà connecté dans un autre channel !");
+            }
+        }
+        if (messageEmbed != null) {
+            if (message != null)  {
+                message.addReaction("U+274C").queue();
+                TimerTask task = new TimerTask() {
+                    public void run() {
+                        message.delete().queue();
+                    }
+                };
+                Timer timer = new Timer("Timer");
+                long delay = 1000L;
+                timer.schedule(task, delay);
+            }
+            PrivateChannel pc = user.openPrivateChannel().complete();
+            pc.sendMessageEmbeds(messageEmbed).queue();
+            return false;
+        }
+        return true;
+    }
+
     private void onButtonClicked(ButtonClickEvent event) {
         User user = event.getUser();
         Guild guild = event.getGuild();
         TextChannel textChannel = event.getTextChannel();
-        event.deferEdit().queue();
+
+        VoiceChannel voiceChannel = guild.getMember(user).getVoiceState().getChannel();
+
+        if (!canSendCommand(voiceChannel, guild, user, null)) {
+            return;
+        } else {
+            event.deferEdit().queue();
+        }
         switch (event.getComponentId()) {
             case "skip" :
                 commandsMusic.skipExec(user, guild, textChannel);

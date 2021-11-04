@@ -93,6 +93,7 @@ public class CommandsMusic {
                 manager.getPlayer(guild).getPlayerMessage().newMessage("Play","Tu dois être co sur un channel vocal pour demander ça.", user, false, textChannel);
                 return;
             }
+            // Verification que l'utilisateur soit dans le même chan
             if (!voiceChannel.getId().equals(guild.getMember(Inicium.getJda().getSelfUser()).getVoiceState().getChannel().getId())) {
                 try {
                     guild.getAudioManager().openAudioConnection(voiceChannel);
@@ -122,7 +123,6 @@ public class CommandsMusic {
 
     public void disconnectExec(User user, Guild guild, TextChannel textChannel) {
         if(!guild.getAudioManager().isConnected()) {
-            manager.getPlayer(guild).getPlayerMessage().newMessage("Disconnect","Je ne suis déjà pas là ...", user, false, textChannel);
             return;
         }
         MusicPlayer player = manager.getPlayer(guild);
