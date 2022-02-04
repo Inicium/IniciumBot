@@ -5,8 +5,9 @@ import fr.fonkio.inicium.Utils;
 import fr.fonkio.message.MusicPlayer;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.api.interactions.components.Component;
+import net.dv8tion.jda.api.interactions.components.ItemComponent;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 
 import java.awt.*;
@@ -21,8 +22,8 @@ public class PlayerMessage {
     private String command;
     private String message;
     private boolean afficherQueue;
-    private MusicPlayer musicPlayer;
-    private Timer timer = new Timer("timerUpdate");
+    private final MusicPlayer musicPlayer;
+    private final Timer timer = new Timer("timerUpdate");
     private TimerTask timerTask;
 
     private static final long DELAY  = 5000L;
@@ -117,7 +118,7 @@ public class PlayerMessage {
             message.setActionRow(Button.success("done", "Terminé !").asDisabled());
             return message;
         }
-        List<Component> buttons = new ArrayList<>();
+        List<ItemComponent> buttons = new ArrayList<>();
 
         if (musicPlayer.isPause()) {
             buttons.add(Button.success("resume", "▶ Play"));
@@ -139,7 +140,7 @@ public class PlayerMessage {
     }
 
     public MessageAction addTrackEndButtons(MessageAction message) {
-        List<Component> buttons = new ArrayList<>();
+        List<ItemComponent> buttons = new ArrayList<>();
         buttons.add(Button.success("done", "Terminé !").asDisabled());
         buttons.add(Button.danger("disconnect", "\uD83D\uDEAA Déconnecter"));
         message.setActionRow(buttons);

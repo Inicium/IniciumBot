@@ -4,10 +4,7 @@ import fr.fonkio.inicium.Inicium;
 import fr.fonkio.music.MusicManager;
 import fr.fonkio.message.MusicPlayer;
 import fr.fonkio.music.YoutubeSearch;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.entities.VoiceChannel;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -74,7 +71,7 @@ public class CommandsMusic {
         if (guild == null) {
             return;
         }
-        VoiceChannel voiceChannel = guild.getMember(user).getVoiceState().getChannel();
+        AudioChannel voiceChannel = guild.getMember(user).getVoiceState().getChannel();
         if (!guild.getAudioManager().isConnected()) {
 
             if (voiceChannel == null) {

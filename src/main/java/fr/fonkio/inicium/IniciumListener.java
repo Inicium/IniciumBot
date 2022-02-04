@@ -13,7 +13,7 @@ import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMoveEvent;
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.user.update.UserUpdateOnlineStatusEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
@@ -47,8 +47,8 @@ public class IniciumListener implements EventListener {
             onMove((GuildVoiceMoveEvent)event);
         } else if (event instanceof GuildVoiceLeaveEvent) {
             onDisconnect((GuildVoiceLeaveEvent)event);
-        } else if (event instanceof ButtonClickEvent) {
-            onButtonClicked((ButtonClickEvent)event);
+        } else if (event instanceof ButtonInteractionEvent) {
+            onButtonClicked((ButtonInteractionEvent) event);
         } else if (event instanceof GuildJoinEvent) {
             onServerJoin((GuildJoinEvent)event);
         } else if (event instanceof UserUpdateOnlineStatusEvent) {
@@ -56,7 +56,7 @@ public class IniciumListener implements EventListener {
         }
     }
 
-    private Map<Guild, Map<Member, VoiceChannel>> ancienChannel = new HashMap<>();
+    private final Map<Guild, Map<Member, AudioChannel>> ancienChannel = new HashMap<>();
 
     private void onUserStatusChange(UserUpdateOnlineStatusEvent event) {
         Guild guild = event.getGuild();
@@ -65,37 +65,35 @@ public class IniciumListener implements EventListener {
         }
         Member member = event.getMember();
         VoiceChannel afkChannel = guild.getAfkChannel();
-        if (afkChannel != null) {
-            switch (event.getNewValue()) {
-                case IDLE:
-                    if (!ancienChannel.containsKey(guild)) {
-                        ancienChannel.put(guild, new HashMap<>());
-                    }
-                    Map<Member, VoiceChannel> ancienChannelGuild = ancienChannel.get(guild);
-                    GuildVoiceState guildVoiceState = member.getVoiceState();
-                    if (guildVoiceState != null) {
-                        ancienChannelGuild.put(member, guildVoiceState.getChannel());
-                        guild.moveVoiceMember(member, afkChannel).queue();
-                    }
-                    break;
-                case ONLINE:
-                    if (event.getOldValue().equals(OnlineStatus.IDLE)) {
-                        if (ancienChannel.containsKey(guild)) {
-                            Map<Member, VoiceChannel> ancienChannelGuild1 = ancienChannel.get(guild);
-                            GuildVoiceState guildVoiceState1 = member.getVoiceState();
-                            if (guildVoiceState1 != null) {
-                                VoiceChannel voiceChannel = guildVoiceState1.getChannel();
-                                if (voiceChannel != null && voiceChannel.equals(afkChannel)) {
-                                    guild.moveVoiceMember(member, ancienChannelGuild1.get(member)).queue();
+        GuildVoiceState guildVoiceState = member.getVoiceState();
+        if (guildVoiceState != null) {
+            AudioChannel audioChannel = guildVoiceState.getChannel();
+            if (audioChannel != null) {
+                if (afkChannel != null) {
+                    switch (event.getNewValue()) {
+                        case IDLE:
+                            if (!ancienChannel.containsKey(guild)) {
+                                ancienChannel.put(guild, new HashMap<>());
+                            }
+                            Map<Member, AudioChannel> ancienChannelGuild = ancienChannel.get(guild);
+                            ancienChannelGuild.put(member, audioChannel);
+                            guild.moveVoiceMember(member, afkChannel).queue();
+                            break;
+                        case ONLINE:
+                            if (event.getOldValue().equals(OnlineStatus.IDLE)) {
+                                if (ancienChannel.containsKey(guild)) {
+                                    Map<Member, AudioChannel> ancienChannelGuild1 = ancienChannel.get(guild);
+                                    if (audioChannel.equals(afkChannel)) {
+                                        guild.moveVoiceMember(member, ancienChannelGuild1.get(member)).queue();
+                                    }
                                 }
                             }
-                        }
+                            break;
                     }
-                    break;
+                }
             }
-
-
         }
+
 
     }
 
@@ -158,27 +156,33 @@ public class IniciumListener implements EventListener {
         if (guildVoiceState == null) {
             return;
         }
-        VoiceChannel voiceChannel = member.getVoiceState().getChannel();
+        AudioChannel voiceChannel = member.getVoiceState().getChannel();
 
         String args;
         switch (command) {
             case "play":
                 if (canSendCommand(voiceChannel, guild, user, message)) {
-                    args = commandAndArgs.substring(5);
-                    commandsMusic.playExec(guild, textChannel, user, args);
+                    if (commandAndArgs.length() > 5) {
+                        args = commandAndArgs.substring(5);
+                        commandsMusic.playExec(guild, textChannel, user, args);
+                    }
                 }
                 break;
             case "p":
                 if (canSendCommand(voiceChannel, guild, user, message)) {
-                    args = commandAndArgs.substring(2);
-                    commandsMusic.playExec(guild, textChannel, user, args);
+                    if (commandAndArgs.length() > 2) {
+                        args = commandAndArgs.substring(2);
+                        commandsMusic.playExec(guild, textChannel, user, args);
+                    }
                 }
                 break;
             case "ps":
                 if (canSendCommand(voiceChannel, guild, user, message)) {
-                    args = commandAndArgs.substring(3);
-                    commandsMusic.skipExec(user, guild, textChannel);
-                    commandsMusic.playExec(guild, textChannel, user, args);
+                    if (commandAndArgs.length() > 3) {
+                        args = commandAndArgs.substring(3);
+                        commandsMusic.skipExec(user, guild, textChannel);
+                        commandsMusic.playExec(guild, textChannel, user, args);
+                    }
                 }
                 break;
             case "skip":
@@ -199,8 +203,10 @@ public class IniciumListener implements EventListener {
                 break;
             case "seek":
                 if (canSendCommand(voiceChannel, guild, user, message)) {
-                    args = commandAndArgs.substring(5);
-                    commandsMusic.seekExec(user, guild, textChannel, args);
+                    if (commandAndArgs.length() > 5) {
+                        args = commandAndArgs.substring(5);
+                        commandsMusic.seekExec(user, guild, textChannel, args);
+                    }
                 }
                 break;
             case "leave":
@@ -228,16 +234,28 @@ public class IniciumListener implements EventListener {
                 generalCommands.help(guild, message, user);
                 break;
             case "blacklist":
-                args = commandAndArgs.substring(10);
-                generalCommands.blacklistExec(user, guild, message, args);
+                if (commandAndArgs.length() > 5) {
+                    args = commandAndArgs.substring(10);
+                    generalCommands.blacklistExec(user, guild, message, args);
+                } else {
+                    generalCommands.blacklistExec(user, guild, message, "help");
+                }
                 break;
             case "welcome":
-                args = commandAndArgs.substring(8);
-                generalCommands.welcomeExec(user, guild, message, args);
+                if (commandAndArgs.length() > 8) {
+                    args = commandAndArgs.substring(8);
+                    generalCommands.welcomeExec(user, guild, message, args);
+                } else {
+                    generalCommands.welcomeExec(user, guild, message, "help");
+                }
                 break;
             case "goodbye":
-                args = commandAndArgs.substring(8);
-                generalCommands.goodbyeExec(user, guild, message, args);
+                if (commandAndArgs.length() > 8) {
+                    args = commandAndArgs.substring(8);
+                    generalCommands.goodbyeExec(user, guild, message, args);
+                } else {
+                    generalCommands.goodbyeExec(user, guild, message, "help");
+                }
                 break;
             case "prefix":
                 args = commandAndArgs;
@@ -246,12 +264,12 @@ public class IniciumListener implements EventListener {
         }
     }
 
-    private boolean canSendCommand(VoiceChannel userVoiceChannel, Guild guild, User user, Message message) {
+    private boolean canSendCommand(AudioChannel userVoiceChannel, Guild guild, User user, Message message) {
         Member self = guild.getMember(Inicium.getJda().getSelfUser());
         if (self != null) {
             GuildVoiceState guildVoiceState = self.getVoiceState();
             if (guildVoiceState != null) {
-                VoiceChannel botVoiceChannel = guildVoiceState.getChannel();
+                AudioChannel botVoiceChannel = guildVoiceState.getChannel();
                 MessageEmbed messageEmbed = null;
 
                 if (userVoiceChannel == null) {
@@ -263,6 +281,8 @@ public class IniciumListener implements EventListener {
                     String idBotVoiceChannel = botVoiceChannel.getId();
                     if (!userVoiceChannel.getId().equals(idBotVoiceChannel)) {
                         messageEmbed = EmbedGenerator.generate(user, "Bot occupé", "Le bot est déjà connecté dans un autre channel !");
+                    } else {
+                        return true;
                     }
                 }
                 if (messageEmbed != null) { // Une des condition n'a pas été validée
@@ -286,7 +306,7 @@ public class IniciumListener implements EventListener {
         return false;
     }
 
-    private void onButtonClicked(ButtonClickEvent event) {
+    private void onButtonClicked(ButtonInteractionEvent event) {
         User user = event.getUser();
         Guild guild = event.getGuild();
         TextChannel textChannel = event.getTextChannel();
@@ -295,7 +315,7 @@ public class IniciumListener implements EventListener {
             if (member != null) {
                 GuildVoiceState guildVoiceState = member.getVoiceState();
                 if (guildVoiceState != null) {
-                    VoiceChannel voiceChannel = guildVoiceState.getChannel();
+                    AudioChannel voiceChannel = guildVoiceState.getChannel();
                     if (!canSendCommand(voiceChannel, guild, user, null)) {
                         return;
                     } else {
@@ -331,7 +351,7 @@ public class IniciumListener implements EventListener {
         checkLeaveIfChannelEmpty(event.getGuild(), event.getChannelLeft());
     }
 
-    private void checkLeaveIfChannelEmpty(Guild guild, VoiceChannel voiceChannel) {
+    private void checkLeaveIfChannelEmpty(Guild guild, AudioChannel voiceChannel) {
         if(!guild.getAudioManager().isConnected()) {
             return;
         }
@@ -347,7 +367,7 @@ public class IniciumListener implements EventListener {
         Guild guild = event.getGuild();
         String idTC = Inicium.CONFIGURATION.getGuildConfig(guild.getId(), ConfigurationEnum.QUIT_CHANNEL);
         if (!idTC.equals("")) {
-            if(guild.getSelfMember().hasPermission(Permission.MESSAGE_WRITE)) {
+            if(guild.getSelfMember().hasPermission(Permission.MESSAGE_SEND)) {
                 TextChannel tc = guild.getTextChannelById(idTC);
                 if (tc != null) {
                     tc.sendMessageEmbeds(EmbedGenerator.generate(event.getUser(), "Leave", event.getUser().getName()+" a quitté le serveur "+guild.getName()+".")).queue();
@@ -359,7 +379,7 @@ public class IniciumListener implements EventListener {
         Guild guild = event.getGuild();
         String idTC = Inicium.CONFIGURATION.getGuildConfig(guild.getId(), ConfigurationEnum.WELCOME_CHANNEL);
         if (!idTC.equals("")) {
-            if (guild.getSelfMember().hasPermission(Permission.MESSAGE_WRITE)) {
+            if (guild.getSelfMember().hasPermission(Permission.MESSAGE_SEND)) {
                 TextChannel tc = guild.getTextChannelById(idTC);
                 if (tc != null) {
                     tc.sendMessageEmbeds(EmbedGenerator.generate(event.getUser(), "Bienvenue !", event.getUser().getAsMention() + " a rejoint le serveur "+guild.getName()+".")).queue((message -> message.addReaction("👋").queue()));

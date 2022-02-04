@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.exceptions.RateLimitedException;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import org.jetbrains.annotations.NotNull;
 
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
@@ -30,8 +31,7 @@ public class Inicium {
 
     public static void main(String[] args) throws LoginException {
         System.out.println("Demarrage du bot ...");
-        Set<GatewayIntent> intents = new HashSet<>();
-        intents.addAll(EnumSet.allOf(GatewayIntent.class));
+        Set<GatewayIntent> intents = new HashSet<>(EnumSet.allOf(GatewayIntent.class));
         jda = JDABuilder.create(CONFIGURATION.getToken(),intents).setAutoReconnect(true).build();
         CONFIGURATION.save();
         IniciumListener iniciumListener = new IniciumListener();
@@ -46,15 +46,15 @@ public class Inicium {
                 return null;
             }
             @Override
-            public ActivityType getType() {
-                return ActivityType.DEFAULT;
+            public @NotNull ActivityType getType() {
+                return ActivityType.LISTENING;
             }
             @Override
             public Timestamps getTimestamps() {
                 return new Timestamps(System.currentTimeMillis(), System.currentTimeMillis()+10000000L);
             }
             @Override
-            public String getName() {
+            public @NotNull String getName() {
                 return "IniciumBot \uD83C\uDF0C                                                                                 \nCréé par Fonkio";
             }
             @Override
@@ -72,7 +72,7 @@ public class Inicium {
 
     }
 
-    public Inicium() throws LoginException, IllegalArgumentException {
+    public Inicium() throws IllegalArgumentException {
 
     }
 

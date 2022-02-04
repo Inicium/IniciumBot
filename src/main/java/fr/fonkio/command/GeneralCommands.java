@@ -31,7 +31,7 @@ public class GeneralCommands {
                 blacklist(guild, message, author);
                 break;
             default:
-                message.reply(
+                message.replyEmbeds(
                         EmbedGenerator.generate(author, "blacklist", "La commande s'utilise de la manière suivante :\n"+Inicium.CONFIGURATION.getGuildConfig(guild.getId(), ConfigurationEnum.PREFIX_COMMAND)+"blacklist (add/remove/list) [idChannel]")
                 ).queue();
         }
@@ -48,7 +48,7 @@ public class GeneralCommands {
                 delWelcomeChannel(guild, message, author);
                 break;
             default:
-                message.reply(
+                message.replyEmbeds(
                         EmbedGenerator.generate(author, "welcome", "La commande s'utilise de la manière suivante :\n"+Inicium.CONFIGURATION.getGuildConfig(guild.getId(), ConfigurationEnum.PREFIX_COMMAND)+"welcome (set/remove) [idChannel]")
                 ).queue();
         }
@@ -65,7 +65,7 @@ public class GeneralCommands {
                 delQuitChannel(guild, message, author);
                 break;
             default:
-                message.reply(
+                message.replyEmbeds(
                         EmbedGenerator.generate(author, "goodbye", "La commande s'utilise de la manière suivante :\n"+Inicium.CONFIGURATION.getGuildConfig(guild.getId(), ConfigurationEnum.PREFIX_COMMAND)+"goodbye (set/remove) [idChannel]")
                 ).queue();
         }
@@ -183,9 +183,9 @@ public class GeneralCommands {
         replyEmbed(message, user, "welcome set", "Les messages de join seront postés sur "+guild.getTextChannelById(id));
     }
 
-    private void replyEmbed(Message message, User user, String permission, String s) {
-        message.reply(
-                EmbedGenerator.generate(user, permission, s)
+    private void replyEmbed(Message messageToReply, User user, String title, String reply) {
+        messageToReply.replyEmbeds(
+                EmbedGenerator.generate(user, title, reply)
         ).queue();
     }
 
