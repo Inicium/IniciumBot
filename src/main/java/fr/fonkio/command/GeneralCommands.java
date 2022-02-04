@@ -2,6 +2,7 @@ package fr.fonkio.command;
 
 import fr.fonkio.inicium.Inicium;
 import fr.fonkio.message.EmbedGenerator;
+import fr.fonkio.utils.ConfigurationEnum;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
@@ -12,7 +13,7 @@ import org.json.JSONArray;
 
 import java.awt.*;
 
-public class CommandsGeneral {
+public class GeneralCommands {
 
 
 
@@ -31,7 +32,7 @@ public class CommandsGeneral {
                 break;
             default:
                 message.reply(
-                        EmbedGenerator.generate(author, "blacklist", "La commande s'utilise de la manière suivante :\n"+Inicium.CONFIGURATION.getPrefix(guild.getId())+"blacklist (add/remove/list) [idChannel]")
+                        EmbedGenerator.generate(author, "blacklist", "La commande s'utilise de la manière suivante :\n"+Inicium.CONFIGURATION.getGuildConfig(guild.getId(), ConfigurationEnum.PREFIX_COMMAND)+"blacklist (add/remove/list) [idChannel]")
                 ).queue();
         }
     }
@@ -48,7 +49,7 @@ public class CommandsGeneral {
                 break;
             default:
                 message.reply(
-                        EmbedGenerator.generate(author, "welcome", "La commande s'utilise de la manière suivante :\n"+Inicium.CONFIGURATION.getPrefix(guild.getId())+"welcome (set/remove) [idChannel]")
+                        EmbedGenerator.generate(author, "welcome", "La commande s'utilise de la manière suivante :\n"+Inicium.CONFIGURATION.getGuildConfig(guild.getId(), ConfigurationEnum.PREFIX_COMMAND)+"welcome (set/remove) [idChannel]")
                 ).queue();
         }
     }
@@ -65,7 +66,7 @@ public class CommandsGeneral {
                 break;
             default:
                 message.reply(
-                        EmbedGenerator.generate(author, "goodbye", "La commande s'utilise de la manière suivante :\n"+Inicium.CONFIGURATION.getPrefix(guild.getId())+"goodbye (set/remove) [idChannel]")
+                        EmbedGenerator.generate(author, "goodbye", "La commande s'utilise de la manière suivante :\n"+Inicium.CONFIGURATION.getGuildConfig(guild.getId(), ConfigurationEnum.PREFIX_COMMAND)+"goodbye (set/remove) [idChannel]")
                 ).queue();
         }
     }
@@ -160,7 +161,7 @@ public class CommandsGeneral {
             replyEmbed(message, user, "goodbye set échec", "Channel introuvable ! Vous devez entrer l'ID du channel :\nhttps://support.discord.com/hc/fr/articles/206346498-Où-trouver-l-ID-de-mon-compte-utilisateur-serveur-message-");
             return;
         }
-        Inicium.CONFIGURATION.setQuit(guild.getId(), id);
+        Inicium.CONFIGURATION.setGuildConfig(guild.getId(), ConfigurationEnum.QUIT_CHANNEL, id);
         replyEmbed(message, user, "goodbye set", "Les messages de leave seront postés sur "+guild.getTextChannelById(id));
     }
 
@@ -178,7 +179,7 @@ public class CommandsGeneral {
             replyEmbed(message, user, "welcome set échec", "Channel introuvable ! Vous devez entrer l'ID du channel :\nhttps://support.discord.com/hc/fr/articles/206346498-Où-trouver-l-ID-de-mon-compte-utilisateur-serveur-message-");
             return;
         }
-        Inicium.CONFIGURATION.setWelcome(guild.getId(), id);
+        Inicium.CONFIGURATION.setGuildConfig(guild.getId(), ConfigurationEnum.WELCOME_CHANNEL, id);
         replyEmbed(message, user, "welcome set", "Les messages de join seront postés sur "+guild.getTextChannelById(id));
     }
 
@@ -201,9 +202,9 @@ public class CommandsGeneral {
             replyEmbed(message, user, "Prefix échec", "Le prefix doit avoir une taille comprise entre 1 et 5 caractères ");
             return;
         }
-        Inicium.CONFIGURATION.setPrefix(guild.getId(), prefix);
-        message.reply(
-                EmbedGenerator.generate(user, "Prefix", "Le nouveau prefix est ``"+prefix+"``")
+        Inicium.CONFIGURATION.setGuildConfig(guild.getId(), ConfigurationEnum.PREFIX_COMMAND, prefix);
+        message.replyEmbeds(
+                EmbedGenerator.generate(user, "Prefix", "Le nouveau prefix est ``" + prefix + "``")
         ).queue();
     }
 
@@ -215,7 +216,7 @@ public class CommandsGeneral {
             permissionCheck(message, user);
             return;
         }
-        Inicium.CONFIGURATION.setQuit(guild.getId(), "");
+        Inicium.CONFIGURATION.setGuildConfig(guild.getId(), ConfigurationEnum.QUIT_CHANNEL, "");
         replyEmbed(message, user, "goodbye remove", "Les messages de leave ne seront plus postés");
     }
 
@@ -227,7 +228,7 @@ public class CommandsGeneral {
             permissionCheck(message, user);
             return;
         }
-        Inicium.CONFIGURATION.setWelcome(guild.getId(), "");
+        Inicium.CONFIGURATION.setGuildConfig(guild.getId(), ConfigurationEnum.WELCOME_CHANNEL, "");
         replyEmbed(message, user, "welcome remove", "Les messages de join sont désormais désactivés");
     }
 
@@ -238,7 +239,7 @@ public class CommandsGeneral {
         EmbedBuilder eb = new EmbedBuilder();
         eb.setAuthor(user.getName(), null, user.getAvatarUrl());
         eb.setTitle("Liste des commandes");
-        String prefix = Inicium.CONFIGURATION.getPrefix(guild.getId());
+        String prefix = Inicium.CONFIGURATION.getGuildConfig(guild.getId(), ConfigurationEnum.PREFIX_COMMAND);
         eb.addBlankField(false);
         eb.addField(prefix+"play [Lien/RechercheYT], "+prefix+"p [...]", "Jouer une musique/video sur le channel vocal (YouTube, Twitch, SoundCloud, ...), ajoute à la file d'attente si une piste est en cours", false);
         eb.addField(prefix+"skip, "+prefix+"s", "Passe à la piste suivante", true);
@@ -255,7 +256,7 @@ public class CommandsGeneral {
         eb.setColor(Color.GREEN);
         eb.setImage("https://cdn.discordapp.com/attachments/297407304871968768/854394142761943060/unknown.png");
         eb.setAuthor(user.getName(), null, user.getAvatarUrl());
-        message.reply(
+        message.replyEmbeds(
                 eb.build()
         ).queue();
     }
@@ -270,7 +271,7 @@ public class CommandsGeneral {
         }
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Liste des commandes");
-        String prefix = Inicium.CONFIGURATION.getPrefix(guild.getId());
+        String prefix = Inicium.CONFIGURATION.getGuildConfig(guild.getId(), ConfigurationEnum.PREFIX_COMMAND);
         eb.addBlankField(false);
         eb.addField(prefix+"welcome help", "Définir un channel pour l'affichage d'un message de bienvenue", false);
         eb.addField(prefix+"goodbye help", "Définir un channel pour l'affichage d'un message lors d'un départ", false);
@@ -278,7 +279,7 @@ public class CommandsGeneral {
         eb.addField(prefix+"prefix [nouveau-prefix]", "Change le prefix pour les commandes (Entre 1 et 5 caractères)", false);
         eb.setColor(Color.GREEN);
         eb.setAuthor(user.getName(), null, user.getAvatarUrl());
-        message.reply(
+        message.replyEmbeds(
                 eb.build()
         ).queue();
     }
