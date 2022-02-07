@@ -232,6 +232,43 @@ public class GeneralCommands {
         replyEmbed(message, user, "welcome remove", "Les messages de join sont désormais désactivés");
     }
 
+
+    public void setAutoAfk(Guild guild, Message message, User user, String args) {
+        if (guild == null) {
+            return;
+        }
+        if (!guild.getMember(user).hasPermission(Permission.ADMINISTRATOR)) {
+            permissionCheck(message, user);
+            return;
+        }
+        String value = args.replaceFirst("autoafk ", "");
+        String replyMessage;
+        switch (value.toLowerCase()) {
+            case "on":
+            case "enable":
+            case "true":
+                Inicium.CONFIGURATION.setGuildConfig(guild.getId(), ConfigurationEnum.MOVE_AFK, "true");
+                replyMessage = "Le déplacement des pesonnes AFK est activé";
+                break;
+            case "off":
+            case "disable":
+            case "false":
+                Inicium.CONFIGURATION.setGuildConfig(guild.getId(), ConfigurationEnum.MOVE_AFK, "false");
+                replyMessage = "Le déplacement des pesonnes AFK est désactivé";
+                break;
+            default:
+                replyMessage = "La commande s'utilise de la manière suivante :\n"+Inicium.CONFIGURATION.getGuildConfig(guild.getId(), ConfigurationEnum.PREFIX_COMMAND)+"autoafk (enable/disable/true/false/on/off)\nActuellement, le déplacement automatique des personnes AFK est ";
+                if ("false".equals(Inicium.CONFIGURATION.getGuildConfig(guild.getId(), ConfigurationEnum.MOVE_AFK))) {
+                    replyMessage += "désactivé";
+                } else {
+                    replyMessage += "activé";
+                }
+        }
+        message.replyEmbeds(
+                EmbedGenerator.generate(user, "Auto AFK move", replyMessage)
+        ).queue();
+    }
+
     public void help(Guild guild, Message message, User user) {
         if (guild == null) {
             return;
@@ -247,7 +284,7 @@ public class GeneralCommands {
         eb.addField(prefix+"resume", "Reprendre", true);
         eb.addField(prefix+"ps [Lien/RechercheYT]", "Passe à la piste suivante et ajoute la musique à la file", false);
         eb.addField(prefix+"seek [Temps]", "Avance la piste au temps demandé (Ex pour 5min 38sec ``"+prefix+"seek 5:38``)", false);
-        eb.addField(prefix+"leave, "+prefix+"quit, "+prefix+"disconnect, "+prefix+"disconnect", "Deconnexion du bot", false);
+        eb.addField(prefix+"leave, "+prefix+"quit, "+prefix+"disconnect, "+prefix+"dc", "Deconnexion du bot", false);
         eb.addField(prefix+"clear, "+prefix+"clean, "+prefix+"clr", "Effacer la liste d'attente", true);
         eb.addField(prefix+"queue, "+prefix+"np", "Affiche la file des pistes", true);
         eb.addBlankField(false);
@@ -276,7 +313,9 @@ public class GeneralCommands {
         eb.addField(prefix+"welcome help", "Définir un channel pour l'affichage d'un message de bienvenue", false);
         eb.addField(prefix+"goodbye help", "Définir un channel pour l'affichage d'un message lors d'un départ", false);
         eb.addField(prefix+"blacklist help", "Info gestion de la blacklist (Channel ou l'on ne peut pas executer de commande)", false);
+        eb.addField(prefix+"autoafk help", "Info gestion déplacement automatique des personnes AFK", false);
         eb.addField(prefix+"prefix [nouveau-prefix]", "Change le prefix pour les commandes (Entre 1 et 5 caractères)", false);
+
         eb.setColor(Color.GREEN);
         eb.setAuthor(user.getName(), null, user.getAvatarUrl());
         message.replyEmbeds(

@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMoveEvent;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceSelfDeafenEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.user.update.UserUpdateOnlineStatusEvent;
@@ -53,6 +54,28 @@ public class IniciumListener implements EventListener {
             onServerJoin((GuildJoinEvent)event);
         } else if (event instanceof UserUpdateOnlineStatusEvent) {
             onUserStatusChange((UserUpdateOnlineStatusEvent)event);
+        } else if (event instanceof GuildVoiceSelfDeafenEvent){
+            onDeafen((GuildVoiceSelfDeafenEvent)event);
+        }
+    }
+
+    private void onDeafen(GuildVoiceSelfDeafenEvent event) {
+        if (!event.isSelfDeafened()) {
+            GuildVoiceState guildVoiceState = event.getMember().getVoiceState();
+            if (guildVoiceState!= null  ) {
+                AudioChannel audioChannel = guildVoiceState.getChannel();
+                Guild guild = event.getGuild();
+                AudioChannel afkChannel = guild.getAfkChannel();
+                Member member = event.getMember();
+                if (audioChannel != null && audioChannel.equals(afkChannel)) {
+                    if (ancienChannel.containsKey(guild)) {
+                        Map<Member, AudioChannel> ancienChannelGuild = ancienChannel.get(guild);
+                        if (audioChannel.equals(afkChannel)) {
+                            guild.moveVoiceMember(member, ancienChannelGuild.get(member)).queue();
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -69,23 +92,18 @@ public class IniciumListener implements EventListener {
         if (guildVoiceState != null) {
             AudioChannel audioChannel = guildVoiceState.getChannel();
             if (audioChannel != null) {
-                if (afkChannel != null) {
+                if (audioChannel.equals(afkChannel)) {
                     switch (event.getNewValue()) {
                         case IDLE:
-                            if (!ancienChannel.containsKey(guild)) {
-                                ancienChannel.put(guild, new HashMap<>());
-                            }
-                            Map<Member, AudioChannel> ancienChannelGuild = ancienChannel.get(guild);
-                            ancienChannelGuild.put(member, audioChannel);
-                            guild.moveVoiceMember(member, afkChannel).queue();
                             break;
                         case ONLINE:
                             if (event.getOldValue().equals(OnlineStatus.IDLE)) {
+                                if (guildVoiceState.isSelfDeafened()) {
+                                    return;
+                                }
                                 if (ancienChannel.containsKey(guild)) {
                                     Map<Member, AudioChannel> ancienChannelGuild1 = ancienChannel.get(guild);
-                                    if (audioChannel.equals(afkChannel)) {
-                                        guild.moveVoiceMember(member, ancienChannelGuild1.get(member)).queue();
-                                    }
+                                    guild.moveVoiceMember(member, ancienChannelGuild1.get(member)).queue();
                                 }
                             }
                             break;
@@ -261,6 +279,10 @@ public class IniciumListener implements EventListener {
                 args = commandAndArgs;
                 generalCommands.setPrefix(guild, message, user, args);
                 break;
+            case "autoafk":
+                args = commandAndArgs;
+                generalCommands.setAutoAfk(guild, message, user, args);
+                break;
         }
     }
 
@@ -348,7 +370,17 @@ public class IniciumListener implements EventListener {
     }
 
     private void onMove(GuildVoiceMoveEvent event) {
-        checkLeaveIfChannelEmpty(event.getGuild(), event.getChannelLeft());
+        Guild guild = event.getGuild();
+        checkLeaveIfChannelEmpty(guild, event.getChannelLeft());
+        AudioChannel afkChannel = guild.getAfkChannel();
+        if(event.getChannelJoined().equals(afkChannel)) {
+            Member member = event.getMember();
+            if (!ancienChannel.containsKey(guild)) {
+                ancienChannel.put(guild, new HashMap<>());
+            }
+            Map<Member, AudioChannel> ancienChannelGuild = ancienChannel.get(guild);
+            ancienChannelGuild.put(member, event.getChannelLeft());
+        }
     }
 
     private void checkLeaveIfChannelEmpty(Guild guild, AudioChannel voiceChannel) {
