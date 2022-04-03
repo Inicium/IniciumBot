@@ -118,14 +118,7 @@ public class Inicium {
                 Commands.slash("np", "Voir la liste de lecture"),
                 Commands.slash("helpadmin", "Voir le commande administrateur"),
                 Commands.slash("help", "Voir la liste des commandes du bot musique"),
-                Commands.slash("blacklist", "Gérer la liste des channels qui interdisent l'envoi d'une commande")
-                        .addOptions(
-                                new OptionData(OptionType.STRING, "action", "Action que vous voulez effectuer", true)
-                                .addChoice("Ajouter", "add")
-                                .addChoice("Supprimer", "remove")
-                                .addChoice("Lister", "list")
-                        )
-                        .addOption(OptionType.CHANNEL, "channel", "Channel à ajouter/supprimer de la liste"),
+                Commands.slash("blacklist", "Gérer la liste des channels qui interdisent l'envoi d'une commande"),
                 Commands.slash("welcome", "Gérer le channel d'annonce des nouveaux arrivant sur le serveur"),
                 Commands.slash("goodbye", "Gérer le channel d'annonce des personnes qui quittent le serveur")
                 ).queue();

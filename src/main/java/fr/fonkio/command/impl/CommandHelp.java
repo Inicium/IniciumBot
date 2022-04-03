@@ -23,13 +23,13 @@ public class CommandHelp extends AbstractCommand {
             EmbedBuilder eb = new EmbedBuilder();
             eb.setAuthor(user.getName(), null, user.getAvatarUrl());
             eb.setTitle("Liste des commandes");
-            String prefix = Inicium.CONFIGURATION.getGuildConfig(guild.getId(), ConfigurationEnum.PREFIX_COMMAND);
+            String prefix = "/";
             eb.addBlankField(false);
-            eb.addField(prefix+"play [Lien/RechercheYT], "+prefix+"p [...]", "Jouer une musique/video sur le channel vocal (YouTube, Twitch, SoundCloud, ...), ajoute à la file d'attente si une piste est en cours", false);
+            eb.addField(prefix+"play [Musique], "+prefix+"p [...]", "Jouer une musique/video sur le channel vocal (YouTube, Twitch, SoundCloud, ...), ajoute à la file d'attente si une piste est en cours", false);
             eb.addField(prefix+"skip, "+prefix+"s", "Passe à la piste suivante", true);
             eb.addField(prefix+"pause", "Mettre en pause", true);
             eb.addField(prefix+"resume", "Reprendre", true);
-            eb.addField(prefix+"ps [Lien/RechercheYT]", "Passe à la piste suivante et ajoute la musique à la file", false);
+            eb.addField(prefix+"ps [Musique]", "Passe à la piste suivante et ajoute la musique à la file", false);
             eb.addField(prefix+"seek [Temps]", "Avance la piste au temps demandé (Ex pour 5min 38sec ``"+prefix+"seek 5:38``)", false);
             eb.addField(prefix+"leave, "+prefix+"quit, "+prefix+"disconnect, "+prefix+"dc", "Deconnexion du bot", false);
             eb.addField(prefix+"clear, "+prefix+"clean, "+prefix+"clr", "Effacer la liste d'attente", true);

@@ -30,13 +30,11 @@ public class CommandHelpadmin extends AbstractCommand {
                 }
                 EmbedBuilder eb = new EmbedBuilder();
                 eb.setTitle("Liste des commandes");
-                String prefix = Inicium.CONFIGURATION.getGuildConfig(guild.getId(), ConfigurationEnum.PREFIX_COMMAND);
+                String prefix = "/";
                 eb.addBlankField(false);
-                eb.addField(prefix+"welcome help", "Définir un channel pour l'affichage d'un message de bienvenue", false);
-                eb.addField(prefix+"goodbye help", "Définir un channel pour l'affichage d'un message lors d'un départ", false);
-                eb.addField(prefix+"blacklist help", "Info gestion de la blacklist (Channel ou l'on ne peut pas executer de commande)", false);
-                eb.addField(prefix+"autoafk help", "Info gestion déplacement automatique des personnes AFK", false);
-                eb.addField(prefix+"prefix [nouveau-prefix]", "Change le prefix pour les commandes (Entre 1 et 5 caractères)", false);
+                eb.addField(prefix+"welcome", "Définir un channel pour l'affichage d'un message de bienvenue", false);
+                eb.addField(prefix+"goodbye", "Définir un channel pour l'affichage d'un message lors d'un départ", false);
+                eb.addField(prefix+"blacklist", "Définir les channels où l'on ne peut pas executer de commande", false);
 
                 eb.setColor(Color.GREEN);
                 eb.setAuthor(user.getName(), null, user.getAvatarUrl());
