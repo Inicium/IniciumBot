@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class Configuration {
 
@@ -72,26 +73,28 @@ public class Configuration {
         return getServerConfig(guidId).getJSONArray("blacklist");
     }
 
-    public void addBlackList(String guildId, String idTextChannel) {
+    public boolean blackListContains(String guidId, String idTextChannel) {
+        JSONArray jsonArray = getBlackList(guidId);
+        for (int i = 0; i < jsonArray.length(); i++) {
+            if (idTextChannel.equals(jsonArray.getString(i))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void addBlackList(String guildId, List<String> idTextChannelList) {
         JSONArray ja = getBlackList(guildId);
-        ja.put(ja.length(), idTextChannel);
+        for (String id : idTextChannelList) {
+            ja.put(id);
+        }
         getServerConfig(guildId).put("blacklist", ja);
         save();
     }
-    public boolean delBlacklist(String guildId, String idTextChannel) {
-        JSONArray ja = getBlackList(guildId);
-        boolean trouve = false;
-        for(int i = 0; i < ja.length(); i++) {
-            if (ja.getString(i).equals(idTextChannel)) {
-                ja.remove(i);
-                trouve = true;
-            }
-        }
-        if (trouve) {
-            getServerConfig(guildId).put("blacklist", ja);
-            save();
-        }
-        return trouve;
+    public void delBlacklist(String guildId) {
+        JSONArray ja = new JSONArray();
+        getServerConfig(guildId).put("blacklist", ja);
+        save();
     }
 
     public String getGuildConfig(String guildId, ConfigurationEnum key) {

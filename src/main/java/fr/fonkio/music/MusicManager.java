@@ -11,6 +11,7 @@ import fr.fonkio.message.MusicPlayer;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.interaction.GenericInteractionCreateEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,23 +34,20 @@ public class MusicManager {
     }
 
 
-    public void loadTrack (final TextChannel channel, final String source, User author) {
-        loadTrack(channel, source, author, true);
+    public void loadTrack (final Guild guild, final String source, User author, GenericInteractionCreateEvent event) {
+        loadTrack(guild, source, author, event, true);
     }
-    public void loadTrack (final TextChannel channel, final String source, User author, boolean message) {
-        Guild guild =channel.getGuild();
+    public void loadTrack (final Guild guild, final String source, User author, GenericInteractionCreateEvent event, boolean message) {
         MusicPlayer player = getPlayer(guild);
-        channel.getGuild().getAudioManager().setSendingHandler(player.getAudioHandler());
+        guild.getAudioManager().setSendingHandler(player.getAudioHandler());
         manager.loadItemOrdered(player, source, new AudioLoadResultHandler() {
 
             @Override
             public void trackLoaded(AudioTrack track) {
-                if (!message) {
-                    player.playTrack(track);
-                    return;
-                }
                 player.playTrack(track);
-                player.getPlayerMessage().newMessage("Play", "Ajout de la piste...\n"+track.getInfo().uri+"\n ", author, true, channel);
+                if (message) {
+                    player.getPlayerMessage().newMessage("Play", "Ajout de la piste...\n"+track.getInfo().uri+"\n ", author, true, event);
+                }
             }
 
             @Override
@@ -59,12 +57,12 @@ public class MusicManager {
                     AudioTrack track = playlist.getTracks().get(i);
                     player.playTrack(track);
                 }
-                player.getPlayerMessage().newMessage("Play", "Ajout de la playlist **" + playlist.getName() + "**\n",author, true, channel);
+                player.getPlayerMessage().newMessage("Play", "Ajout de la playlist **" + playlist.getName() + "**\n",author, true, event);
             }
 
             @Override
             public void noMatches() {
-                player.getPlayerMessage().newMessage("Play", "La piste "+ source + " n'a pas été trouvée.",author, true, channel);
+                player.getPlayerMessage().newMessage("Play", "La piste "+ source + " n'a pas été trouvée.",author, true, event);
             }
 
             @Override
@@ -72,7 +70,7 @@ public class MusicManager {
                 exception.printStackTrace();
                 player.getPlayerMessage().newMessage("Play",
                         "Impossible de jouer la piste (raison:" +exception.getMessage()+")\n**SI C'EST UNE MUSIQUE ESSAYE D'AJOUTER \"LYRICS\" A TA RECHERCHE**"
-                        ,author, true, channel);
+                        ,author, true, event);
             }
         });
     }
