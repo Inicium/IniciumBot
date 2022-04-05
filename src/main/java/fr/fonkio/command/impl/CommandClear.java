@@ -10,6 +10,11 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 
 public class CommandClear extends AbstractCommand {
+
+    public CommandClear() {
+        blacklistable = true;
+    }
+
     @Override
     public boolean run(SlashCommandInteractionEvent eventSlash, ButtonInteractionEvent eventButton) {
         GenericInteractionCreateEvent event = eventSlash != null ? eventSlash : eventButton;

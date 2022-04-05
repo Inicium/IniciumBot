@@ -9,10 +9,8 @@ import fr.fonkio.utils.Configuration;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
-import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 
 import javax.security.auth.login.LoginException;
@@ -56,6 +54,7 @@ public class Inicium {
         AbstractCommand blacklist = new CommandBlacklist();
         AbstractCommand welcome = new CommandWelcomeChannel();
         AbstractCommand goodbye = new CommandGoodbyeChannel();
+        AbstractCommand moveall = new CommandMoveAll();
 
         commands.put("play", play);
         commands.put("p", play);
@@ -79,18 +78,18 @@ public class Inicium {
         commands.put("blacklist", blacklist);
         commands.put("welcome", welcome);
         commands.put("goodbye", goodbye);
+        commands.put("moveall", moveall);
+        commands.put("mva", moveall);
 
         Set<GatewayIntent> intents = new HashSet<>(EnumSet.allOf(GatewayIntent.class));
         jda = JDABuilder.create(CONFIGURATION.getToken(), intents).setAutoReconnect(true).build();
         CONFIGURATION.save();
-        //jda.addEventListener(new IniciumListener());
         jda.addEventListener(new EventButtonInteraction());
         jda.addEventListener(new EventGuildJoin());
         jda.addEventListener(new EventGuildMemberRemoveJoin());
         jda.addEventListener(new EventGuildVoiceLeave());
         jda.addEventListener(new EventSlashCommandInteraction());
         jda.addEventListener(new EventSelectMenuInteraction());
-        //jda.addEventListener(new EventMessageReceived());
         Activity act = new IniciumActivity();
         jda.getPresence().setActivity(act);
 
@@ -120,7 +119,11 @@ public class Inicium {
                 Commands.slash("help", "Voir la liste des commandes du bot musique"),
                 Commands.slash("blacklist", "Gérer la liste des channels qui interdisent l'envoi d'une commande"),
                 Commands.slash("welcome", "Gérer le channel d'annonce des nouveaux arrivant sur le serveur"),
-                Commands.slash("goodbye", "Gérer le channel d'annonce des personnes qui quittent le serveur")
+                Commands.slash("goodbye", "Gérer le channel d'annonce des personnes qui quittent le serveur"),
+                Commands.slash("mva", "Déplacer tous les utilisateurs du channel actuel")
+                        .addOption(OptionType.CHANNEL, "destination", "Channel de destination", true),
+                Commands.slash("moveall", "Déplacer tous les utilisateurs du channel actuel")
+                        .addOption(OptionType.CHANNEL, "destination", "Channel de destination", true)
                 ).queue();
 
         System.out.println("Bot connecté");

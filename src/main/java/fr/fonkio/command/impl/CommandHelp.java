@@ -12,6 +12,9 @@ import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import java.awt.*;
 
 public class CommandHelp extends AbstractCommand {
+
+
+
     @Override
     public boolean run(SlashCommandInteractionEvent eventSlash, ButtonInteractionEvent eventButton) {
         if (eventSlash == null) {
@@ -34,6 +37,7 @@ public class CommandHelp extends AbstractCommand {
             eb.addField(prefix+"leave, "+prefix+"quit, "+prefix+"disconnect, "+prefix+"dc", "Deconnexion du bot", false);
             eb.addField(prefix+"clear, "+prefix+"clean, "+prefix+"clr", "Effacer la liste d'attente", true);
             eb.addField(prefix+"queue, "+prefix+"np", "Affiche la file des pistes", true);
+            eb.addField(prefix+"moveall [Destination], "+prefix+"mva [...]", "Déplacer toutes les personnes du channel actuel dans un autre channel", false);
             eb.addBlankField(false);
             eb.addField("Boutons d'action", "Vous pouvez effectuer des actions avec les boutons d'action", false);
             eb.setFooter("Pour voir les commandes admin : " + prefix+"helpadmin");
@@ -43,7 +47,7 @@ public class CommandHelp extends AbstractCommand {
 
             eventSlash.replyEmbeds(
                     eb.build()
-            ).queue();
+            ).setEphemeral(true).queue();
         }
         return true;
     }

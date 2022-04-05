@@ -13,6 +13,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class CommandDisconnect extends AbstractCommand {
+
+    public CommandDisconnect() {
+        blacklistable = true;
+    }
+
     @Override
     public boolean run(SlashCommandInteractionEvent eventSlash, ButtonInteractionEvent eventButton) {
 

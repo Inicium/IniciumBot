@@ -40,7 +40,7 @@ public class CommandHelpadmin extends AbstractCommand {
                 eb.setAuthor(user.getName(), null, user.getAvatarUrl());
                 eventSlash.replyEmbeds(
                         eb.build()
-                ).queue();
+                ).setEphemeral(true).queue();
 
             }
         }

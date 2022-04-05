@@ -10,6 +10,11 @@ import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
 public class CommandPlay extends AbstractCommand {
+
+    public CommandPlay() {
+        blacklistable = true;
+    }
+
     @Override
     public boolean run(SlashCommandInteractionEvent eventSlash, ButtonInteractionEvent eventButton) {
         if (eventSlash == null) {

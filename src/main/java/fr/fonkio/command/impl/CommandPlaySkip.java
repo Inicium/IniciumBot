@@ -12,6 +12,10 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
 public class CommandPlaySkip extends AbstractCommand {
 
+    public CommandPlaySkip() {
+        blacklistable = true;
+    }
+
     @Override
     public boolean run(SlashCommandInteractionEvent eventSlash, ButtonInteractionEvent eventButton) {
         if (eventSlash == null) {

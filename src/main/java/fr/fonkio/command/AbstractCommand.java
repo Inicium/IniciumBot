@@ -19,6 +19,8 @@ public abstract class AbstractCommand {
 
     public abstract boolean run(SlashCommandInteractionEvent event, ButtonInteractionEvent eventButton);
 
+    protected boolean blacklistable;
+
     public boolean canNotSendCommand(User user, Guild guild, GenericInteractionCreateEvent event) {
         Member member = guild.getMember(user);
         if (member == null) {
@@ -63,7 +65,7 @@ public abstract class AbstractCommand {
     protected List<SelectOption> getSelectOptionsChannelList(Guild guild, ConfigurationEnum configurationEnum) {
         List<SelectOption> optionList = new ArrayList<>();
         for (TextChannel tc : guild.getTextChannels()) {
-            boolean defaultValue = false;
+            boolean defaultValue;
             if (configurationEnum != null) {
                 defaultValue = tc.getId().equals(Inicium.CONFIGURATION.getGuildConfig(guild.getId(), configurationEnum));
             } else {
@@ -79,12 +81,12 @@ public abstract class AbstractCommand {
     }
 
     protected void permissionCheck(SlashCommandInteractionEvent event, User user) {
-        replyEmbed(event, user, "Permission", "Vous n'êtes pas administrateur de ce serveur");
+        event.replyEmbeds(
+                EmbedGenerator.generate(user, "Permission", "Vous n'êtes pas administrateur de ce serveur")
+        ).setEphemeral(true).queue();
     }
 
-    protected void replyEmbed(SlashCommandInteractionEvent event, User user, String title, String reply) {
-        event.replyEmbeds(
-                EmbedGenerator.generate(user, title, reply)
-        ).queue();
+    public boolean isBlacklistable() {
+        return blacklistable;
     }
 }

@@ -10,6 +10,10 @@ import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 
 public class CommandResume extends AbstractCommand {
 
+    public CommandResume() {
+        blacklistable = true;
+    }
+
     @Override
     public boolean run(SlashCommandInteractionEvent eventSlash, ButtonInteractionEvent eventButton) {
         GenericInteractionCreateEvent event = eventSlash != null ? eventSlash : eventButton;
