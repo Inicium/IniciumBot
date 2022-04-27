@@ -45,7 +45,12 @@ public class PlayerMessage {
             messageEnCours.editOriginalEmbeds(oldEmbed).setActionRow(Button.success("done", "Terminé !").asDisabled()).queue();
         }
         if(timerTask != null) {
-            timerTask.cancel();
+            try {
+                timerTask.cancel();
+            } catch (IllegalStateException e) {
+                System.err.println("Le timer est déjà arrêté");
+            }
+
         }
 
         this.command = command;
@@ -112,15 +117,26 @@ public class PlayerMessage {
             }
             barGenerator(builder, np, duration);
             queue.remove(0);
-            int i = 0;
-            for(AudioTrack at : queue) {
-                i++;
+            int i;
+            //Limite de 25 Fields
+            // 23 + 1 en cours + 1 message à ajouter
+            for(i = 0; i < queue.size() && i < 23; i++) {
+                AudioTrack at = queue.get(i);
                 if(at.getInfo().isStream) {
                     duration = "STREAM";
                 } else {
                     duration = Utils.convertLongToString(at.getDuration());
                 }
-                builder.addField("``["+i+"]`` "+at.getInfo().title, "**Durée :** ``"+duration + "``\n**Auteur :** ``"+at.getInfo().author+"``", false);
+                builder.addField("``["+(i+2)+"]`` "+at.getInfo().title, "**Durée :** ``"+duration + "``\n**Auteur :** ``"+at.getInfo().author+"``", false);
+            }
+            if (i == 23) {
+                int trackLeft = queue.size()-23;
+                if (trackLeft > 1) {
+                    builder.addField("+" + trackLeft + " autres pistes", "", false);
+                } else if (trackLeft == 1){
+                    builder.addField("+" + trackLeft + " autre piste", "", false);
+                }
+
             }
             if (np.getInfo().uri.contains("youtube.com")) {
                 builder.setThumbnail("http://i3.ytimg.com/vi/"+np.getInfo().uri.split("v=")[1].split("&")[0]+"/maxresdefault.jpg");
