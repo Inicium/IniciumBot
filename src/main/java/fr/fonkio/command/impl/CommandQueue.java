@@ -22,9 +22,9 @@ public class CommandQueue extends AbstractCommand {
 
         if(guild != null) {
             if(!guild.getAudioManager().isConnected()) {
-                Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("Now playing","Il n'y a pas de musique en cours ...", user, false, event);
+                Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("ℹ Now playing","Il n'y a pas de musique en cours ...", user, false, event);
             } else {
-                Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("Now playing","⏬⏬ Voici la liste ⏬⏬", user, true, event);
+                Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("ℹ Now playing","⏬⏬ Voici la liste ⏬⏬", user, true, event);
             }
         }
 

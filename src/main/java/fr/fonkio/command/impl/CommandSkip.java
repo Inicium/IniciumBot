@@ -26,11 +26,11 @@ public class CommandSkip extends AbstractCommand {
                 return true;
             }
             if(!guild.getAudioManager().isConnected()) {
-                Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("Skip","Il n'y a pas de musique en cours ...", user, false, event);
+                Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("⏭ Skip","Il n'y a pas de musique en cours.", user, false, event);
                 return true;
             }
             Inicium.manager.getPlayer(guild).skipTrack();
-            Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("Skip","La piste viens d'être passée...", user, true, event);
+            Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("⏭ Skip","La piste viens d'être passée ⏭", user, true, event);
         }
 
         return true;

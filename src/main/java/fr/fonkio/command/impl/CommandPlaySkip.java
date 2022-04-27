@@ -45,18 +45,18 @@ public class CommandPlaySkip extends AbstractCommand {
                     AudioChannel voiceChannel = guildVoiceState.getChannel();
                     if (!guild.getAudioManager().isConnected()) {
                         if (voiceChannel == null) {
-                            Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("PlaySkip","Tu dois être co sur un channel vocal pour demander ça.", user, false, eventSlash);
+                            Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("▶ ⏭ PlaySkip","Tu dois être co sur un channel vocal pour demander ça.", user, false, eventSlash);
                         }
                         try {
                             guild.getAudioManager().openAudioConnection(voiceChannel);
                             guild.getAudioManager().setSelfDeafened(true);
                         } catch (InsufficientPermissionException e){
-                            Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("PlaySkip","Je n'ai pas la permission de rejoindre ce channel !", user, false, eventSlash);
+                            Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("▶ ⏭ PlaySkip","Je n'ai pas la permission de rejoindre ce channel !", user, false, eventSlash);
                         }
 
                     } else {
                         if (voiceChannel == null) {
-                            Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("PlaySkip","Tu dois être co sur un channel vocal pour demander ça.", user, false, eventSlash);
+                            Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("▶ ⏭ PlaySkip","Tu dois être co sur un channel vocal pour demander ça.", user, false, eventSlash);
                             return true;
                         }
                         // Verification que l'utilisateur soit dans le même chan
@@ -69,7 +69,7 @@ public class CommandPlaySkip extends AbstractCommand {
                                     try {
                                         guild.getAudioManager().openAudioConnection(voiceChannel);
                                     } catch (InsufficientPermissionException e) {
-                                        eventSlash.replyEmbeds(EmbedGenerator.generate(user, "Permission", "Je n'ai pas la permission de rejoindre ce channel !")).setEphemeral(true).queue();
+                                        eventSlash.replyEmbeds(EmbedGenerator.generate(user, "\uD83D\uDEAB Permission", "Je n'ai pas la permission de rejoindre ce channel !")).setEphemeral(true).queue();
                                     }
                                 }
                             }

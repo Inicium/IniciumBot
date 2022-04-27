@@ -38,7 +38,7 @@ public class CommandDisconnect extends AbstractCommand {
 
             if(guild.getId().equals("296520788033404929")) {
                 Inicium.manager.loadTrack(guild, Inicium.CONFIGURATION.getDCsong(), user, event, false);
-                Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("Disconnect","Aurevoir 👋", user, false, event);
+                Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("\uD83D\uDEAA Disconnect","Aurevoir 👋", user, false, event);
 
 
                 TimerTask task = new TimerTask() {

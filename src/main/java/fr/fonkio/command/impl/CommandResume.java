@@ -25,12 +25,12 @@ public class CommandResume extends AbstractCommand {
                 return true;
             }
             if(!guild.getAudioManager().isConnected()) {
-                Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("Resume","Il n'y a pas de musique en cours ...", user, false, event);
+                Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("▶ Resume","Il n'y a pas de musique en cours ...", user, false, event);
             } else if(Inicium.manager.getPlayer(guild).isPause()) {
                 Inicium.manager.getPlayer(guild).setPause(false);
-                Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("Resume","▶", user, true, event);
+                Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("▶ Resume","", user, true, event);
             } else {
-                Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("Resume","Déjà en cours de lecture...", user, true, event);
+                Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("▶ Resume","Déjà en cours de lecture...", user, true, event);
             }
         }
         return true;

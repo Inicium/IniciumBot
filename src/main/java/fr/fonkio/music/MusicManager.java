@@ -46,7 +46,12 @@ public class MusicManager {
             public void trackLoaded(AudioTrack track) {
                 player.playTrack(track);
                 if (message) {
-                    player.getPlayerMessage().newMessage("Play", "Ajout de la piste...\n"+track.getInfo().uri+"\n ", author, true, event);
+                    player.getPlayerMessage().newMessage("▶ Play",
+                            "\uD83D\uDCBF\u200B Ajout de la piste \uD83D\uDCBF\u200B" +
+                                    "\n\uD83D\uDD17\u200B " + track.getInfo().uri +
+                                    "\n\uD83C\uDFB5\u200B " + track.getInfo().title +
+                                    "\n\uD83C\uDF99️\u200B " + track.getInfo().author
+                            , author, true, event);
                 }
             }
 
@@ -57,18 +62,18 @@ public class MusicManager {
                     AudioTrack track = playlist.getTracks().get(i);
                     player.playTrack(track);
                 }
-                player.getPlayerMessage().newMessage("Play", "Ajout de la playlist **" + playlist.getName() + "**\n",author, true, event);
+                player.getPlayerMessage().newMessage("▶ Play", "Ajout de la playlist **" + playlist.getName() + "**\n",author, true, event);
             }
 
             @Override
             public void noMatches() {
-                player.getPlayerMessage().newMessage("Play", "La piste "+ source + " n'a pas été trouvée.",author, true, event);
+                player.getPlayerMessage().newMessage("▶ Play", "La piste "+ source + " n'a pas été trouvée.",author, true, event);
             }
 
             @Override
             public void loadFailed(FriendlyException exception) {
                 exception.printStackTrace();
-                player.getPlayerMessage().newMessage("Play",
+                player.getPlayerMessage().newMessage("▶ Play",
                         "Impossible de jouer la piste (raison:" +exception.getMessage()+")\n**SI C'EST UNE MUSIQUE ESSAYE D'AJOUTER \"LYRICS\" A TA RECHERCHE**"
                         ,author, true, event);
             }

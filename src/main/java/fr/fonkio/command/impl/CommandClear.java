@@ -26,11 +26,11 @@ public class CommandClear extends AbstractCommand {
             }
             MusicPlayer player = Inicium.manager.getPlayer(guild);
             if(player.getListener().getTracks().isEmpty()) {
-                Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("Clear","La liste est déjà vide ...", user, true, event);
+                Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("\uD83D\uDDD1 Clear","La liste est déjà vide ...", user, true, event);
                 return true;
             }
             player.getListener().getTracks().clear();
-            Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("Clear","La liste a été effacée !", user, true, event);
+            Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("\uD83D\uDDD1 Clear","La liste a été effacée !", user, true, event);
         }
 
         return true;

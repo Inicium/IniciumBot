@@ -31,7 +31,7 @@ public class CommandGoodbyeChannel extends AbstractCommand {
                 }
 
                 List<SelectOption> optionList = getSelectOptionsChannelList(guild, ConfigurationEnum.QUIT_CHANNEL);
-                eventSlash.replyEmbeds(EmbedGenerator.generate(user,"Goodbye channel", "Sélectionner le channel dans lequel les messages de leave seront postés"))
+                eventSlash.replyEmbeds(EmbedGenerator.generate(user,"\uD83D\uDC4B Goodbye channel", "Sélectionner le channel dans lequel les messages de leave seront postés"))
                         .addActionRow(
                                 SelectMenu.create("choix-channel-goodbye")
                                         .setMinValues(0)

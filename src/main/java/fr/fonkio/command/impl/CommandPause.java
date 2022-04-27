@@ -25,15 +25,15 @@ public class CommandPause extends AbstractCommand {
                 return true;
             }
             if(!guild.getAudioManager().isConnected()) {
-                Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("Pause","Il n'y a pas de musique en cours ...", user, false, event);
+                Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("⏸ Pause","Il n'y a pas de musique en cours ...", user, false, event);
                 return true;
             }
             if(Inicium.manager.getPlayer(guild).isPause()) {
-                Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("Pause","Déjà en pause...", user, false, event);
+                Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("⏸ Pause","Déjà en pause...", user, false, event);
                 return true;
             }
             Inicium.manager.getPlayer(guild).setPause(true);
-            Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("Pause","⏸", user, true, event);
+            Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("⏸ Pause","", user, true, event);
         }
         return true;
     }

@@ -28,7 +28,7 @@ public class CommandWelcomeChannel extends AbstractCommand {
                     return true;
                 }
                 List<SelectOption> optionList = getSelectOptionsChannelList(guild, ConfigurationEnum.WELCOME_CHANNEL);
-                eventSlash.replyEmbeds(EmbedGenerator.generate(user,"Welcome channel", "Sélectionner le channel dans lequel les messages de bienvenue seront postés"))
+                eventSlash.replyEmbeds(EmbedGenerator.generate(user,"\uD83D\uDC4B Welcome channel", "Sélectionner le channel dans lequel les messages de bienvenue seront postés"))
                         .addActionRow(
                                 SelectMenu.create("choix-channel-welcome")
                                         .setMinValues(0)

@@ -35,7 +35,7 @@ public class CommandBlacklist extends AbstractCommand {
                 permissionCheck(eventSlash, user);
             } else {
                 List<SelectOption> optionList = getSelectOptionsChannelList(guild, null);
-                eventSlash.replyEmbeds(EmbedGenerator.generate(user,"Blacklist", "Sélectionner les channels dans lesquels les commandes sont interdites"))
+                eventSlash.replyEmbeds(EmbedGenerator.generate(user,"⛔ Blacklist", "Sélectionner les channels dans lesquels les commandes sont interdites"))
                         .addActionRow(
                                 SelectMenu.create("choix-channel-blacklist")
                                         .setMinValues(0)

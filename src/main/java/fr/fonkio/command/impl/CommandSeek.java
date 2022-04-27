@@ -35,16 +35,16 @@ public class CommandSeek extends AbstractCommand {
             }
 
             if(!guild.getAudioManager().isConnected()) {
-                Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("Seek","Il n'y a pas de musique en cours ...", user, false, eventSlash);
+                Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("\uD83D\uDD0E Seek","Il n'y a pas de musique en cours ...", user, false, eventSlash);
                 return true;
             }
             try {
                 Inicium.manager.getPlayer(guild).seekTrack(timeParameter);
             } catch (IllegalArgumentException e) {
-                Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("Seek","Le temps entré n'est pas valide", user, true, eventSlash);
+                Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("\uD83D\uDD0E Seek","Le temps entré n'est pas valide", user, true, eventSlash);
                 return true;
             }
-            Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("Seek","La piste a été avancée à " + timeParameter, user, true, eventSlash);
+            Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("\uD83D\uDD0E Seek","La piste a été avancée à " + timeParameter, user, true, eventSlash);
         }
 
         return true;
