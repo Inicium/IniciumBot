@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 
 import javax.security.auth.login.LoginException;
@@ -121,14 +122,12 @@ public class Inicium {
                 Commands.slash("welcome", "Gérer le channel d'annonce des nouveaux arrivant sur le serveur"),
                 Commands.slash("goodbye", "Gérer le channel d'annonce des personnes qui quittent le serveur"),
                 Commands.slash("mva", "Déplacer tous les utilisateurs du channel actuel")
-                        .addOption(OptionType.CHANNEL, "destination", "Channel de destination", true),
+                        .addOptions(new OptionData(OptionType.CHANNEL, "destination", "Channel de destination", true).setChannelTypes(ChannelType.VOICE, ChannelType.STAGE)),
                 Commands.slash("moveall", "Déplacer tous les utilisateurs du channel actuel")
-                        .addOption(OptionType.CHANNEL, "destination", "Channel de destination", true)
+                        .addOptions(new OptionData(OptionType.CHANNEL, "destination", "Channel de destination", true).setChannelTypes(ChannelType.VOICE, ChannelType.STAGE))
                 ).queue();
-
         System.out.println("Bot connecté");
         CONFIGURATION.save();
-
     }
 
     public static JDA getJda() {
