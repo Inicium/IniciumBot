@@ -1,8 +1,6 @@
 package fr.fonkio.command.impl;
 
 import fr.fonkio.command.AbstractCommand;
-import fr.fonkio.inicium.Inicium;
-import fr.fonkio.utils.ConfigurationEnum;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;

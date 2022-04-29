@@ -3,8 +3,6 @@ package fr.fonkio.utils;
 public enum ConfigurationEnum {
     QUIT_CHANNEL("quit", ""),
     WELCOME_CHANNEL("welcome", ""),
-    PREFIX_COMMAND("prefix", "!"),
-    MOVE_AFK("moveAfk", "false"),
     SERVER_NAME("name", "undefined");
 
     ConfigurationEnum(String key, String defaultValue) {

@@ -10,7 +10,7 @@ import java.util.List;
 
 public class YoutubeSearch {
 
-    private YouTube youtube;
+    private final YouTube youtube;
 
     public YoutubeSearch() {
         YouTube temp = null;
