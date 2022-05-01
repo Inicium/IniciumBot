@@ -28,7 +28,7 @@ Pour avoir un accès hébergé au bot, merci de me le demander
 ### Description
 Jouer une piste sur le channel vocal (YouTube, Twitch, SoundCloud, ...)
 ### Commande
-/play `[musique]`
+/play `[musique]`</br>
 /p `[musique]`
 ### Paramètre
 `[musique]` : Lien/Recherche de la musique
@@ -54,46 +54,108 @@ Pour NRJ par exemple</br></br>
 ![image](https://user-images.githubusercontent.com/28084726/166140497-c25e05dd-4ec5-4b82-a71f-ecdda45e31b9.png)
 
 ## Skip
+### Description
+Passer la lecture en cours pour jouer la musique suivante
 ### Commande
-/skip
+/skip</br>
 /s
+### Bouton
+![image](https://user-images.githubusercontent.com/28084726/166140956-939676dc-fdd7-42e0-8eb5-2b23a53a44ec.png)
 ### Exemple
 ![image](https://user-images.githubusercontent.com/28084726/166140814-6190d763-a402-4581-bb70-d2ee5a3e12b9.png)
 </br></br>```/skip```</br></br>
 ![image](https://user-images.githubusercontent.com/28084726/166140852-46a893ee-ee38-45b6-b19d-4e9784656c81.png)
 
 ## PlaySkip
+### Description
+Lancer la lecture d'une musique avec un lien ou une recherche et passer la musique en cours
+### Commande
+/ps `[musique]`
+### Paramètre
+`[musique]` : Lien/Recherche de la musique
+
 ## Pause / Resume
+### Description
+Mettre en pause la musique en cours de lecture / Relancer la musique mise en pause
+### Commande
+/pause</br>
+/resume
+### Bouton
+![image](https://user-images.githubusercontent.com/28084726/166141265-af44f026-889f-4ba1-a6d4-19e433918fb9.png)
+![image](https://user-images.githubusercontent.com/28084726/166141305-588876b6-c481-4679-ba8a-1121a28fc79a.png)
+### Exemple
+```/pause```</br></br>
+![image](https://user-images.githubusercontent.com/28084726/166141180-289f5966-01e7-4837-b645-5d25f70d6f57.png)</br></br>
+```/resume```</br></br>
+![image](https://user-images.githubusercontent.com/28084726/166141272-d9ad4106-41ec-4398-a555-0a76b6318995.png)
+
 ## Seek
+### Description
+Avancer / Reculer le temps de lecture de la musique en cours
+### Commande
+/seek `[temps]`
+### Paramètre
+`[temps]` : Temps sous forme HH:MM:SS ou MM:SS
+### Exemple
+```/seek time: 1:00```</br></br>
+![image](https://user-images.githubusercontent.com/28084726/166141425-1aaea30f-eda7-4ee7-abba-4223e2dde923.png)
+
 ## Disconnect
+### Description
+Déconnecter le bot du channel audio
+### Commande
+/disconnect</br>
+/leave</br>
+/quit</br>
+/dc
+### Bouton
+![image](https://user-images.githubusercontent.com/28084726/166141828-5e1ed67f-23a6-40ee-9167-54c4aa59f64b.png)
+### Exemple
+
 ## Clear
+### Description
+### Commande
+### Exemple
+
 ## Queue
+### Description
+### Commande
+### Exemple
+
 ## Shuffle
+### Description
+### Commande
+### Exemple
 
 # Commandes générales
 ## MoveAll
+### Description
+### Commande
+### Exemple
+
 ## Help
+### Description
+### Commande
+### Exemple
 
 # Commandes administrateur
 ## Blacklist
+### Description
+### Commande
+### Exemple
+
 ## Welcome
+### Description
+### Commande
+### Exemple
+
 ## Goodbye
+### Description
+### Commande
+### Exemple
+
 ## HelpAdmin
-
-## Jouer des musiques via un lien YouTube, SoundCloud, Twitch ...
-![image](https://user-images.githubusercontent.com/28084726/143623288-f0aad75a-4090-4357-9e6b-e2c754776220.png)
-
-## Jouer des musiques par recherche textuelle Youtube
-![image](https://user-images.githubusercontent.com/28084726/143623403-6bfb7c69-36e9-4eaf-8fa4-a77dfa3f3925.png)
-
-## Affichage de la liste de lecture et mise à jour des informations en temps réel
-![image](https://user-images.githubusercontent.com/28084726/143623625-d8dd50f7-6688-4e5f-ac7e-d6dc9648393c.png)
-
-## Contrôle par les boutons d'action
-![image](https://user-images.githubusercontent.com/28084726/143623780-03dd096b-3510-4742-8a5c-cfa7e2097e4b.png)
-
-## Liste des commandes
-![image](https://user-images.githubusercontent.com/28084726/143623682-09b7ba09-f9ee-4566-a049-0f28b473be0f.png)
-
-![image](https://user-images.githubusercontent.com/28084726/143623830-e12c79db-9ed4-4b8a-b854-7df3428723cd.png)
+### Description
+### Commande
+### Exemple
 
