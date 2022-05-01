@@ -4,6 +4,7 @@ import fr.fonkio.IniciumActivity;
 import fr.fonkio.command.AbstractCommand;
 import fr.fonkio.command.impl.*;
 import fr.fonkio.listener.impl.*;
+import fr.fonkio.message.StringsConst;
 import fr.fonkio.music.MusicManager;
 import fr.fonkio.utils.Configuration;
 import net.dv8tion.jda.api.JDA;
@@ -56,6 +57,7 @@ public class Inicium {
         AbstractCommand welcome = new CommandWelcomeChannel();
         AbstractCommand goodbye = new CommandGoodbyeChannel();
         AbstractCommand moveall = new CommandMoveAll();
+        AbstractCommand shuffle = new CommandShuffle();
 
         commands.put("play", play);
         commands.put("p", play);
@@ -81,6 +83,7 @@ public class Inicium {
         commands.put("goodbye", goodbye);
         commands.put("moveall", moveall);
         commands.put("mva", moveall);
+        commands.put("shuffle", shuffle);
 
         Set<GatewayIntent> intents = new HashSet<>(EnumSet.allOf(GatewayIntent.class));
         jda = JDABuilder.create(CONFIGURATION.getToken(), intents).setAutoReconnect(true).build();
@@ -95,36 +98,37 @@ public class Inicium {
         jda.getPresence().setActivity(act);
 
         jda.updateCommands().addCommands(
-                Commands.slash("play", "Lancer la lecture d'une musique avec un lien ou une recherche")
-                        .addOption(OptionType.STRING, "musique", "Lien/Recherche de la musique", true),
-                Commands.slash("p", "Lancer la lecture d'une musique avec un lien ou une recherche")
-                        .addOption(OptionType.STRING, "musique", "Lien/Recherche de la musique", true),
-                Commands.slash("ps", "Lancer la lecture d'une musique avec un lien ou une recherche et passer à la musique en cours")
-                        .addOption(OptionType.STRING, "musique", "Lien/Recherche de la musique", true),
-                Commands.slash("skip", "Passer la lecture en cours pour jouer la musique suivante"),
-                Commands.slash("s", "Passer la lecture en cours pour jouer la musique suivante"),
-                Commands.slash("pause", "Mettre en pause la musique en cours de lecture"),
-                Commands.slash("resume", "Relancer la musique mise en pause"),
-                Commands.slash("seek", "Avancer / Reculer le temps de lecture de la musique en cours")
-                        .addOption(OptionType.STRING, "time", "Temps sous forme HH:MM:SS ou MM:SS", true),
-                Commands.slash("leave", "Déconnecter le bot du channel audio"),
-                Commands.slash("quit", "Déconnecter le bot du channel audio"),
-                Commands.slash("disconnect", "Déconnecter le bot du channel audio"),
-                Commands.slash("dc", "Déconnecter le bot du channel audio"),
-                Commands.slash("clear", "Effacer la liste des musiques en attente"),
-                Commands.slash("clean", "Effacer la liste des musiques en attente"),
-                Commands.slash("clr", "Effacer la liste des musiques en attente"),
-                Commands.slash("queue", "Voir la liste de lecture"),
-                Commands.slash("np", "Voir la liste de lecture"),
-                Commands.slash("helpadmin", "Voir le commande administrateur"),
-                Commands.slash("help", "Voir la liste des commandes du bot musique"),
-                Commands.slash("blacklist", "Gérer la liste des channels qui interdisent l'envoi d'une commande"),
-                Commands.slash("welcome", "Gérer le channel d'annonce des nouveaux arrivant sur le serveur"),
-                Commands.slash("goodbye", "Gérer le channel d'annonce des personnes qui quittent le serveur"),
-                Commands.slash("mva", "Déplacer tous les utilisateurs du channel actuel")
-                        .addOptions(new OptionData(OptionType.CHANNEL, "destination", "Channel de destination", true).setChannelTypes(ChannelType.VOICE, ChannelType.STAGE)),
-                Commands.slash("moveall", "Déplacer tous les utilisateurs du channel actuel")
-                        .addOptions(new OptionData(OptionType.CHANNEL, "destination", "Channel de destination", true).setChannelTypes(ChannelType.VOICE, ChannelType.STAGE))
+                Commands.slash("play", StringsConst.COMMAND_PLAY_DESC)
+                        .addOption(OptionType.STRING, "musique", StringsConst.COMMAND_PLAY_PARAM, true),
+                Commands.slash("p", StringsConst.COMMAND_PLAY_DESC)
+                        .addOption(OptionType.STRING, "musique", StringsConst.COMMAND_PLAY_PARAM, true),
+                Commands.slash("ps", StringsConst.COMMAND_PLAYSKIP_DESC)
+                        .addOption(OptionType.STRING, "musique", StringsConst.COMMAND_PLAY_PARAM, true),
+                Commands.slash("skip", StringsConst.COMMAND_SKIP_DESC),
+                Commands.slash("s", StringsConst.COMMAND_SKIP_DESC),
+                Commands.slash("pause", StringsConst.COMMAND_PAUSE_DESC),
+                Commands.slash("resume", StringsConst.COMMAND_RESUME_DESC),
+                Commands.slash("seek", StringsConst.COMMAND_SEEK_DESC)
+                        .addOption(OptionType.STRING, "time", StringsConst.COMMAND_SEEK_PARAM, true),
+                Commands.slash("leave", StringsConst.COMMAND_DISCONNECT_DESC),
+                Commands.slash("quit", StringsConst.COMMAND_DISCONNECT_DESC),
+                Commands.slash("disconnect", StringsConst.COMMAND_DISCONNECT_DESC),
+                Commands.slash("dc", StringsConst.COMMAND_DISCONNECT_DESC),
+                Commands.slash("clear", StringsConst.COMMAND_CLEAR_DESC),
+                Commands.slash("clean", StringsConst.COMMAND_CLEAR_DESC),
+                Commands.slash("clr", StringsConst.COMMAND_CLEAR_DESC),
+                Commands.slash("queue", StringsConst.COMMAND_QUEUE_DESC),
+                Commands.slash("np", StringsConst.COMMAND_QUEUE_DESC),
+                Commands.slash("helpadmin", StringsConst.COMMAND_HELPADMIN_DESC),
+                Commands.slash("help", StringsConst.COMMAND_HELP_DESC),
+                Commands.slash("blacklist", StringsConst.COMMAND_BLACKLIST_DESC),
+                Commands.slash("welcome", StringsConst.COMMAND_WELCOME_DESC),
+                Commands.slash("goodbye", StringsConst.COMMAND_GOODBYE_DESC),
+                Commands.slash("mva", StringsConst.COMMAND_MOVEALL_DESC)
+                        .addOptions(new OptionData(OptionType.CHANNEL, "destination", StringsConst.COMMAND_MOVEALL_PARAM, true).setChannelTypes(ChannelType.VOICE, ChannelType.STAGE)),
+                Commands.slash("moveall", StringsConst.COMMAND_MOVEALL_DESC)
+                        .addOptions(new OptionData(OptionType.CHANNEL, "destination", StringsConst.COMMAND_MOVEALL_PARAM, true).setChannelTypes(ChannelType.VOICE, ChannelType.STAGE)),
+                Commands.slash("shuffle", StringsConst.COMMAND_SHUFFLE_DESC)
                 ).queue();
         System.out.println("Bot connecté");
         CONFIGURATION.save();
