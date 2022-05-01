@@ -2,6 +2,7 @@ package fr.fonkio.command.impl;
 
 import fr.fonkio.command.AbstractCommand;
 import fr.fonkio.inicium.Inicium;
+import fr.fonkio.message.StringsConst;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.GenericInteractionCreateEvent;
@@ -25,15 +26,15 @@ public class CommandPause extends AbstractCommand {
                 return true;
             }
             if(!guild.getAudioManager().isConnected()) {
-                Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("⏸ Pause","Il n'y a pas de musique en cours ...", user, false, event);
+                Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage(StringsConst.COMMAND_PAUSE_TITLE, StringsConst.MESSAGE_NO_MUSIC_IN_PROGRESS, user, false, event);
                 return true;
             }
             if(Inicium.manager.getPlayer(guild).isPause()) {
-                Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("⏸ Pause","Déjà en pause...", user, false, event);
+                Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage(StringsConst.COMMAND_PAUSE_TITLE, StringsConst.COMMAND_PAUSE_ALREADY_PAUSED, user, false, event);
                 return true;
             }
             Inicium.manager.getPlayer(guild).setPause(true);
-            Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("⏸ Pause","", user, true, event);
+            Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage(StringsConst.COMMAND_PAUSE_TITLE, "", user, true, event);
         }
         return true;
     }

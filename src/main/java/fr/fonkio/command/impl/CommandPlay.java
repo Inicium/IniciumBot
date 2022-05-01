@@ -3,6 +3,7 @@ package fr.fonkio.command.impl;
 import fr.fonkio.command.AbstractCommand;
 import fr.fonkio.inicium.Inicium;
 import fr.fonkio.message.EmbedGenerator;
+import fr.fonkio.message.StringsConst;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
@@ -41,18 +42,17 @@ public class CommandPlay extends AbstractCommand {
                     AudioChannel voiceChannel = guildVoiceState.getChannel();
                     if (!guild.getAudioManager().isConnected()) {
                         if (voiceChannel == null) {
-                            Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("▶ Play","Tu dois être co sur un channel vocal pour demander ça.", user, false, eventSlash);
+                            Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage(StringsConst.COMMAND_PLAY_TITLE, StringsConst.MESSAGE_NOT_CONNECTED, user, false, eventSlash);
                         }
                         try {
                             guild.getAudioManager().openAudioConnection(voiceChannel);
                             guild.getAudioManager().setSelfDeafened(true);
                         } catch (InsufficientPermissionException e){
-                            Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("▶ Play","Je n'ai pas la permission de rejoindre ce channel !", user, false, eventSlash);
+                            Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage(StringsConst.COMMAND_PLAY_TITLE, StringsConst.MESSAGE_CANT_CONNECT, user, false, eventSlash);
                         }
-
                     } else {
                         if (voiceChannel == null) {
-                            Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("▶ Play","Tu dois être co sur un channel vocal pour demander ça.", user, false, eventSlash);
+                            Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage(StringsConst.COMMAND_PLAY_TITLE, StringsConst.MESSAGE_NOT_CONNECTED, user, false, eventSlash);
                             return true;
                         }
                         // Verification que l'utilisateur soit dans le même chan
@@ -63,16 +63,17 @@ public class CommandPlay extends AbstractCommand {
                                 AudioChannel audioChannel = guildVoiceStateBot.getChannel();
                                 if (audioChannel != null && !voiceChannel.getId().equals(audioChannel.getId())) {
                                     try {
+                                        System.out.println("3");
                                         guild.getAudioManager().openAudioConnection(voiceChannel);
                                     } catch (InsufficientPermissionException e) {
-                                        eventSlash.replyEmbeds(EmbedGenerator.generate(user, "\uD83D\uDEAB Permission", "Je n'ai pas la permission de rejoindre ce channel !")).setEphemeral(true).queue();
+                                        eventSlash.replyEmbeds(EmbedGenerator.generate(user, StringsConst.COMMAND_PLAY_TITLE, StringsConst.MESSAGE_NO_PERMISSIONS)).setEphemeral(true).queue();
                                     }
                                 }
                             }
                         }
                     }
+                    System.out.println("2");
                     Inicium.manager.loadTrack(guild, youtubeSearch.searchOrUrl(musiqueParameter), user, eventSlash);
-
                 }
             }
         }

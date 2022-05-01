@@ -2,6 +2,7 @@ package fr.fonkio.command.impl;
 
 import fr.fonkio.command.AbstractCommand;
 import fr.fonkio.inicium.Inicium;
+import fr.fonkio.message.StringsConst;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -35,16 +36,16 @@ public class CommandSeek extends AbstractCommand {
             }
 
             if(!guild.getAudioManager().isConnected()) {
-                Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("\uD83D\uDD0E Seek","Il n'y a pas de musique en cours ...", user, false, eventSlash);
+                Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage(StringsConst.COMMAND_SEEK_TITLE, StringsConst.MESSAGE_NO_MUSIC_IN_PROGRESS, user, false, eventSlash);
                 return true;
             }
             try {
                 Inicium.manager.getPlayer(guild).seekTrack(timeParameter);
             } catch (IllegalArgumentException e) {
-                Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("\uD83D\uDD0E Seek","Le temps entré n'est pas valide", user, true, eventSlash);
+                Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage(StringsConst.COMMAND_SEEK_TITLE,StringsConst.COMMAND_SEEK_INVALID_FORMAT, user, true, eventSlash);
                 return true;
             }
-            Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("\uD83D\uDD0E Seek","La piste a été avancée à " + timeParameter, user, true, eventSlash);
+            Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage(StringsConst.COMMAND_SEEK_TITLE,StringsConst.COMMAND_SEEK_SUCCESS + timeParameter, user, true, eventSlash);
         }
 
         return true;

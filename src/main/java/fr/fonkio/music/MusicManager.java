@@ -8,6 +8,7 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fr.fonkio.message.MusicPlayer;
+import fr.fonkio.message.StringsConst;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.GenericInteractionCreateEvent;
@@ -39,14 +40,15 @@ public class MusicManager {
     public void loadTrack (final Guild guild, final String source, User author, GenericInteractionCreateEvent event, boolean message) {
         MusicPlayer player = getPlayer(guild);
         guild.getAudioManager().setSendingHandler(player.getAudioHandler());
+        player.getPlayerMessage().newMessage("\uD83D\uDD03 " + StringsConst.MESSAGE_LOADING_TITLE, StringsConst.MESSAGE_LOADING, author, true, event);
         manager.loadItemOrdered(player, source, new AudioLoadResultHandler() {
 
             @Override
             public void trackLoaded(AudioTrack track) {
                 player.playTrack(track);
                 if (message) {
-                    player.getPlayerMessage().newMessage("▶ Play",
-                            "\uD83D\uDCBF\u200B Ajout de la piste \uD83D\uDCBF\u200B" +
+                    player.getPlayerMessage().editMessage(StringsConst.COMMAND_PLAY_TITLE,
+                            "\uD83D\uDCBF\u200B "+ StringsConst.MESSAGE_ADDING_TRACK +" \uD83D\uDCBF\u200B" +
                                     "\n\uD83D\uDD17\u200B " + track.getInfo().uri +
                                     "\n\uD83C\uDFB5\u200B " + track.getInfo().title +
                                     "\n\uD83C\uDF99️\u200B " + track.getInfo().author
@@ -56,24 +58,23 @@ public class MusicManager {
 
             @Override
             public void playlistLoaded(AudioPlaylist playlist) {
-
                 for(int i = 0; i < playlist.getTracks().size(); i++) {
                     AudioTrack track = playlist.getTracks().get(i);
                     player.playTrack(track);
                 }
-                player.getPlayerMessage().newMessage("▶ Play", "Ajout de la playlist **" + playlist.getName() + "**\n",author, true, event);
+                player.getPlayerMessage().editMessage(StringsConst.COMMAND_PLAY_TITLE, StringsConst.MESSAGE_ADDING_PLAYLIST + "**" + playlist.getName() + "**\n",author, true, event);
             }
 
             @Override
             public void noMatches() {
-                player.getPlayerMessage().newMessage("▶ Play", "La piste "+ source + " n'a pas été trouvée.",author, true, event);
+                player.getPlayerMessage().editMessage(StringsConst.COMMAND_PLAY_TITLE, StringsConst.MESSAGE_THE_TRACK+ source + StringsConst.MESSAGE_NOT_FOUND, author, true, event);
             }
 
             @Override
             public void loadFailed(FriendlyException exception) {
                 exception.printStackTrace();
-                player.getPlayerMessage().newMessage("▶ Play",
-                        "Impossible de jouer la piste (raison:" +exception.getMessage()+")\n**SI C'EST UNE MUSIQUE ESSAYE D'AJOUTER \"LYRICS\" A TA RECHERCHE**"
+                player.getPlayerMessage().editMessage(StringsConst.COMMAND_PLAY_TITLE,
+                        StringsConst.MESSAGE_CANT_PLAY_RESON +exception.getMessage()+")\n**"+ StringsConst.MESSAGE_ADD_LYRIC_TO_SEARCH +"**"
                         ,author, true, event);
             }
         });

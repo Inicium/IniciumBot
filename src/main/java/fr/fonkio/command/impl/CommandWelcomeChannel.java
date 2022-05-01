@@ -2,6 +2,7 @@ package fr.fonkio.command.impl;
 
 import fr.fonkio.command.AbstractCommand;
 import fr.fonkio.message.EmbedGenerator;
+import fr.fonkio.message.StringsConst;
 import fr.fonkio.utils.ConfigurationEnum;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
@@ -28,7 +29,7 @@ public class CommandWelcomeChannel extends AbstractCommand {
                     return true;
                 }
                 List<SelectOption> optionList = getSelectOptionsChannelList(guild, ConfigurationEnum.WELCOME_CHANNEL);
-                eventSlash.replyEmbeds(EmbedGenerator.generate(user,"\uD83D\uDC4B Welcome channel", "Sélectionner le channel dans lequel les messages de bienvenue seront postés"))
+                eventSlash.replyEmbeds(EmbedGenerator.generate(user, StringsConst.COMMAND_WELCOME_TITLE, StringsConst.COMMAND_WELCOME_SUCCESS))
                         .addActionRow(
                                 SelectMenu.create("choix-channel-welcome")
                                         .setMinValues(0)

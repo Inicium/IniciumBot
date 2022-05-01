@@ -2,6 +2,7 @@ package fr.fonkio.listener.impl;
 
 import fr.fonkio.inicium.Inicium;
 import fr.fonkio.message.EmbedGenerator;
+import fr.fonkio.message.StringsConst;
 import fr.fonkio.utils.ConfigurationEnum;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
@@ -16,14 +17,14 @@ public class EventGuildMemberRemoveJoin extends ListenerAdapter {
     public void onGuildMemberRemove(GuildMemberRemoveEvent event) {
         Guild guild = event.getGuild();
         User user = event.getUser();
-        sendWelcomeQuitMessage(ConfigurationEnum.QUIT_CHANNEL, "Au revoir !", user.getName()+" a quitté le serveur "+guild.getName()+".", guild, user);
+        sendWelcomeQuitMessage(ConfigurationEnum.QUIT_CHANNEL, StringsConst.MESSAGE_GOODBYE_TITLE, user.getName() + StringsConst.MESSAGE_GOODBYE + guild.getName()+".", guild, user);
     }
 
     @Override
     public void onGuildMemberJoin(GuildMemberJoinEvent event) {
         Guild guild = event.getGuild();
         User user = event.getUser();
-        sendWelcomeQuitMessage(ConfigurationEnum.WELCOME_CHANNEL, "Bienvenue !", user.getAsMention() + " a rejoint le serveur "+guild.getName()+".", guild, user);
+        sendWelcomeQuitMessage(ConfigurationEnum.WELCOME_CHANNEL, StringsConst.MESSAGE_WELCOME_TITLE, user.getAsMention() + StringsConst.MESSAGE_WELCOME +guild.getName()+".", guild, user);
     }
 
     private void sendWelcomeQuitMessage(ConfigurationEnum configChannel, String title, String message, Guild guild, User user) {

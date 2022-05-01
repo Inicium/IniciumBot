@@ -3,12 +3,14 @@ package fr.fonkio.music;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fr.fonkio.inicium.Utils;
 import fr.fonkio.message.MusicPlayer;
+import fr.fonkio.message.StringsConst;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.interaction.GenericInteractionCreateEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.ItemComponent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
@@ -36,9 +38,17 @@ public class PlayerMessage {
         this.musicPlayer = musicPlayer;
     }
 
+    public void editMessage(String command, String message, User author, boolean afficherQueue, GenericInteractionCreateEvent event) {
+        this.command = command;
+        this.message = message;
+        this.author = author;
+        this.afficherQueue = afficherQueue;
+        messageEnCours.editOriginalEmbeds(getEmbed()).setActionRows(addButtons()).queue();
+    }
+
     public void newMessage(String command, String message, User author, boolean afficherQueue, GenericInteractionCreateEvent event) {
         if (messageEnCours != null) { //Suppression des commandes du dernier message
-            messageEnCours.editOriginalEmbeds(oldEmbed).setActionRow(Button.success("done", "Terminé !").asDisabled()).queue();
+            messageEnCours.editOriginalEmbeds(oldEmbed).setActionRow(Button.success("done", StringsConst.BUTTON_DONE).asDisabled()).queue();
         }
         if(timerTask != null) {
             try {
@@ -55,10 +65,10 @@ public class PlayerMessage {
         this.author = author;
 
         if (event instanceof SlashCommandInteractionEvent) {
-            this.messageEnCours = ((SlashCommandInteractionEvent)event).replyEmbeds(getEmbed()).addActionRow(addButtons()).complete();
+            this.messageEnCours = ((SlashCommandInteractionEvent)event).replyEmbeds(getEmbed()).addActionRows(addButtons()).complete();
         } else if (event instanceof ButtonInteractionEvent) {
             if (messageEnCours != null) {
-                this.messageEnCours.editOriginalEmbeds(getEmbed()).setActionRow(addButtons()).queue();
+                this.messageEnCours.editOriginalEmbeds(getEmbed()).setActionRows(addButtons()).queue();
             }
 
         }
@@ -68,7 +78,7 @@ public class PlayerMessage {
 
     private MessageEmbed getEmbed() {
         EmbedBuilder builder = new EmbedBuilder();
-        builder.setAuthor("Bot musique", null, "https://i.pinimg.com/originals/79/ab/9f/79ab9f804b5ebbdd514af3329cad6e0c.gif?size=256");
+        builder.setAuthor(StringsConst.MESSAGE_MUSIC_BOT, null, "https://i.pinimg.com/originals/79/ab/9f/79ab9f804b5ebbdd514af3329cad6e0c.gif?size=256");
         builder.setTitle(this.command);
         builder.setDescription(this.message);
         builder.setColor(Color.GREEN);
@@ -84,11 +94,11 @@ public class PlayerMessage {
 
     private void addFields(EmbedBuilder builder, List<AudioTrack> queue) {
         if (queue.size()==0) { //Pas de musique dans la file
-            builder.addField("Musique", "Aucune musique n'est en cours de lecture", false);
+            builder.addField(StringsConst.MESSAGE_MUSIC, StringsConst.MESSAGE_NO_MUSIC_IN_PROGRESS, false);
         } else if (queue.size()==1) { //1 musique dans la file
             AudioTrack np = queue.get(0);
             if (np == null) { //Si elle est nulle
-                builder.addField("Musique", "Aucune musique n'est en cours de lecture", false);
+                builder.addField(StringsConst.MESSAGE_MUSIC, StringsConst.MESSAGE_NO_MUSIC_IN_PROGRESS, false);
             } else { //Si elle n'est pas nulle
                 if (np.getInfo().uri.contains("youtube.com")) {
                     builder.setThumbnail("http://i3.ytimg.com/vi/"+np.getInfo().uri.split("v=")[1].split("&")[0]+"/maxresdefault.jpg");
@@ -100,7 +110,7 @@ public class PlayerMessage {
                     duration = Utils.convertLongToString(np.getDuration());
                 }
                 barGenerator(builder, np, duration);
-                builder.addField("File d'attente", "Aucune musique n'est dans la file d'attente ...", false);
+                builder.addField(StringsConst.MESSAGE_WAITLIST, StringsConst.MESSAGE_NO_MUSIC_IN_WAITLIST, false);
             }
 
         } else {
@@ -123,14 +133,17 @@ public class PlayerMessage {
                 } else {
                     duration = Utils.convertLongToString(at.getDuration());
                 }
-                builder.addField("``["+(i+2)+"]`` "+at.getInfo().title, "**Durée :** ``"+duration + "``\n**Auteur :** ``"+at.getInfo().author+"``", false);
+                builder.addField(""+convertIntEmoji(i+2)+" "+at.getInfo().title,
+                        "**" + StringsConst.MESSAGE_DURATION + "** ``"+duration +
+                        "``\n**"+ StringsConst.MESSAGE_AUTHOR +"** ``"+at.getInfo().author+"``",
+                        false);
             }
             if (i == 23) {
                 int trackLeft = queue.size()-23;
                 if (trackLeft > 1) {
-                    builder.addField("+" + trackLeft + " autres pistes", "", false);
+                    builder.addField("+" + trackLeft + StringsConst.MESSAGE_OTHER_TRACKS, "", false);
                 } else if (trackLeft == 1){
-                    builder.addField("+" + trackLeft + " autre piste", "", false);
+                    builder.addField("+" + trackLeft + StringsConst.MESSAGE_OTHER_TRACK, "", false);
                 }
 
             }
@@ -140,40 +153,57 @@ public class PlayerMessage {
         }
     }
 
-    public List<ItemComponent> addButtons() {
-        List<ItemComponent> itemComponentList = new ArrayList<>();
-        if (musicPlayer.getAudioPlayer().getPlayingTrack() == null) {
-            itemComponentList.add(Button.success("done", "Terminé !").asDisabled());
-            return itemComponentList;
-        }
+    private String convertIntEmoji(int i) {
+        return (i+"")
+                .replaceAll("0", "0️⃣")
+                .replaceAll("1", "1️⃣")
+                .replaceAll("2", "2️⃣")
+                .replaceAll("3", "3️⃣")
+                .replaceAll("4", "4️⃣")
+                .replaceAll("5", "5️⃣")
+                .replaceAll("6", "6️⃣")
+                .replaceAll("7", "7️⃣")
+                .replaceAll("8", "8️⃣")
+                .replaceAll("9", "9️⃣");
+    }
 
-        if (musicPlayer.isPause()) {
-            itemComponentList.add(Button.success("resume", "▶ Play"));
-            itemComponentList.add(Button.secondary("pause", "⏸ Pause").asDisabled());
-        } else {
-            itemComponentList.add(Button.secondary("resume", "▶ Play").asDisabled());
-            itemComponentList.add(Button.success("pause", "⏸ Pause"));
+    public List<ActionRow> addButtons() {
+        List<ActionRow> actionRowList = new ArrayList<>();
+        List<ItemComponent> itemComponentLine1List = new ArrayList<>();
+        if (musicPlayer.getAudioPlayer().getPlayingTrack() == null) {
+            itemComponentLine1List.add(Button.success("done", StringsConst.BUTTON_DONE).asDisabled());
+            actionRowList.add(ActionRow.of(itemComponentLine1List));
+            return actionRowList;
         }
-        itemComponentList.add(Button.primary("skip", "⏯ Skip"));
-        Button button = Button.danger("clear", "\uD83D\uDDD1 Effacer la liste");
+        List<ItemComponent> itemComponentLine2List = new ArrayList<>();
+        if (musicPlayer.isPause()) {
+            itemComponentLine1List.add(Button.success("resume", StringsConst.COMMAND_PLAY_TITLE));
+        } else {
+            itemComponentLine1List.add(Button.success("pause", StringsConst.COMMAND_PAUSE_TITLE));
+        }
+        itemComponentLine1List.add(Button.primary("skip", StringsConst.COMMAND_SKIP_TITLE));
+        itemComponentLine1List.add(Button.primary("shuffle", StringsConst.COMMAND_SHUFFLE_TITLE));
+        Button button = Button.danger("clear", StringsConst.COMMAND_CLEAR_TITLE);
         if (musicPlayer.getQueue().size()<2) {
             button = button.asDisabled();
         }
-        itemComponentList.add(button);
-        itemComponentList.add(Button.danger("disconnect", "\uD83D\uDEAA Déconnecter"));
-        return itemComponentList;
+        itemComponentLine2List.add(button);
+        itemComponentLine2List.add(Button.danger("disconnect", StringsConst.COMMAND_DISCONNECT_TITLE));
+        actionRowList.add(ActionRow.of(itemComponentLine1List));
+        actionRowList.add(ActionRow.of(itemComponentLine2List));
+        return actionRowList;
     }
 
     public List<ItemComponent> addTrackEndButtons() {
         List<ItemComponent> buttons = new ArrayList<>();
-        buttons.add(Button.success("done", "Terminé !").asDisabled());
-        buttons.add(Button.danger("disconnect", "\uD83D\uDEAA Déconnecter"));
+        buttons.add(Button.success("done", StringsConst.BUTTON_DONE).asDisabled());
+        buttons.add(Button.danger("disconnect", StringsConst.COMMAND_DISCONNECT_TITLE));
         return buttons;
     }
 
     private void barGenerator(EmbedBuilder builder, AudioTrack np, String duration) {
         String position = Utils.convertLongToString(np.getPosition());
-        builder.addField("``[En cours]`` "+np.getInfo().title, "**Durée :** ``"+position+" / "+duration + "``\n**Auteur :** ``"+np.getInfo().author+"``", false);
+        builder.addField("\uD83C\uDFB6 1️⃣ "+np.getInfo().title + " \uD83D\uDD0A", "**" + StringsConst.MESSAGE_DURATION + "** ``"+position+" / "+duration + "``\n**" + StringsConst.MESSAGE_AUTHOR + "** ``"+np.getInfo().author+"``", false);
         double posF;
         if (np.getInfo().isStream) {
             posF = 100D;

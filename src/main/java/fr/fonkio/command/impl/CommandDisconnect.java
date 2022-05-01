@@ -3,6 +3,7 @@ package fr.fonkio.command.impl;
 import fr.fonkio.command.AbstractCommand;
 import fr.fonkio.inicium.Inicium;
 import fr.fonkio.message.MusicPlayer;
+import fr.fonkio.message.StringsConst;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.GenericInteractionCreateEvent;
@@ -37,8 +38,9 @@ public class CommandDisconnect extends AbstractCommand {
             player.getAudioPlayer().stopTrack();
 
             if(guild.getId().equals("296520788033404929")) {
+                player.getAudioPlayer().setPaused(false);
                 Inicium.manager.loadTrack(guild, Inicium.CONFIGURATION.getDCsong(), user, event, false);
-                Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("\uD83D\uDEAA Disconnect","Aurevoir 👋", user, false, event);
+                Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage(StringsConst.COMMAND_DISCONNECT_TITLE,StringsConst.COMMAND_DISCONNECT_SUCCESS, user, false, event);
 
 
                 TimerTask task = new TimerTask() {

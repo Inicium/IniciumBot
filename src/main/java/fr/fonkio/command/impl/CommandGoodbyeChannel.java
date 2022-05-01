@@ -2,6 +2,7 @@ package fr.fonkio.command.impl;
 
 import fr.fonkio.command.AbstractCommand;
 import fr.fonkio.message.EmbedGenerator;
+import fr.fonkio.message.StringsConst;
 import fr.fonkio.utils.ConfigurationEnum;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
@@ -31,7 +32,7 @@ public class CommandGoodbyeChannel extends AbstractCommand {
                 }
 
                 List<SelectOption> optionList = getSelectOptionsChannelList(guild, ConfigurationEnum.QUIT_CHANNEL);
-                eventSlash.replyEmbeds(EmbedGenerator.generate(user,"\uD83D\uDC4B Goodbye channel", "Sélectionner le channel dans lequel les messages de leave seront postés"))
+                eventSlash.replyEmbeds(EmbedGenerator.generate(user, StringsConst.COMMAND_GOODBYE_TITLE, StringsConst.COMMAND_GOODBYE_SUCCESS))
                         .addActionRow(
                                 SelectMenu.create("choix-channel-goodbye")
                                         .setMinValues(0)

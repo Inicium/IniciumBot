@@ -6,6 +6,8 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import fr.fonkio.message.MusicPlayer;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
@@ -28,7 +30,14 @@ public class AudioListener extends AudioEventAdapter {
         return tracks.size();
     }
 
-    public void nexTrack() {
+    public void shuffle() {
+        List<AudioTrack> queue = new ArrayList<>(tracks);
+        Collections.shuffle(queue);
+        tracks.clear();
+        tracks.addAll(queue);
+    }
+
+    public void nextTrack() {
         if(tracks.isEmpty()) {
             if(player.getGuild().getAudioManager().getConnectedChannel() != null) {
                 player.getAudioPlayer().destroy();
@@ -41,24 +50,21 @@ public class AudioListener extends AudioEventAdapter {
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
         if(endReason.mayStartNext) {
-            nexTrack();
+            nextTrack();
         }
     }
 
     public void queue(AudioTrack track) {
         if (!player.getAudioPlayer().startTrack(track, true)) {
-            tracks.offer(track);
+            tracks.add(track);
         }
     }
 
     public List<AudioTrack> getQueue() {
 
-        List<AudioTrack> queue = new LinkedList<AudioTrack>();
+        List<AudioTrack> queue = new LinkedList<>();
         queue.add(player.getAudioPlayer().getPlayingTrack());
         queue.addAll(tracks);
-		/*for(Iterator<AudioTrack> it = tracks.iterator(); it.hasNext();) {
-			AudioTrack at = it.next();
-		}*/
 
         return queue;
     }

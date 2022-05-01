@@ -3,6 +3,7 @@ package fr.fonkio.command.impl;
 import fr.fonkio.command.AbstractCommand;
 import fr.fonkio.inicium.Inicium;
 import fr.fonkio.message.MusicPlayer;
+import fr.fonkio.message.StringsConst;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.GenericInteractionCreateEvent;
@@ -26,11 +27,11 @@ public class CommandClear extends AbstractCommand {
             }
             MusicPlayer player = Inicium.manager.getPlayer(guild);
             if(player.getListener().getTracks().isEmpty()) {
-                Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("\uD83D\uDDD1 Clear","La liste est déjà vide ...", user, true, event);
+                player.getPlayerMessage().newMessage(StringsConst.COMMAND_CLEAR_TITLE, StringsConst.COMMAND_CLEAR_ALREADY_EMPTY, user, true, event);
                 return true;
             }
             player.getListener().getTracks().clear();
-            Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("\uD83D\uDDD1 Clear","La liste a été effacée !", user, true, event);
+            player.getPlayerMessage().newMessage(StringsConst.COMMAND_CLEAR_TITLE, StringsConst.COMMAND_CLEAR_SUCCESS, user, true, event);
         }
 
         return true;

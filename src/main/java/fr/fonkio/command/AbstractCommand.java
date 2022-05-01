@@ -2,6 +2,7 @@ package fr.fonkio.command;
 
 import fr.fonkio.inicium.Inicium;
 import fr.fonkio.message.EmbedGenerator;
+import fr.fonkio.message.StringsConst;
 import fr.fonkio.music.YoutubeSearch;
 import fr.fonkio.utils.ConfigurationEnum;
 import net.dv8tion.jda.api.entities.*;
@@ -39,14 +40,14 @@ public abstract class AbstractCommand {
                 MessageEmbed messageEmbed;
 
                 if (userVoiceChannel == null) {
-                    messageEmbed = EmbedGenerator.generate(member.getUser(), "Tu dois être connecté", "Tu peux envoyer des commandes uniquement si tu es connecté !");
+                    messageEmbed = EmbedGenerator.generate(member.getUser(), StringsConst.MESSAGE_IMPOSSIBLE, StringsConst.MESSAGE_NOT_CONNECTED);
                 } else {
                     if (botVoiceChannel == null) {
                         return false;
                     }
                     String idBotVoiceChannel = botVoiceChannel.getId();
                     if (!userVoiceChannel.getId().equals(idBotVoiceChannel)) {
-                        messageEmbed = EmbedGenerator.generate(member.getUser(), "Bot occupé", "Le bot est déjà connecté dans un autre channel !");
+                        messageEmbed = EmbedGenerator.generate(member.getUser(), StringsConst.MESSAGE_BOT_BUSY, StringsConst.MESSAGE_BOT_IN_OTHER_CHANNEL);
                     } else {
                         return false;
                     }
@@ -73,7 +74,7 @@ public abstract class AbstractCommand {
             }
 
             optionList.add(SelectOption.of(tc.getName(), tc.getId())
-                    .withDescription("Définir " + tc.getName())
+                    .withDescription(StringsConst.SELECT_OPTION_DEFINE + tc.getName())
                     .withEmoji(Emoji.fromUnicode("\ud83d\udce2"))
                     .withDefault(defaultValue));
         }
@@ -82,7 +83,7 @@ public abstract class AbstractCommand {
 
     protected void permissionCheck(SlashCommandInteractionEvent event, User user) {
         event.replyEmbeds(
-                EmbedGenerator.generate(user, "Permission", "Vous n'êtes pas administrateur de ce serveur")
+                EmbedGenerator.generate(user, StringsConst.MESSAGE_ADMIN_PERM, StringsConst.MESSAGE_NO_ADMIN_PERM)
         ).setEphemeral(true).queue();
     }
 

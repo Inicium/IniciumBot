@@ -2,6 +2,7 @@ package fr.fonkio.command.impl;
 
 import fr.fonkio.command.AbstractCommand;
 import fr.fonkio.message.EmbedGenerator;
+import fr.fonkio.message.StringsConst;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -34,22 +35,22 @@ public class CommandMoveAll extends AbstractCommand {
                             for (Member m : sourceAudioChannel.getMembers()) {
                                 guild.moveVoiceMember(m, destinationAudioChannelParameter).queue();
                             }
-                            eventSlash.replyEmbeds(EmbedGenerator.generate(user, "\uD83D\uDE80 MoveAll", "J'ai déplacé tout le monde ! \uD83D\uDE80\u200B")).setEphemeral(true).queue();
+                            eventSlash.replyEmbeds(EmbedGenerator.generate(user, "\uD83D\uDE80 MoveAll", StringsConst.COMMAND_MOVEALL_SUCCESS)).setEphemeral(true).queue();
                         } else {
-                            eventSlash.replyEmbeds(EmbedGenerator.generate(user, "\uD83D\uDE80 MoveAll", "Tu n'as pas les permissions nécessaires pour déplacer des membres ou pour accéder à ce channel"))
+                            eventSlash.replyEmbeds(EmbedGenerator.generate(user, "\uD83D\uDE80 MoveAll", StringsConst.COMMAND_MOVEALL_PERM))
                                     .setEphemeral(true).queue();
                         }
                     } else {
-                        eventSlash.replyEmbeds(EmbedGenerator.generate(user, "\uD83D\uDE80 MoveAll", "Tu n'es pas connecté dans un channel !"))
+                        eventSlash.replyEmbeds(EmbedGenerator.generate(user, "\uD83D\uDE80 MoveAll", StringsConst.MESSAGE_NOT_CONNECTED))
                                 .setEphemeral(true).queue();
                     }
                 } else {
-                    eventSlash.replyEmbeds(EmbedGenerator.generate(user, "\uD83D\uDE80 MoveAll", "Le channel est introuvable"))
+                    eventSlash.replyEmbeds(EmbedGenerator.generate(user, "\uD83D\uDE80 MoveAll", StringsConst.MESSAGE_UNKNOWN_CHANNEL))
                             .setEphemeral(true).queue();
                 }
 
             } else {
-                eventSlash.replyEmbeds(EmbedGenerator.generate(user, "\uD83D\uDE80MoveAll", "Tu dois être co sur un channel vocal pour demander ça."))
+                eventSlash.replyEmbeds(EmbedGenerator.generate(user, "\uD83D\uDE80MoveAll", StringsConst.MESSAGE_NOT_CONNECTED))
                         .setEphemeral(true).queue();
             }
         } else {

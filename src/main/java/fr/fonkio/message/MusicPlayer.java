@@ -44,9 +44,12 @@ public class MusicPlayer {
     }
 
     public synchronized void skipTrack() {
-        listener.nexTrack();
+        listener.nextTrack();
     }
 
+    public void shuffle() {
+        listener.shuffle();
+    }
 
     public void seekTrack(String position) throws IllegalArgumentException {
         String [] time = position.split(":");
@@ -90,6 +93,5 @@ public class MusicPlayer {
     public void setPlayerMessage(PlayerMessage playerMessage) {
         this.playerMessage = playerMessage;
     }
-
 
 }

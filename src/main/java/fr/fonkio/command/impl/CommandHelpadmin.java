@@ -1,12 +1,12 @@
 package fr.fonkio.command.impl;
 
 import fr.fonkio.command.AbstractCommand;
+import fr.fonkio.message.StringsConst;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
-
 import java.awt.*;
 
 public class CommandHelpadmin extends AbstractCommand {
@@ -27,12 +27,12 @@ public class CommandHelpadmin extends AbstractCommand {
                     return true;
                 }
                 EmbedBuilder eb = new EmbedBuilder();
-                eb.setTitle("Liste des commandes");
+                eb.setTitle(StringsConst.COMMAND_HELPADMIN_TITLE);
                 String prefix = "/";
                 eb.addBlankField(false);
-                eb.addField(prefix+"welcome", "Définir un channel pour l'affichage d'un message de bienvenue", false);
-                eb.addField(prefix+"goodbye", "Définir un channel pour l'affichage d'un message lors d'un départ", false);
-                eb.addField(prefix+"blacklist", "Définir les channels où l'on ne peut pas executer de commande", false);
+                eb.addField(prefix+"welcome", StringsConst.COMMAND_WELCOME_DESC, false);
+                eb.addField(prefix+"goodbye", StringsConst.COMMAND_GOODBYE_DESC, false);
+                eb.addField(prefix+"blacklist", StringsConst.COMMAND_BLACKLIST_DESC, false);
 
                 eb.setColor(Color.GREEN);
                 eb.setAuthor(user.getName(), null, user.getAvatarUrl());

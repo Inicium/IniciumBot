@@ -3,6 +3,7 @@ package fr.fonkio.command.impl;
 import fr.fonkio.command.AbstractCommand;
 import fr.fonkio.inicium.Inicium;
 import fr.fonkio.message.EmbedGenerator;
+import fr.fonkio.message.StringsConst;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
@@ -45,18 +46,18 @@ public class CommandPlaySkip extends AbstractCommand {
                     AudioChannel voiceChannel = guildVoiceState.getChannel();
                     if (!guild.getAudioManager().isConnected()) {
                         if (voiceChannel == null) {
-                            Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("▶ ⏭ PlaySkip","Tu dois être co sur un channel vocal pour demander ça.", user, false, eventSlash);
+                            Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage(StringsConst.COMMAND_PLAYSKIP_TITLE, StringsConst.MESSAGE_NOT_CONNECTED, user, false, eventSlash);
                         }
                         try {
                             guild.getAudioManager().openAudioConnection(voiceChannel);
                             guild.getAudioManager().setSelfDeafened(true);
                         } catch (InsufficientPermissionException e){
-                            Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("▶ ⏭ PlaySkip","Je n'ai pas la permission de rejoindre ce channel !", user, false, eventSlash);
+                            Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage(StringsConst.COMMAND_PLAYSKIP_TITLE, StringsConst.MESSAGE_NO_PERMISSIONS, user, false, eventSlash);
                         }
 
                     } else {
                         if (voiceChannel == null) {
-                            Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage("▶ ⏭ PlaySkip","Tu dois être co sur un channel vocal pour demander ça.", user, false, eventSlash);
+                            Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage(StringsConst.COMMAND_PLAYSKIP_TITLE, StringsConst.MESSAGE_NOT_CONNECTED, user, false, eventSlash);
                             return true;
                         }
                         // Verification que l'utilisateur soit dans le même chan
@@ -69,7 +70,7 @@ public class CommandPlaySkip extends AbstractCommand {
                                     try {
                                         guild.getAudioManager().openAudioConnection(voiceChannel);
                                     } catch (InsufficientPermissionException e) {
-                                        eventSlash.replyEmbeds(EmbedGenerator.generate(user, "\uD83D\uDEAB Permission", "Je n'ai pas la permission de rejoindre ce channel !")).setEphemeral(true).queue();
+                                        eventSlash.replyEmbeds(EmbedGenerator.generate(user, StringsConst.COMMAND_PLAYSKIP_TITLE, StringsConst.MESSAGE_NO_PERMISSIONS)).setEphemeral(true).queue();
                                     }
                                 }
                             }

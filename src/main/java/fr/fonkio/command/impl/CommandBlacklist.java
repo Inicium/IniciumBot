@@ -2,6 +2,7 @@ package fr.fonkio.command.impl;
 
 import fr.fonkio.command.AbstractCommand;
 import fr.fonkio.message.EmbedGenerator;
+import fr.fonkio.message.StringsConst;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -31,7 +32,7 @@ public class CommandBlacklist extends AbstractCommand {
                 permissionCheck(eventSlash, user);
             } else {
                 List<SelectOption> optionList = getSelectOptionsChannelList(guild, null);
-                eventSlash.replyEmbeds(EmbedGenerator.generate(user,"⛔ Blacklist", "Sélectionner les channels dans lesquels les commandes sont interdites"))
+                eventSlash.replyEmbeds(EmbedGenerator.generate(user, StringsConst.COMMAND_BLACKLIST_TITLE, StringsConst.COMMAND_BLACKLIST_SUCCESS))
                         .addActionRow(
                                 SelectMenu.create("choix-channel-blacklist")
                                         .setMinValues(0)

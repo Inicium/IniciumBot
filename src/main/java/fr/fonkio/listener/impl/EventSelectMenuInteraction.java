@@ -2,6 +2,7 @@ package fr.fonkio.listener.impl;
 
 import fr.fonkio.inicium.Inicium;
 import fr.fonkio.message.EmbedGenerator;
+import fr.fonkio.message.StringsConst;
 import fr.fonkio.utils.ConfigurationEnum;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEvent;
@@ -39,6 +40,6 @@ public class EventSelectMenuInteraction extends ListenerAdapter {
                 }
                 break;
         }
-        event.editMessageEmbeds(EmbedGenerator.generate(event.getUser(), "Choix validé !", "Votre choix est enregistré")).setActionRow(Button.success("saved","Enregistré !").asDisabled()).queue();
+        event.editMessageEmbeds(EmbedGenerator.generate(event.getUser(), StringsConst.MESSAGE_CONFIRM_TITLE, StringsConst.MESSAGE_CONFIRM)).setActionRow(Button.success("saved",StringsConst.BUTTON_SAVED).asDisabled()).queue();
     }
 }
