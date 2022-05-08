@@ -22,6 +22,11 @@ Pour avoir un accès hébergé au bot, merci de me le demander
   - [Welcome](#welcome)
   - [Goodbye](#goodbye)
   - [HelpAdmin](#helpadmin)
+
+Les commandes et les arguments sont autocomplétés
+![image](https://user-images.githubusercontent.com/28084726/167290097-1c4755ae-9352-4651-b4d2-5ba95054d377.png)
+![image](https://user-images.githubusercontent.com/28084726/167290108-b0b627a8-1ccc-40ef-b348-4a680ed57965.png)
+
 # Commandes gestion musique
 
 ## Play
@@ -111,51 +116,104 @@ Déconnecter le bot du channel audio
 ### Bouton
 ![image](https://user-images.githubusercontent.com/28084726/166141828-5e1ed67f-23a6-40ee-9167-54c4aa59f64b.png)
 ### Exemple
+```/disconnect```</br></br>
+![image](https://user-images.githubusercontent.com/28084726/167289042-ef074e9a-dc26-4962-9c42-fc11993c9dd8.png)
 
 ## Clear
 ### Description
+Effacer la liste des musiques en attente
 ### Commande
+/clear</br>
+/clean</br>
+/clr
+### Bouton
+![image](https://user-images.githubusercontent.com/28084726/167289138-d62b546e-3e92-4dee-a2ae-97c36e3c4f17.png)
 ### Exemple
+![image](https://user-images.githubusercontent.com/28084726/167289147-8a4146fd-fea1-4cf7-b792-5bde16de52ce.png)</br></br>
+```/clear```</br></br>
+![image](https://user-images.githubusercontent.com/28084726/167289179-45fbbef8-b15a-4e6c-b1a0-d6747df0066a.png)
 
 ## Queue
 ### Description
+Voir la liste de lecture
 ### Commande
+/queue</br></br>
+/np
 ### Exemple
+```/np```</br></br>
+![image](https://user-images.githubusercontent.com/28084726/167289241-d44ab378-902e-43f1-86ce-596a50af83c9.png)
 
 ## Shuffle
 ### Description
+Mélanger la liste de lecture
 ### Commande
+/shuffle
+### Bouton
+![image](https://user-images.githubusercontent.com/28084726/167289263-30aede7e-fd93-4946-ade0-559ab62a359e.png)
 ### Exemple
+![image](https://user-images.githubusercontent.com/28084726/167289400-b7a12574-d760-46ea-b58a-25e50b0cb73a.png)</br></br>
+```/shuffle```</br></br>
+![image](https://user-images.githubusercontent.com/28084726/167289423-c5d34c88-38fc-48bf-992a-140a2cafe19b.png)
 
 # Commandes générales
+
 ## MoveAll
 ### Description
+Déplacer tous les utilisateurs du channel actuel
 ### Commande
+/moveall [destination]</br></br>
+/mva [destination]
+### Paramètres
+`[destination]` : Channel de destination
 ### Exemple
+![image](https://user-images.githubusercontent.com/28084726/167289591-517c3a69-dc2f-4714-bb97-ed08c3b988e5.png)</br></br>
+```/mva destination: #🥇 Salle de discussion 1```</br></br>
+![image](https://user-images.githubusercontent.com/28084726/167289616-5937a7b6-12b2-495a-865f-170e3d482a83.png)</br></br>
+![image](https://user-images.githubusercontent.com/28084726/167289628-03cf541e-4391-4a13-83bc-92a436b2c77f.png)
 
 ## Help
 ### Description
+Voir la liste des commandes du bot musique
 ### Commande
+/help
 ### Exemple
+```/help```</br></br>
+![image](https://user-images.githubusercontent.com/28084726/167289669-cc5bb189-5212-4387-b814-723db88791af.png)
 
 # Commandes administrateur
 ## Blacklist
 ### Description
+Définir les channels où l'on ne peut pas executer de commande
 ### Commande
+/blacklist
 ### Exemple
+```/blacklist```</br></br>
+![image](https://user-images.githubusercontent.com/28084726/167290049-593232f3-c4c8-42e8-bae7-a76cd516ada9.png)
 
 ## Welcome
 ### Description
+Définir un channel pour l'affichage d'un message de bienvenue
 ### Commande
+/welcome
 ### Exemple
+```/welcome```</br></br>
+![image](https://user-images.githubusercontent.com/28084726/167289797-d64cec78-a3b6-41f9-a984-1ecc72334968.png)
 
 ## Goodbye
 ### Description
+Définir un channel pour l'affichage d'un message lors d'un départ
 ### Commande
+/goodbye
 ### Exemple
+```/goodbye```</br></br>
+![image](https://user-images.githubusercontent.com/28084726/167289820-6ff94751-f2e5-4151-b402-41a61dbf24a5.png)
 
 ## HelpAdmin
 ### Description
+Voir la liste des commandes administrateur
 ### Commande
+/helpadmin
 ### Exemple
+```/helpadmin```</br></br>
+![image](https://user-images.githubusercontent.com/28084726/167289698-3042fec4-f458-4cc6-8396-6cadf6d19788.png)
 
