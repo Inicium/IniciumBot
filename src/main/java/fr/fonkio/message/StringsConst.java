@@ -25,8 +25,8 @@ public class StringsConst {
     public static final String COMMAND_HELP_TITLE = "Liste des commandes";
     public static final String COMMAND_HELP_DESC = "Voir la liste des commandes du bot musique";
 
-    public static final String COMMAND_HELPADMIN_TITLE = "Voir le commande administrateur";
-    public static final String COMMAND_HELPADMIN_DESC = "Voir le commande administrateur";
+    public static final String COMMAND_HELPADMIN_TITLE = "Liste des commandes administrateur";
+    public static final String COMMAND_HELPADMIN_DESC = "Voir la liste des commandes administrateur";
 
     public static final String COMMAND_WELCOME_TITLE = "\uD83D\uDC4B Welcome channel";
     public static final String COMMAND_WELCOME_DESC = "Définir un channel pour l'affichage d'un message de bienvenue";
