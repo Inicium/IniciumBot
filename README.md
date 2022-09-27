@@ -3,6 +3,7 @@ Bot musique pour Discord<br/>
 Pour avoir un accès hébergé au bot, merci de me le demander
 
 # Présentation
+## Teble des matières
 - [Commandes gestion musique](#commandes-gestion-musique)
   - [Play](#play)
   - [Skip](#skip)
@@ -23,6 +24,7 @@ Pour avoir un accès hébergé au bot, merci de me le demander
   - [Goodbye](#goodbye)
   - [HelpAdmin](#helpadmin)
 
+## Utilisation générale
 Les commandes et les arguments sont autocomplétés
 ![image](https://user-images.githubusercontent.com/28084726/167290097-1c4755ae-9352-4651-b4d2-5ba95054d377.png)
 ![image](https://user-images.githubusercontent.com/28084726/167290108-b0b627a8-1ccc-40ef-b348-4a680ed57965.png)
