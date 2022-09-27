@@ -11,7 +11,7 @@ import fr.fonkio.message.MusicPlayer;
 import fr.fonkio.message.StringsConst;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.interaction.GenericInteractionCreateEvent;
+import net.dv8tion.jda.api.interactions.InteractionHook;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,25 +34,25 @@ public class MusicManager {
     }
 
 
-    public void loadTrack (final Guild guild, final String source, User author, GenericInteractionCreateEvent event) {
-        loadTrack(guild, source, author, event, true);
+    public void loadTrack (final Guild guild, final String source, User author, InteractionHook hook) {
+        loadTrack(guild, source, author, hook, true);
     }
-    public void loadTrack (final Guild guild, final String source, User author, GenericInteractionCreateEvent event, boolean message) {
+    public void loadTrack (final Guild guild, final String source, User author, InteractionHook hook, boolean message) {
         MusicPlayer player = getPlayer(guild);
         guild.getAudioManager().setSendingHandler(player.getAudioHandler());
-        player.getPlayerMessage().newMessage("\uD83D\uDD03 " + StringsConst.MESSAGE_LOADING_TITLE, StringsConst.MESSAGE_LOADING, author, true, event);
+        player.getPlayerMessage().updatePlayerMessage("\uD83D\uDD03 " + StringsConst.MESSAGE_LOADING_TITLE, StringsConst.MESSAGE_LOADING, author, true, hook);
         manager.loadItemOrdered(player, source, new AudioLoadResultHandler() {
 
             @Override
             public void trackLoaded(AudioTrack track) {
                 player.playTrack(track);
                 if (message) {
-                    player.getPlayerMessage().editMessage(StringsConst.COMMAND_PLAY_TITLE,
+                    player.getPlayerMessage().updatePlayerMessage(StringsConst.COMMAND_PLAY_TITLE,
                             "\uD83D\uDCBF\u200B "+ StringsConst.MESSAGE_ADDING_TRACK +" \uD83D\uDCBF\u200B" +
                                     "\n\uD83D\uDD17\u200B " + track.getInfo().uri +
                                     "\n\uD83C\uDFB5\u200B " + track.getInfo().title +
                                     "\n\uD83C\uDF99️\u200B " + track.getInfo().author
-                            , author, true, event);
+                            , author, true, hook);
                 }
             }
 
@@ -62,20 +62,26 @@ public class MusicManager {
                     AudioTrack track = playlist.getTracks().get(i);
                     player.playTrack(track);
                 }
-                player.getPlayerMessage().editMessage(StringsConst.COMMAND_PLAY_TITLE, StringsConst.MESSAGE_ADDING_PLAYLIST + "**" + playlist.getName() + "**\n",author, true, event);
+                if (message) {
+                    player.getPlayerMessage().updatePlayerMessage(StringsConst.COMMAND_PLAY_TITLE, StringsConst.MESSAGE_ADDING_PLAYLIST + "**" + playlist.getName() + "**\n",author, true, hook);
+                }
             }
 
             @Override
             public void noMatches() {
-                player.getPlayerMessage().editMessage(StringsConst.COMMAND_PLAY_TITLE, StringsConst.MESSAGE_THE_TRACK+ source + StringsConst.MESSAGE_NOT_FOUND, author, true, event);
+                if (message) {
+                    player.getPlayerMessage().updatePlayerMessage(StringsConst.COMMAND_PLAY_TITLE, StringsConst.MESSAGE_THE_TRACK + source + StringsConst.MESSAGE_NOT_FOUND, author, true, hook);
+                }
             }
 
             @Override
             public void loadFailed(FriendlyException exception) {
                 exception.printStackTrace();
-                player.getPlayerMessage().editMessage(StringsConst.COMMAND_PLAY_TITLE,
-                        StringsConst.MESSAGE_CANT_PLAY_RESON +exception.getMessage()+")\n**"+ StringsConst.MESSAGE_ADD_LYRIC_TO_SEARCH +"**"
-                        ,author, true, event);
+                if (message) {
+                    player.getPlayerMessage().updatePlayerMessage(StringsConst.COMMAND_PLAY_TITLE,
+                            StringsConst.MESSAGE_CANT_PLAY_RESON + exception.getMessage() + ")\n**" + StringsConst.MESSAGE_ADD_LYRIC_TO_SEARCH + "**"
+                            , author, true, hook);
+                }
             }
         });
     }

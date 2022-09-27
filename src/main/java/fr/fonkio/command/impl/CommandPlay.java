@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
+import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
 public class CommandPlay extends AbstractCommand {
@@ -21,12 +22,11 @@ public class CommandPlay extends AbstractCommand {
         if (eventSlash == null) {
             return false;
         }
-
+        InteractionHook hook = eventSlash.deferReply().complete();
         User user = eventSlash.getUser();
         Guild guild = eventSlash.getGuild();
-
         if (guild != null) {
-            if (canNotSendCommand(user, guild, eventSlash)) {
+            if (canNotSendCommand(user, guild, hook)) {
                 return true;
             }
             OptionMapping musiqueOption = eventSlash.getOption("musique");
@@ -42,17 +42,19 @@ public class CommandPlay extends AbstractCommand {
                     AudioChannel voiceChannel = guildVoiceState.getChannel();
                     if (!guild.getAudioManager().isConnected()) {
                         if (voiceChannel == null) {
-                            Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage(StringsConst.COMMAND_PLAY_TITLE, StringsConst.MESSAGE_NOT_CONNECTED, user, false, eventSlash);
+                            hook.editOriginalEmbeds(EmbedGenerator.generate(user, StringsConst.COMMAND_PLAY_TITLE, StringsConst.MESSAGE_NOT_CONNECTED)).queue();
+                            return true;
                         }
                         try {
                             guild.getAudioManager().openAudioConnection(voiceChannel);
                             guild.getAudioManager().setSelfDeafened(true);
                         } catch (InsufficientPermissionException e){
-                            Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage(StringsConst.COMMAND_PLAY_TITLE, StringsConst.MESSAGE_CANT_CONNECT, user, false, eventSlash);
+                            hook.editOriginalEmbeds(EmbedGenerator.generate(user, StringsConst.COMMAND_PLAY_TITLE, StringsConst.MESSAGE_CANT_CONNECT)).queue();
+                            return true;
                         }
                     } else {
                         if (voiceChannel == null) {
-                            Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage(StringsConst.COMMAND_PLAY_TITLE, StringsConst.MESSAGE_NOT_CONNECTED, user, false, eventSlash);
+                            hook.editOriginalEmbeds(EmbedGenerator.generate(user, StringsConst.COMMAND_PLAY_TITLE, StringsConst.MESSAGE_NOT_CONNECTED)).queue();
                             return true;
                         }
                         // Verification que l'utilisateur soit dans le même chan
@@ -63,17 +65,15 @@ public class CommandPlay extends AbstractCommand {
                                 AudioChannel audioChannel = guildVoiceStateBot.getChannel();
                                 if (audioChannel != null && !voiceChannel.getId().equals(audioChannel.getId())) {
                                     try {
-                                        System.out.println("3");
                                         guild.getAudioManager().openAudioConnection(voiceChannel);
                                     } catch (InsufficientPermissionException e) {
-                                        eventSlash.replyEmbeds(EmbedGenerator.generate(user, StringsConst.COMMAND_PLAY_TITLE, StringsConst.MESSAGE_NO_PERMISSIONS)).setEphemeral(true).queue();
+                                        hook.editOriginalEmbeds(EmbedGenerator.generate(user, StringsConst.COMMAND_PLAY_TITLE, StringsConst.MESSAGE_NO_PERMISSIONS)).queue();
                                     }
                                 }
                             }
                         }
                     }
-                    System.out.println("2");
-                    Inicium.manager.loadTrack(guild, youtubeSearch.searchOrUrl(musiqueParameter), user, eventSlash);
+                    Inicium.manager.loadTrack(guild, youtubeSearch.searchOrUrl(musiqueParameter), user, hook);
                 }
             }
         }

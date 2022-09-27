@@ -6,9 +6,6 @@ import fr.fonkio.message.MusicPlayer;
 import fr.fonkio.message.StringsConst;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.events.interaction.GenericInteractionCreateEvent;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.ItemComponent;
@@ -21,7 +18,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class PlayerMessage {
-    private InteractionHook messageEnCours;
+    private Message messageEnCours;
     private User author;
     private String command;
     private String message;
@@ -38,25 +35,17 @@ public class PlayerMessage {
         this.musicPlayer = musicPlayer;
     }
 
-    public void editMessage(String command, String message, User author, boolean afficherQueue, GenericInteractionCreateEvent event) {
-        this.command = command;
-        this.message = message;
-        this.author = author;
-        this.afficherQueue = afficherQueue;
-        messageEnCours.editOriginalEmbeds(getEmbed()).setActionRows(addButtons()).queue();
-    }
+    public void updatePlayerMessage(String command, String message, User author, boolean afficherQueue, InteractionHook hook) {
 
-    public void newMessage(String command, String message, User author, boolean afficherQueue, GenericInteractionCreateEvent event) {
-        if (messageEnCours != null) { //Suppression des commandes du dernier message
-            messageEnCours.editOriginalEmbeds(oldEmbed).setActionRow(Button.success("done", StringsConst.BUTTON_DONE).asDisabled()).queue();
-        }
-        if(timerTask != null) {
-            try {
-                timerTask.cancel();
-            } catch (IllegalStateException e) {
-                System.err.println("Le timer est déjà arrêté");
+        if (messageEnCours != null && !messageEnCours.equals(hook.retrieveOriginal().complete())) {
+            messageEnCours.editMessageEmbeds(oldEmbed).setActionRow(Button.success("done", StringsConst.BUTTON_DONE).asDisabled()).queue();
+            if(timerTask != null) {
+                try {
+                    timerTask.cancel();
+                } catch (IllegalStateException e) {
+                    System.err.println("Le timer est déjà arrêté");
+                }
             }
-
         }
 
         this.command = command;
@@ -64,14 +53,8 @@ public class PlayerMessage {
         this.afficherQueue = afficherQueue;
         this.author = author;
 
-        if (event instanceof SlashCommandInteractionEvent) {
-            this.messageEnCours = ((SlashCommandInteractionEvent)event).replyEmbeds(getEmbed()).addActionRows(addButtons()).complete();
-        } else if (event instanceof ButtonInteractionEvent) {
-            if (messageEnCours != null) {
-                this.messageEnCours.editOriginalEmbeds(getEmbed()).setActionRows(addButtons()).queue();
-            }
+        this.messageEnCours = hook.editOriginalEmbeds(getEmbed()).setActionRows(addButtons()).complete();
 
-        }
         timerTask = new PlayerUpdater();
         timer.scheduleAtFixedRate(timerTask, DELAY, PERIOD);
     }
@@ -219,15 +202,15 @@ public class PlayerMessage {
             if (musicPlayer.isPause()) {
                 cancel();
             } else if (musicPlayer.getAudioPlayer().getPlayingTrack() == null) {
-                messageEnCours.editOriginalEmbeds(getEmbed()).setActionRow(addTrackEndButtons()).queue();
+                messageEnCours = messageEnCours.editMessageEmbeds(getEmbed()).setActionRow(addTrackEndButtons()).complete();
                 cancel();
             }
             else {
                 if (musicPlayer.getQueue().size()==0) {
-                    messageEnCours.editOriginalEmbeds(getEmbed()).setActionRow(addTrackEndButtons()).queue();
+                    messageEnCours = messageEnCours.editMessageEmbeds(getEmbed()).setActionRow(addTrackEndButtons()).complete();
                     cancel();
                 } else {
-                    messageEnCours.editOriginalEmbeds(getEmbed()).queue();
+                    messageEnCours = messageEnCours.editMessageEmbeds(getEmbed()).complete();
                 }
             }
         }

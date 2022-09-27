@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
+import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
 
@@ -23,11 +24,13 @@ public class CommandPlaySkip extends AbstractCommand {
             return false;
         }
 
+        InteractionHook hook = eventSlash.deferReply().complete();
+
         User user = eventSlash.getUser();
         Guild guild = eventSlash.getGuild();
 
         if (guild != null) {
-            if (canNotSendCommand(user, guild, eventSlash)) {
+            if (canNotSendCommand(user, guild, hook)) {
                 return true;
             }
 
@@ -46,18 +49,18 @@ public class CommandPlaySkip extends AbstractCommand {
                     AudioChannel voiceChannel = guildVoiceState.getChannel();
                     if (!guild.getAudioManager().isConnected()) {
                         if (voiceChannel == null) {
-                            Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage(StringsConst.COMMAND_PLAYSKIP_TITLE, StringsConst.MESSAGE_NOT_CONNECTED, user, false, eventSlash);
+                            Inicium.manager.getPlayer(guild).getPlayerMessage().updatePlayerMessage(StringsConst.COMMAND_PLAYSKIP_TITLE, StringsConst.MESSAGE_NOT_CONNECTED, user, false, hook);
                         }
                         try {
                             guild.getAudioManager().openAudioConnection(voiceChannel);
                             guild.getAudioManager().setSelfDeafened(true);
                         } catch (InsufficientPermissionException e){
-                            Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage(StringsConst.COMMAND_PLAYSKIP_TITLE, StringsConst.MESSAGE_NO_PERMISSIONS, user, false, eventSlash);
+                            Inicium.manager.getPlayer(guild).getPlayerMessage().updatePlayerMessage(StringsConst.COMMAND_PLAYSKIP_TITLE, StringsConst.MESSAGE_NO_PERMISSIONS, user, false, hook);
                         }
 
                     } else {
                         if (voiceChannel == null) {
-                            Inicium.manager.getPlayer(guild).getPlayerMessage().newMessage(StringsConst.COMMAND_PLAYSKIP_TITLE, StringsConst.MESSAGE_NOT_CONNECTED, user, false, eventSlash);
+                            Inicium.manager.getPlayer(guild).getPlayerMessage().updatePlayerMessage(StringsConst.COMMAND_PLAYSKIP_TITLE, StringsConst.MESSAGE_NOT_CONNECTED, user, false, hook);
                             return true;
                         }
                         // Verification que l'utilisateur soit dans le même chan
@@ -76,11 +79,11 @@ public class CommandPlaySkip extends AbstractCommand {
                             }
                         }
                     }
-                    Inicium.manager.loadTrack(guild, youtubeSearch.searchOrUrl(musiqueParameter), user, eventSlash);
+                    Inicium.manager.loadTrack(guild, youtubeSearch.searchOrUrl(musiqueParameter), user, hook);
 
                 }
             }
         }
-        return false;
+        return true;
     }
 }

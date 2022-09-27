@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.interaction.GenericInteractionCreateEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
 
 import java.util.ArrayList;
@@ -16,13 +17,13 @@ import java.util.List;
 
 public abstract class AbstractCommand {
 
-    protected  YoutubeSearch youtubeSearch = new YoutubeSearch();
+    protected YoutubeSearch youtubeSearch = new YoutubeSearch();
 
     public abstract boolean run(SlashCommandInteractionEvent event, ButtonInteractionEvent eventButton);
 
     protected boolean blacklistable;
 
-    public boolean canNotSendCommand(User user, Guild guild, GenericInteractionCreateEvent event) {
+    public boolean canNotSendCommand(User user, Guild guild, InteractionHook hook) {
         Member member = guild.getMember(user);
         if (member == null) {
             return true;
@@ -52,12 +53,7 @@ public abstract class AbstractCommand {
                         return false;
                     }
                 }
-                if (event instanceof SlashCommandInteractionEvent) {
-                    ((SlashCommandInteractionEvent)event).replyEmbeds(messageEmbed).setEphemeral(true).queue();
-                } else if (event instanceof ButtonInteractionEvent) {
-                    ((ButtonInteractionEvent)event).replyEmbeds(messageEmbed).setEphemeral(true).queue();
-                }
-
+                hook.editOriginalEmbeds(messageEmbed).queue();
             }
         }
         return true;

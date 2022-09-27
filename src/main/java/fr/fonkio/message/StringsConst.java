@@ -105,4 +105,6 @@ public class StringsConst {
     public static final String MESSAGE_AUTHOR = "Auteur :";
     public static final String MESSAGE_OTHER_TRACKS = " autres pistes";
     public static final String MESSAGE_OTHER_TRACK = " autre piste";
+    public static final String MESSAGE_ERROR_TITLE = "Erreur";
+    public static final String MESSAGE_ERROR = "Erreur lors de l'exécution de la commande. Merci de réessayer plus tard.";
 }

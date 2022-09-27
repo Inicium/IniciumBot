@@ -24,7 +24,10 @@ public class EventSlashCommandInteraction extends ListenerAdapter {
                                 StringsConst.MESSAGE_BLACKLISTED)
                 ).setEphemeral(true).queue();
             } else {
-                commandRunner.run(event, null);
+                boolean execution = commandRunner.run(event, null);
+                if (!execution) {
+                    event.replyEmbeds(EmbedGenerator.generate(event.getUser(), StringsConst.MESSAGE_ERROR_TITLE, StringsConst.MESSAGE_ERROR)).queue();
+                }
             }
 
         }

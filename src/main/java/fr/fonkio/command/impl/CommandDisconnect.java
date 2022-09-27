@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.GenericInteractionCreateEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import net.dv8tion.jda.api.interactions.InteractionHook;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -21,13 +22,14 @@ public class CommandDisconnect extends AbstractCommand {
 
     @Override
     public boolean run(SlashCommandInteractionEvent eventSlash, ButtonInteractionEvent eventButton) {
-
         GenericInteractionCreateEvent event = eventSlash != null ? eventSlash : eventButton;
+        InteractionHook hook = eventSlash != null ? eventSlash.deferReply().complete() : eventButton.getHook();
+
         Guild guild = event.getGuild();
         User user = event.getUser();
 
         if (guild != null) {
-            if (canNotSendCommand(user, guild, event)) {
+            if (canNotSendCommand(user, guild, hook)) {
                 return true;
             }
             if(!guild.getAudioManager().isConnected()) {
@@ -39,8 +41,8 @@ public class CommandDisconnect extends AbstractCommand {
 
             if(guild.getId().equals("296520788033404929")) {
                 player.getAudioPlayer().setPaused(false);
-                Inicium.manager.loadTrack(guild, Inicium.CONFIGURATION.getDCsong(), user, event, false);
-                Inicium.manager.getPlayer(guild).getPlayerMessage().editMessage(StringsConst.COMMAND_DISCONNECT_TITLE,StringsConst.COMMAND_DISCONNECT_SUCCESS, user, false, event);
+                Inicium.manager.loadTrack(guild, Inicium.CONFIGURATION.getDCsong(), user, hook, false);
+                Inicium.manager.getPlayer(guild).getPlayerMessage().updatePlayerMessage(StringsConst.COMMAND_DISCONNECT_TITLE,StringsConst.COMMAND_DISCONNECT_SUCCESS, user, false, hook);
 
 
                 TimerTask task = new TimerTask() {
