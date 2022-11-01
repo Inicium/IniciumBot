@@ -16,7 +16,7 @@ public class EventSlashCommandInteraction extends ListenerAdapter {
         Guild guild = event.getGuild();
         if (guild != null) {
             AbstractCommand commandRunner = Inicium.commands.get(event.getName());
-            if (commandRunner.isBlacklistable() && Inicium.CONFIGURATION.blackListContains(guild.getId(), event.getTextChannel().getId())) {
+            if (commandRunner.isBlacklistable() && Inicium.CONFIGURATION.blackListContains(guild.getId(), event.getChannel().asTextChannel().getId())) {
                 event.replyEmbeds(
                         EmbedGenerator.generate(
                                 event.getUser(),

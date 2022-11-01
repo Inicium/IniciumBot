@@ -3,7 +3,11 @@ package fr.fonkio.utils;
 public enum ConfigurationEnum {
     QUIT_CHANNEL("quit", ""),
     WELCOME_CHANNEL("welcome", ""),
-    SERVER_NAME("name", "undefined");
+    SERVER_NAME("name", "undefined"),
+
+    DEFAULT_ROLE("defaultrole", "");
+
+
 
     ConfigurationEnum(String key, String defaultValue) {
         this.key = key;

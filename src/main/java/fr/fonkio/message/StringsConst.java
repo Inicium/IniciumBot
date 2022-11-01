@@ -32,6 +32,10 @@ public class StringsConst {
     public static final String COMMAND_WELCOME_DESC = "Définir un channel pour l'affichage d'un message de bienvenue";
     public static final String COMMAND_WELCOME_SUCCESS = "Sélectionner le channel dans lequel les messages de bienvenue seront postés";
 
+    public static final String COMMAND_DEFAULT_ROLE_TITLE = "\uD83D\uDC64 Default role";
+    public static final String COMMAND_DEFAULT_ROLE_DESC = "Définir le rôle par défaut attribué aux nouveaux arrivant";
+    public static final String COMMAND_DEFAULT_ROLE_SUCCESS = "Sélectionner rôle attribué par défaut";
+
     public static final String COMMAND_GOODBYE_DESC = "Définir un channel pour l'affichage d'un message lors d'un départ";
 
     public static final String COMMAND_SKIP_TITLE = "⏭ Skip";

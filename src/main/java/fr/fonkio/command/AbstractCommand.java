@@ -6,7 +6,9 @@ import fr.fonkio.message.StringsConst;
 import fr.fonkio.music.YoutubeSearch;
 import fr.fonkio.utils.ConfigurationEnum;
 import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.events.interaction.GenericInteractionCreateEvent;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.AudioChannel;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
@@ -73,6 +75,23 @@ public abstract class AbstractCommand {
                     .withDescription(StringsConst.SELECT_OPTION_DEFINE + tc.getName())
                     .withEmoji(Emoji.fromUnicode("\ud83d\udce2"))
                     .withDefault(defaultValue));
+        }
+        return optionList;
+    }
+
+    protected List<SelectOption> getSelectOptionsRoleList(Guild guild) {
+        List<SelectOption> optionList = new ArrayList<>();
+        int i = 0;
+        for (Role role : guild.getRoles()) {
+            boolean defaultValue = role.getId().equals(Inicium.CONFIGURATION.getGuildConfig(guild.getId(), ConfigurationEnum.DEFAULT_ROLE));
+            if (i < 25) {
+                optionList.add(SelectOption.of(role.getName(), role.getId())
+                        .withDescription(StringsConst.SELECT_OPTION_DEFINE + role.getName())
+                        .withEmoji(Emoji.fromUnicode("\uD83D\uDC64"))
+                        .withDefault(defaultValue));
+            }
+
+            i++;
         }
         return optionList;
     }

@@ -5,14 +5,14 @@ import fr.fonkio.message.EmbedGenerator;
 import fr.fonkio.message.StringsConst;
 import fr.fonkio.utils.ConfigurationEnum;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
-import org.jetbrains.annotations.NotNull;
 
 public class EventSelectMenuInteraction extends ListenerAdapter {
+
     @Override
-    public void onSelectMenuInteraction(@NotNull SelectMenuInteractionEvent event) {
+    public void onStringSelectInteraction(StringSelectInteractionEvent event) {
         Guild guild = event.getGuild();
         if (guild == null) {
             return;
@@ -37,6 +37,13 @@ public class EventSelectMenuInteraction extends ListenerAdapter {
                 Inicium.CONFIGURATION.delBlacklist(guildId);
                 if (!event.getValues().isEmpty()) {
                     Inicium.CONFIGURATION.addBlackList(guildId, event.getValues());
+                }
+                break;
+            case "choix-default-role":
+                if (event.getValues().isEmpty()) {
+                    Inicium.CONFIGURATION.setGuildConfig(guildId, ConfigurationEnum.DEFAULT_ROLE, "");
+                } else {
+                    Inicium.CONFIGURATION.setGuildConfig(guildId, ConfigurationEnum.DEFAULT_ROLE, event.getValues().get(0));
                 }
                 break;
         }
