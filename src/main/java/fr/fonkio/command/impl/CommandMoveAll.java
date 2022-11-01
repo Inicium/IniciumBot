@@ -5,6 +5,7 @@ import fr.fonkio.message.EmbedGenerator;
 import fr.fonkio.message.StringsConst;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.channel.middleman.AudioChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
@@ -27,7 +28,7 @@ public class CommandMoveAll extends AbstractCommand {
                 OptionMapping destinationOption = eventSlash.getOption("destination");
                 AudioChannel destinationAudioChannelParameter = null;
                 if(destinationOption != null) {
-                    destinationAudioChannelParameter = destinationOption.getAsAudioChannel();
+                    destinationAudioChannelParameter = destinationOption.getAsChannel().asAudioChannel();
                 }
                 if (destinationAudioChannelParameter != null) {
                     if (sourceAudioChannel != null) {

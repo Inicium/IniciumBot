@@ -8,8 +8,8 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
-import net.dv8tion.jda.api.interactions.components.selections.SelectMenu;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
+import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
 
 import java.util.List;
 
@@ -31,7 +31,7 @@ public class CommandWelcomeChannel extends AbstractCommand {
                 List<SelectOption> optionList = getSelectOptionsChannelList(guild, ConfigurationEnum.WELCOME_CHANNEL);
                 eventSlash.replyEmbeds(EmbedGenerator.generate(user, StringsConst.COMMAND_WELCOME_TITLE, StringsConst.COMMAND_WELCOME_SUCCESS))
                         .addActionRow(
-                                SelectMenu.create("choix-channel-welcome")
+                                StringSelectMenu.create("choix-channel-welcome")
                                         .setMinValues(0)
                                         .setMaxValues(1)
                                         .addOptions(optionList).build()

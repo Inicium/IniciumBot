@@ -53,7 +53,7 @@ public class PlayerMessage {
         this.afficherQueue = afficherQueue;
         this.author = author;
 
-        this.messageEnCours = hook.editOriginalEmbeds(getEmbed()).setActionRows(addButtons()).complete();
+        this.messageEnCours = hook.editOriginalEmbeds(getEmbed()).setComponents(addButtons()).complete();
 
         timerTask = new PlayerUpdater();
         timer.scheduleAtFixedRate(timerTask, DELAY, PERIOD);

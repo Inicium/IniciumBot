@@ -10,6 +10,7 @@ import fr.fonkio.utils.Configuration;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
@@ -58,6 +59,7 @@ public class Inicium {
         AbstractCommand goodbye = new CommandGoodbyeChannel();
         AbstractCommand moveall = new CommandMoveAll();
         AbstractCommand shuffle = new CommandShuffle();
+        AbstractCommand defaultRole = new CommandDefaultRole();
 
         commands.put("play", play);
         commands.put("p", play);
@@ -84,6 +86,7 @@ public class Inicium {
         commands.put("moveall", moveall);
         commands.put("mva", moveall);
         commands.put("shuffle", shuffle);
+        commands.put("defaultrole", defaultRole);
 
         Set<GatewayIntent> intents = new HashSet<>(EnumSet.allOf(GatewayIntent.class));
         jda = JDABuilder.create(CONFIGURATION.getToken(), intents).setAutoReconnect(true).build();
@@ -128,7 +131,8 @@ public class Inicium {
                         .addOptions(new OptionData(OptionType.CHANNEL, "destination", StringsConst.COMMAND_MOVEALL_PARAM, true).setChannelTypes(ChannelType.VOICE, ChannelType.STAGE)),
                 Commands.slash("moveall", StringsConst.COMMAND_MOVEALL_DESC)
                         .addOptions(new OptionData(OptionType.CHANNEL, "destination", StringsConst.COMMAND_MOVEALL_PARAM, true).setChannelTypes(ChannelType.VOICE, ChannelType.STAGE)),
-                Commands.slash("shuffle", StringsConst.COMMAND_SHUFFLE_DESC)
+                Commands.slash("shuffle", StringsConst.COMMAND_SHUFFLE_DESC),
+                Commands.slash("defaultrole", StringsConst.COMMAND_DEFAULT_ROLE_DESC)
                 ).queue();
         System.out.println("Bot connecté");
         CONFIGURATION.save();
