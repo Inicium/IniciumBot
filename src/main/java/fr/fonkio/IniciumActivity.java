@@ -32,7 +32,7 @@ public class IniciumActivity implements Activity {
 
     @Override
     public @NotNull String getName() {
-        return "IniciumBot \uD83C\uDF0C                                                                                    \nCréé par Fonkio";
+        return "/play \uD83C\uDF0C \n                            \nCréé par Fonkio";
     }
 
     @Override
