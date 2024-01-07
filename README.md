@@ -3,7 +3,7 @@ Bot musique pour Discord<br/>
 Pour avoir un accès hébergé au bot, merci de me le demander
 
 # Présentation
-## Teble des matières
+## Table des matières
 - [Commandes gestion musique](#commandes-gestion-musique)
   - [Play](#play)
   - [Skip](#skip)
