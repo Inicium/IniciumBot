@@ -78,7 +78,7 @@ public class StringsConst {
     public static final String MESSAGE_CANT_CONNECT = "Je n'ai pas la permission de rejoindre ce channel !";
     public static final String MESSAGE_NO_PERMISSIONS = "Je n'ai pas la permission de rejoindre ce channel ! \uD83D\uDEAB";
     public static final String MESSAGE_GOODBYE_TITLE = "Au revoir !";
-    public static final String MESSAGE_GOODBYE = " a quitté le serveur ";
+    public static final String MESSAGE_GOODBYE = " a quitté le serveur :";
     public static final String MESSAGE_IMPOSSIBLE = "Impossible d'effectuer cette action";
     public static final String MESSAGE_BOT_BUSY = "Bot occupé";
     public static final String MESSAGE_BOT_IN_OTHER_CHANNEL = "Le bot est déjà connecté dans un autre channel !";

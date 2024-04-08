@@ -19,7 +19,7 @@ public class EventGuildMemberRemoveJoin extends ListenerAdapter {
     public void onGuildMemberRemove(GuildMemberRemoveEvent event) {
         Guild guild = event.getGuild();
         User user = event.getUser();
-        sendWelcomeQuitMessage(ConfigurationEnum.QUIT_CHANNEL, StringsConst.MESSAGE_GOODBYE_TITLE, user.getName() + StringsConst.MESSAGE_GOODBYE + guild.getName()+".", guild, user);
+        sendWelcomeQuitMessage(ConfigurationEnum.QUIT_CHANNEL, StringsConst.MESSAGE_GOODBYE_TITLE, user.getName() + StringsConst.MESSAGE_GOODBYE, guild, user);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class EventGuildMemberRemoveJoin extends ListenerAdapter {
             if (guild.getSelfMember().hasPermission(Permission.MESSAGE_SEND)) {
                 TextChannel tc = guild.getTextChannelById(idTC);
                 if (tc != null) {
-                    tc.sendMessageEmbeds(EmbedGenerator.generate(user, title, message)).queue((messageSent -> messageSent.addReaction(Emoji.fromUnicode("👋")).queue()));
+                    tc.sendMessageEmbeds(EmbedGenerator.generate(user, title, message, guild)).queue((messageSent -> messageSent.addReaction(Emoji.fromUnicode("👋")).queue()));
                 }
             }
         }

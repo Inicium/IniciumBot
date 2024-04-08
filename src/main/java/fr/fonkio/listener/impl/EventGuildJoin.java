@@ -13,7 +13,7 @@ public class EventGuildJoin extends ListenerAdapter {
     public void onGuildJoin(@NotNull GuildJoinEvent event) {
         Member owner = event.getGuild().getOwner();
         if (owner != null) {
-            Inicium.CONFIGURATION.setGuildConfig(event.getGuild().getId(), ConfigurationEnum.SERVER_NAME, event.getGuild().getName() + " admin : " + owner.getUser().getName() + "#" + event.getGuild().getOwner().getUser().getDiscriminator());
+            Inicium.CONFIGURATION.setGuildConfig(event.getGuild().getId(), ConfigurationEnum.SERVER_NAME, event.getGuild().getName() + " admin : " + owner.getUser().getName());
         }
     }
 

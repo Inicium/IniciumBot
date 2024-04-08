@@ -30,9 +30,21 @@ public class IniciumActivity implements Activity {
         return Emoji.fromFormatted("milky_way");
     }
 
+    @NotNull
+    @Override
+    public Activity withState(@Nullable String state) {
+        return null;
+    }
+
     @Override
     public @NotNull String getName() {
-        return "IniciumBot \uD83C\uDF0C                                                                                    \nCréé par Fonkio";
+        return "/play";
+    }
+
+    @Nullable
+    @Override
+    public String getState() {
+        return null;
     }
 
     @Override

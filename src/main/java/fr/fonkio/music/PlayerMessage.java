@@ -4,6 +4,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fr.fonkio.inicium.Utils;
 import fr.fonkio.message.MusicPlayer;
 import fr.fonkio.message.StringsConst;
+import fr.fonkio.utils.IniciumTimer;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.interactions.InteractionHook;
@@ -24,7 +25,7 @@ public class PlayerMessage {
     private String message;
     private boolean afficherQueue;
     private final MusicPlayer musicPlayer;
-    private final Timer timer = new Timer("timerUpdate");
+    private IniciumTimer timer;
     private TimerTask timerTask;
 
     private static final long DELAY  = 5000L;
@@ -56,6 +57,9 @@ public class PlayerMessage {
         this.messageEnCours = hook.editOriginalEmbeds(getEmbed()).setComponents(addButtons()).complete();
 
         timerTask = new PlayerUpdater();
+        if (timer == null || timer.isCancelled()) {
+            timer = new IniciumTimer("timerUpdate");
+        }
         timer.scheduleAtFixedRate(timerTask, DELAY, PERIOD);
     }
 
@@ -65,7 +69,7 @@ public class PlayerMessage {
         builder.setTitle(this.command);
         builder.setDescription(this.message);
         builder.setColor(Color.GREEN);
-        builder.setFooter(this.author.getName(), this.author.getAvatarUrl());
+        builder.setFooter(this.author.getEffectiveName(), this.author.getAvatarUrl());
 
         if (this.afficherQueue) {
             List <AudioTrack> queue = this.musicPlayer.getQueue();
