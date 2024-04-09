@@ -33,6 +33,7 @@ public class CommandHelpadmin extends AbstractCommand {
                 eb.addField(prefix+"welcome", StringsConst.COMMAND_WELCOME_DESC, false);
                 eb.addField(prefix+"goodbye", StringsConst.COMMAND_GOODBYE_DESC, false);
                 eb.addField(prefix+"blacklist", StringsConst.COMMAND_BLACKLIST_DESC, false);
+                eb.addField(prefix+"disconnectsong" + ", " + prefix + "dcsong", StringsConst.COMMAND_DISCONNECT_SONG_DESC, false);
 
                 eb.setColor(Color.GREEN);
                 eb.setAuthor(user.getName(), null, user.getAvatarUrl());

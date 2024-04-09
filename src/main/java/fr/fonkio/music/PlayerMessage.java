@@ -65,7 +65,7 @@ public class PlayerMessage {
 
     private MessageEmbed getEmbed() {
         EmbedBuilder builder = new EmbedBuilder();
-        builder.setAuthor(StringsConst.MESSAGE_MUSIC_BOT, null, "https://i.pinimg.com/originals/79/ab/9f/79ab9f804b5ebbdd514af3329cad6e0c.gif?size=256");
+        builder.setAuthor(StringsConst.MESSAGE_MUSIC_BOT, null, "https://cdn.dribbble.com/users/2011679/screenshots/5816471/____2.gif");
         builder.setTitle(this.command);
         builder.setDescription(this.message);
         builder.setColor(Color.GREEN);
@@ -204,16 +204,20 @@ public class PlayerMessage {
         @Override
         public void run() {
             if (musicPlayer.isPause()) {
+                System.out.println("En pause : Timer cancel");
                 cancel();
             } else if (musicPlayer.getAudioPlayer().getPlayingTrack() == null) {
+                System.out.println("getPlayingTrack null : Timer cancel");
                 messageEnCours = messageEnCours.editMessageEmbeds(getEmbed()).setActionRow(addTrackEndButtons()).complete();
                 cancel();
             }
             else {
-                if (musicPlayer.getQueue().size()==0) {
+                if (musicPlayer.getQueue().isEmpty()) {
+                    System.out.println("getQueue().isEmpty() : Timer cancel");
                     messageEnCours = messageEnCours.editMessageEmbeds(getEmbed()).setActionRow(addTrackEndButtons()).complete();
                     cancel();
                 } else {
+                    System.out.println("Timer");
                     messageEnCours = messageEnCours.editMessageEmbeds(getEmbed()).complete();
                 }
             }

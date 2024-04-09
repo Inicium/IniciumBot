@@ -27,7 +27,6 @@ public class Configuration {
    public JSONObject newServer() {
         JSONObject jo = new JSONObject();
         jo.put("blacklist", new JSONArray());
-        jo.put("prefix", "!");
         jo.put("welcome", "");
         jo.put("quit", "");
         return jo;
@@ -59,7 +58,7 @@ public class Configuration {
     /**
      *
      * @param guildId Id de la Guild à récupérer
-     * @return Le JSONObject du la Guild, il en créé un si il ne trouve pas le serbeur dans la config
+     * @return Le JSONObject du la Guild, il en créé un si il ne trouve pas le serveur dans la config
      */
     public JSONObject getServerConfig(String guildId) {
         if(!jsonObject.has(guildId)) {
@@ -98,7 +97,7 @@ public class Configuration {
     }
 
     public String getGuildConfig(String guildId, ConfigurationEnum key) {
-        String confString = "";
+        String confString;
         try {
             confString = getServerConfig(guildId).getString(key.getKey());
         } catch (JSONException e) {

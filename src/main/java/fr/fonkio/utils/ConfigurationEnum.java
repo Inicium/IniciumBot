@@ -4,8 +4,9 @@ public enum ConfigurationEnum {
     QUIT_CHANNEL("quit", ""),
     WELCOME_CHANNEL("welcome", ""),
     SERVER_NAME("name", "undefined"),
+    DEFAULT_ROLE("defaultrole", ""),
+    DC_SONG("dcsong", "true");
 
-    DEFAULT_ROLE("defaultrole", "");
 
 
 

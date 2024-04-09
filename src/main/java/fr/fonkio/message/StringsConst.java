@@ -18,6 +18,7 @@ public class StringsConst {
     public static final String COMMAND_DISCONNECT_TITLE = "\uD83D\uDEAA Disconnect";
     public static final String COMMAND_DISCONNECT_SUCCESS = "Aurevoir 👋";
     public static final String COMMAND_DISCONNECT_DESC = "Déconnecter le bot du channel audio";
+    public static final String COMMAND_DISCONNECT_ALREADY_DISCONNECTED = "Je suis déjà déconnecté.";
     
     public static final String COMMAND_GOODBYE_TITLE = "\uD83D\uDC4B Goodbye channel";
     public static final String COMMAND_GOODBYE_SUCCESS = "Sélectionner le channel dans lequel les messages de leave seront postés";
@@ -31,6 +32,10 @@ public class StringsConst {
     public static final String COMMAND_WELCOME_TITLE = "\uD83D\uDC4B Welcome channel";
     public static final String COMMAND_WELCOME_DESC = "Définir un channel pour l'affichage d'un message de bienvenue";
     public static final String COMMAND_WELCOME_SUCCESS = "Sélectionner le channel dans lequel les messages de bienvenue seront postés";
+
+    public static final String COMMAND_DISCONNECT_SONG_TITLE = "\uD83D\uDC4B Son de déconnexion";
+    public static final String COMMAND_DISCONNECT_SONG_DESC = "Activer ou désactiver le son de déconnexion du bot musique";
+    public static final String COMMAND_DISCONNECT_SONG_SUCCESS = "Voulez-vous que le bot vous dise au revoir quand il part ? (La politesse c'est important)";
 
     public static final String COMMAND_DEFAULT_ROLE_TITLE = "\uD83D\uDC64 Default role";
     public static final String COMMAND_DEFAULT_ROLE_DESC = "Définir le rôle par défaut attribué aux nouveaux arrivant";
@@ -101,7 +106,7 @@ public class StringsConst {
     public static final String MESSAGE_LOADING_TITLE = "Chargement";
     public static final String MESSAGE_LOADING = "Chargement...";
     public static final String BUTTON_DONE = "Terminé !";
-    public static final String MESSAGE_MUSIC_BOT = "Bot musique";
+    public static final String MESSAGE_MUSIC_BOT = "Inicium music";
     public static final String MESSAGE_MUSIC = "Musique";
     public static final String MESSAGE_WAITLIST = "File d'attente";
     public static final String MESSAGE_NO_MUSIC_IN_WAITLIST = "Aucune musique n'est dans la file d'attente ...";

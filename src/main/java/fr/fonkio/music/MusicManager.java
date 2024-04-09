@@ -41,7 +41,12 @@ public class MusicManager {
         MusicPlayer player = getPlayer(guild);
         guild.getAudioManager().setSendingHandler(player.getAudioHandler());
         player.getPlayerMessage().updatePlayerMessage("\uD83D\uDD03 " + StringsConst.MESSAGE_LOADING_TITLE, StringsConst.MESSAGE_LOADING, author, true, hook);
-        manager.loadItemOrdered(player, source, new AudioLoadResultHandler() {
+        String updatedSource = source;
+        if (source.contains("suno.ai") && !source.contains("audiopipe") && !source.contains(".mp3")) {
+            String[] stringParts = source.split("/");
+            updatedSource = "https://cdn1.suno.ai/"+ stringParts[stringParts.length - 1] +".mp3";
+        }
+        manager.loadItemOrdered(player, updatedSource, new AudioLoadResultHandler() {
 
             @Override
             public void trackLoaded(AudioTrack track) {

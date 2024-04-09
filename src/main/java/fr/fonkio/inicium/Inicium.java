@@ -41,8 +41,8 @@ public class Inicium {
 
 
     public static void main(String[] args) throws LoginException {
-        System.out.println("Demarrage du bot ...");
-
+        System.out.println("Démarrage du bot ...");
+        System.out.println("Création des commandes...");
         AbstractCommand clear = new CommandClear();
         AbstractCommand disconnect = new CommandDisconnect();
         AbstractCommand pause = new CommandPause();
@@ -60,6 +60,7 @@ public class Inicium {
         AbstractCommand moveall = new CommandMoveAll();
         AbstractCommand shuffle = new CommandShuffle();
         AbstractCommand defaultRole = new CommandDefaultRole();
+        AbstractCommand disconnectsong = new CommandDisconnectSong();
 
         commands.put("play", play);
         commands.put("p", play);
@@ -87,19 +88,24 @@ public class Inicium {
         commands.put("mva", moveall);
         commands.put("shuffle", shuffle);
         commands.put("defaultrole", defaultRole);
-
+        commands.put("disconnectsong", disconnectsong);
+        commands.put("dcsong", disconnectsong);
+        System.out.println("Démarrage JDA...");
         Set<GatewayIntent> intents = new HashSet<>(EnumSet.allOf(GatewayIntent.class));
         jda = JDABuilder.create(CONFIGURATION.getToken(), intents).setAutoReconnect(true).build();
+        System.out.println("JDA : Démarré ! Connexion au token OK.");
         CONFIGURATION.save();
+        System.out.println("JDA : Enregistrement des listeners...");
         jda.addEventListener(new EventButtonInteraction());
         jda.addEventListener(new EventGuildJoin());
         jda.addEventListener(new EventGuildMemberRemoveJoin());
         jda.addEventListener(new EventGuildVoiceLeave());
         jda.addEventListener(new EventSlashCommandInteraction());
         jda.addEventListener(new EventSelectMenuInteraction());
+        System.out.println("JDA : Lancement de l'activité Discord...");
         Activity act = new IniciumActivity();
         jda.getPresence().setActivity(act);
-
+        System.out.println("JDA : Mise à jour des commandes...");
         jda.updateCommands().addCommands(
                 Commands.slash("play", StringsConst.COMMAND_PLAY_DESC)
                         .addOption(OptionType.STRING, "musique", StringsConst.COMMAND_PLAY_PARAM, true),
@@ -127,6 +133,8 @@ public class Inicium {
                 Commands.slash("blacklist", StringsConst.COMMAND_BLACKLIST_DESC),
                 Commands.slash("welcome", StringsConst.COMMAND_WELCOME_DESC),
                 Commands.slash("goodbye", StringsConst.COMMAND_GOODBYE_DESC),
+                Commands.slash("disconnectsong", StringsConst.COMMAND_DISCONNECT_SONG_DESC),
+                Commands.slash("dcsong", StringsConst.COMMAND_DISCONNECT_SONG_DESC),
                 Commands.slash("mva", StringsConst.COMMAND_MOVEALL_DESC)
                         .addOptions(new OptionData(OptionType.CHANNEL, "destination", StringsConst.COMMAND_MOVEALL_PARAM, true).setChannelTypes(ChannelType.VOICE, ChannelType.STAGE)),
                 Commands.slash("moveall", StringsConst.COMMAND_MOVEALL_DESC)

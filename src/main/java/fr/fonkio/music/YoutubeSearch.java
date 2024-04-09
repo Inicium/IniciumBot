@@ -29,10 +29,6 @@ public class YoutubeSearch {
 
     public String searchOrUrl(String input) {
         if (input.startsWith("http")) {
-            if (input.contains("suno.ai") && !input.contains("audiopipe") && !input.contains(".mp3")) {
-                String[] stringParts = input.split("/");
-                return "https://cdn1.suno.ai/"+ stringParts[stringParts.length - 1] +".mp3";
-            }
             return input;
         } else {
             return searchYoutube(input);
