@@ -2,14 +2,18 @@ package fr.fonkio.message;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import fr.fonkio.inicium.Utils;
 import fr.fonkio.music.AudioHandler;
 import fr.fonkio.music.AudioListener;
 import fr.fonkio.music.PlayerMessage;
 import net.dv8tion.jda.api.entities.Guild;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class MusicPlayer {
+    private final Logger logger = LoggerFactory.getLogger(MusicPlayer.class);
     private final AudioPlayer audioPlayer;
     private final AudioListener listener;
     private final Guild guild;
@@ -41,14 +45,17 @@ public class MusicPlayer {
 
     public synchronized void playTrack(AudioTrack track) {
         listener.queue(track);
+        logger.info(Utils.getFormattedLogString(guild, "Le titre " + track.getInfo().title + " a été ajouté à la file"));
     }
 
     public synchronized void skipTrack() {
         listener.nextTrack();
+        logger.info(Utils.getFormattedLogString(guild, "Skiped"));
     }
 
     public void shuffle() {
         listener.shuffle();
+        logger.info(Utils.getFormattedLogString(guild, "Shuffled"));
     }
 
     public void seekTrack(String position) throws IllegalArgumentException {
@@ -71,7 +78,7 @@ public class MusicPlayer {
         AudioTrack track = audioPlayer.getPlayingTrack();
         if (track == null) return;
         track.setPosition(l);
-
+        logger.info(Utils.getFormattedLogString(guild, "Siked to " + position));
     }
 
     public List<AudioTrack> getQueue() {
@@ -84,6 +91,7 @@ public class MusicPlayer {
 
     public void setPause(boolean b) {
         audioPlayer.setPaused(b);
+        logger.info(Utils.getFormattedLogString(guild,"Pause = " + b));
     }
 
     public PlayerMessage getPlayerMessage() {

@@ -5,8 +5,8 @@ public enum ConfigurationEnum {
     WELCOME_CHANNEL("welcome", ""),
     SERVER_NAME("name", "undefined"),
     DEFAULT_ROLE("defaultrole", ""),
-    DC_SONG("dcsong", "true");
-
+    DC_SONG("dcsong", "true"),
+    BLACK_LIST("blacklist", null);
 
 
 

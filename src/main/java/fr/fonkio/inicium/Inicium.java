@@ -15,6 +15,8 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
@@ -22,6 +24,7 @@ import java.util.*;
 
 
 public class Inicium {
+    static Logger logger = LoggerFactory.getLogger(Inicium.class);
 
     public static Configuration CONFIGURATION;
     private static JDA jda;
@@ -41,8 +44,8 @@ public class Inicium {
 
 
     public static void main(String[] args) throws LoginException {
-        System.out.println("Démarrage du bot ...");
-        System.out.println("Création des commandes...");
+        logger.info("Démarrage du bot ...");
+        logger.info("Création des commandes...");
         AbstractCommand clear = new CommandClear();
         AbstractCommand disconnect = new CommandDisconnect();
         AbstractCommand pause = new CommandPause();
@@ -90,22 +93,22 @@ public class Inicium {
         commands.put("defaultrole", defaultRole);
         commands.put("disconnectsong", disconnectsong);
         commands.put("dcsong", disconnectsong);
-        System.out.println("Démarrage JDA...");
+        logger.info("Démarrage JDA...");
         Set<GatewayIntent> intents = new HashSet<>(EnumSet.allOf(GatewayIntent.class));
         jda = JDABuilder.create(CONFIGURATION.getToken(), intents).setAutoReconnect(true).build();
-        System.out.println("JDA : Démarré ! Connexion au token OK.");
+        logger.info("JDA : Démarré ! Connexion au token OK.");
         CONFIGURATION.save();
-        System.out.println("JDA : Enregistrement des listeners...");
+        logger.info("JDA : Enregistrement des listeners...");
         jda.addEventListener(new EventButtonInteraction());
         jda.addEventListener(new EventGuildJoin());
         jda.addEventListener(new EventGuildMemberRemoveJoin());
         jda.addEventListener(new EventGuildVoiceLeave());
         jda.addEventListener(new EventSlashCommandInteraction());
         jda.addEventListener(new EventSelectMenuInteraction());
-        System.out.println("JDA : Lancement de l'activité Discord...");
+        logger.info("JDA : Lancement de l'activité Discord...");
         Activity act = new IniciumActivity();
         jda.getPresence().setActivity(act);
-        System.out.println("JDA : Mise à jour des commandes...");
+        logger.info("JDA : Mise à jour des commandes...");
         jda.updateCommands().addCommands(
                 Commands.slash("play", StringsConst.COMMAND_PLAY_DESC)
                         .addOption(OptionType.STRING, "musique", StringsConst.COMMAND_PLAY_PARAM, true),
@@ -142,7 +145,7 @@ public class Inicium {
                 Commands.slash("shuffle", StringsConst.COMMAND_SHUFFLE_DESC),
                 Commands.slash("defaultrole", StringsConst.COMMAND_DEFAULT_ROLE_DESC)
                 ).queue();
-        System.out.println("Bot connecté");
+        logger.info("Bot connecté");
         CONFIGURATION.save();
     }
 

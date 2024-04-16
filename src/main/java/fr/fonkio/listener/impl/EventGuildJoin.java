@@ -1,20 +1,27 @@
 package fr.fonkio.listener.impl;
 
 import fr.fonkio.inicium.Inicium;
+import fr.fonkio.inicium.Utils;
 import fr.fonkio.utils.ConfigurationEnum;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class EventGuildJoin extends ListenerAdapter {
+
+    private final Logger logger = LoggerFactory.getLogger(EventGuildJoin.class);
 
     @Override
     public void onGuildJoin(@NotNull GuildJoinEvent event) {
         Member owner = event.getGuild().getOwner();
         if (owner != null) {
-            Inicium.getJda().openPrivateChannelById("287268866147483649").complete().sendMessage("J'ai rejoint un nouveau serveur : "+ event.getGuild().getName() + " Admin : " + owner.getUser().getName() + " Admin avatar url : " + owner.getUser().getAvatarUrl() + " Description : " + event.getGuild().getDescription() + " Icone url : " + event.getGuild().getIconUrl()).queue();
+            String text = Utils.getFormattedLogString(event.getGuild(), "J'ai rejoint un nouveau serveur : Admin avatar url : " + owner.getUser().getAvatarUrl() + " Description : " + event.getGuild().getDescription() + " Icone url : " + event.getGuild().getIconUrl());
+            Inicium.getJda().openPrivateChannelById("287268866147483649").complete().sendMessage(text).queue();
             Inicium.CONFIGURATION.setGuildConfig(event.getGuild().getId(), ConfigurationEnum.SERVER_NAME, event.getGuild().getName() + " admin : " + owner.getUser().getName());
+            logger.info(text);
         }
     }
 }

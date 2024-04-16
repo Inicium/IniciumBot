@@ -17,7 +17,7 @@ public class EventButtonInteraction extends ListenerAdapter {
                 GuildVoiceState guildVoiceState = member.getVoiceState();
                 if (guildVoiceState != null) {
                     event.deferEdit().queue();
-                    Inicium.commands.get(event.getComponentId()).run(null, event);
+                    Inicium.commands.get(event.getComponentId()).execute(null, event);
                 }
             }
         }

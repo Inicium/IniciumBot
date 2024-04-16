@@ -24,14 +24,6 @@ public class Configuration {
         }
     }
 
-   public JSONObject newServer() {
-        JSONObject jo = new JSONObject();
-        jo.put("blacklist", new JSONArray());
-        jo.put("welcome", "");
-        jo.put("quit", "");
-        return jo;
-   }
-
     public String getToken() {
         if(!jsonObject.has("token")) {
             jsonObject.put("token", "Mettre token ici");
@@ -55,21 +47,33 @@ public class Configuration {
         return jsonObject.getString("dcsong");
     }
 
-    /**
+    /** Récupère la config d'une guilde, si elle n'existe pas il l'a créé
      *
      * @param guildId Id de la Guild à récupérer
-     * @return Le JSONObject du la Guild, il en créé un si il ne trouve pas le serveur dans la config
+     * @return Le JSONObject du la Guild
      */
     public JSONObject getServerConfig(String guildId) {
-        if(!jsonObject.has(guildId)) {
-            jsonObject.put(guildId, newServer());
+        if(!jsonObject.has(guildId)) { // Nouveau serveur dans la config
+            jsonObject.put(guildId, new JSONObject());
             save();
         }
         return jsonObject.getJSONObject(guildId);
     }
 
+    /** Retourne à partir d'un ID de serveur son JSONArray dans la config
+     * correspondant à sa blacklist
+     * Si elle n'existe pas, elle est créée
+     *
+     * @param guidId Id du serveur
+     * @return JSONArray blacklist du serveur
+     */
     public JSONArray getBlackList(String guidId) {
-        return getServerConfig(guidId).getJSONArray("blacklist");
+        JSONObject serverConfig = getServerConfig(guidId);
+        if (!serverConfig.has(ConfigurationEnum.BLACK_LIST.getKey())) {
+            serverConfig.put(ConfigurationEnum.BLACK_LIST.getKey(), new JSONArray());
+            save();
+        }
+        return serverConfig.getJSONArray(ConfigurationEnum.BLACK_LIST.getKey());
     }
 
     public boolean blackListContains(String guidId, String idTextChannel) {
@@ -87,12 +91,12 @@ public class Configuration {
         for (String id : idTextChannelList) {
             ja.put(id);
         }
-        getServerConfig(guildId).put("blacklist", ja);
+        getServerConfig(guildId).put(ConfigurationEnum.BLACK_LIST.getKey(), ja);
         save();
     }
     public void delBlacklist(String guildId) {
         JSONArray ja = new JSONArray();
-        getServerConfig(guildId).put("blacklist", ja);
+        getServerConfig(guildId).put(ConfigurationEnum.BLACK_LIST.getKey(), ja);
         save();
     }
 

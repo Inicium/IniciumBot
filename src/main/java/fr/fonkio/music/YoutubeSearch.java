@@ -5,10 +5,13 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.SearchResult;
 import fr.fonkio.inicium.Inicium;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class YoutubeSearch {
+    private final Logger logger = LoggerFactory.getLogger(YoutubeSearch.class);
 
     private final YouTube youtube;
 
@@ -36,7 +39,7 @@ public class YoutubeSearch {
     }
 
     private String searchYoutube(String input) {
-        System.out.println(input);
+        logger.info("Recherche sur YouTube de \"" + input + "\"...");
         try {
             List<SearchResult> result = youtube.search()
                     .list("id,snippet")
@@ -49,10 +52,12 @@ public class YoutubeSearch {
                     .getItems();
             if (!result.isEmpty()) {
                 String videoId = result.get(0).getId().getVideoId();
-                return "https://www.youtube.com/watch?v="+videoId;
+                String urlResult = "https://www.youtube.com/watch?v=" + videoId;
+                logger.info("Résultat trouvé : " + urlResult);
+                return urlResult;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Problème lors de la recherche YouTube", e);
         }
         return "";
     }

@@ -1,6 +1,7 @@
 package fr.fonkio.command;
 
 import fr.fonkio.inicium.Inicium;
+import fr.fonkio.inicium.Utils;
 import fr.fonkio.message.EmbedGenerator;
 import fr.fonkio.message.StringsConst;
 import fr.fonkio.music.YoutubeSearch;
@@ -8,20 +9,44 @@ import fr.fonkio.utils.ConfigurationEnum;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.AudioChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.StandardGuildMessageChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractCommand {
-
+    protected Logger logger = LoggerFactory.getLogger(AbstractCommand.class);
     protected YoutubeSearch youtubeSearch = new YoutubeSearch();
 
-    public abstract boolean run(SlashCommandInteractionEvent event, ButtonInteractionEvent eventButton);
+    protected abstract boolean run(SlashCommandInteractionEvent event, ButtonInteractionEvent eventButton);
+    public boolean execute(SlashCommandInteractionEvent eventSlash, ButtonInteractionEvent eventButton) {
+        if (eventSlash != null) {
+            StringBuilder log = new StringBuilder("eventSlash : " + eventSlash.getName() + " ");
+            if (!eventSlash.getOptions().isEmpty()) {
+                for (OptionMapping optionMapping : eventSlash.getOptions()) {
+                    log.append(optionMapping.getName()).append("=").append(optionMapping.getAsString());
+                }
+            }
+            log.append(" par ").append(eventSlash.getUser().getName());
+            logger.info(Utils.getFormattedLogString(eventSlash.getGuild(), log.toString()));
+        } else if (eventButton != null) {
+            logger.info(Utils.getFormattedLogString(eventButton.getGuild(),"eventButton : " + eventButton.getComponent().getLabel() + " par " + eventButton.getUser().getName()));
+        } else {
+            logger.error("Execution sans event impossible !");
+            return false;
+        }
+        return this.run(eventSlash, eventButton);
+    };
 
     protected boolean blacklistable;
 
@@ -61,18 +86,30 @@ public abstract class AbstractCommand {
         return true;
     }
 
+    /** Recupère la liste des channels du serveur sous forme de liste de SelectOption
+     * Les channels sont sélectionnés par défaut (withDefault(true)) en fonction de la config
+     * passée en paramètre
+     *
+     * @param guild
+     * @param configurationEnum
+     * @return
+     */
     protected List<SelectOption> getSelectOptionsChannelList(Guild guild, ConfigurationEnum configurationEnum) {
         List<SelectOption> optionList = new ArrayList<>();
-        for (TextChannel tc : guild.getTextChannels()) {
+        for (GuildChannel guildChannel : guild.getChannels()) {
+            if (!(guildChannel instanceof StandardGuildMessageChannel)) { //Si ce n'est pas un channel textuel (News, Rules ...)
+                continue;
+            }
+            //On sélectionne ou pas le channel dans la liste pour représenter la config actuelle
             boolean defaultValue;
-            if (configurationEnum != null) {
-                defaultValue = tc.getId().equals(Inicium.CONFIGURATION.getGuildConfig(guild.getId(), configurationEnum));
+            if (ConfigurationEnum.BLACK_LIST.equals(configurationEnum)) {
+                defaultValue = Inicium.CONFIGURATION.blackListContains(guild.getId(), guildChannel.getId());
             } else {
-                defaultValue = Inicium.CONFIGURATION.blackListContains(guild.getId(), tc.getId());
+                defaultValue = guildChannel.getId().equals(Inicium.CONFIGURATION.getGuildConfig(guild.getId(), configurationEnum));
             }
 
-            optionList.add(SelectOption.of(tc.getName(), tc.getId())
-                    .withDescription(StringsConst.SELECT_OPTION_DEFINE + tc.getName())
+            optionList.add(SelectOption.of(guildChannel.getName(), guildChannel.getId())
+                    .withDescription(StringsConst.SELECT_OPTION_DEFINE + guildChannel.getName())
                     .withEmoji(Emoji.fromUnicode("\ud83d\udce2"))
                     .withDefault(defaultValue));
         }

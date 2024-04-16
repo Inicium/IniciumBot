@@ -1,6 +1,7 @@
 package fr.fonkio.command.impl;
 
 import fr.fonkio.command.AbstractCommand;
+import fr.fonkio.inicium.Utils;
 import fr.fonkio.message.EmbedGenerator;
 import fr.fonkio.message.StringsConst;
 import net.dv8tion.jda.api.Permission;
@@ -17,41 +18,42 @@ public class CommandMoveAll extends AbstractCommand {
         if (eventSlash == null) {
             return false;
         }
-        Member member = eventSlash.getMember();
+        Member memberSender = eventSlash.getMember();
         User user = eventSlash.getUser();
         Guild guild = eventSlash.getGuild();
 
-        if(member != null && guild != null) {
-            GuildVoiceState guildVoiceState = member.getVoiceState();
-            if (guildVoiceState != null) {
-                AudioChannel sourceAudioChannel = guildVoiceState.getChannel();
-                OptionMapping destinationOption = eventSlash.getOption("destination");
-                AudioChannel destinationAudioChannelParameter = null;
-                if(destinationOption != null) {
-                    destinationAudioChannelParameter = destinationOption.getAsChannel().asAudioChannel();
+        if(memberSender != null && guild != null) {
+            GuildVoiceState guildVoiceStateOfSender = memberSender.getVoiceState();
+            if (guildVoiceStateOfSender != null) {
+                AudioChannel audioChannelOfSender = guildVoiceStateOfSender.getChannel();
+                OptionMapping optionDestination = eventSlash.getOption("destination");
+                AudioChannel audioChannelDestination = null;
+                if(optionDestination != null) {
+                    audioChannelDestination = optionDestination.getAsChannel().asAudioChannel();
                 }
-                if (destinationAudioChannelParameter != null) {
-                    if (sourceAudioChannel != null) {
-                        if(member.hasPermission(Permission.VOICE_MOVE_OTHERS) && member.hasAccess(destinationAudioChannelParameter)) {
-                            for (Member m : sourceAudioChannel.getMembers()) {
-                                guild.moveVoiceMember(m, destinationAudioChannelParameter).queue();
+                if (audioChannelDestination != null) {
+                    if (audioChannelOfSender != null) {
+                        if(memberSender.hasPermission(Permission.VOICE_MOVE_OTHERS) && memberSender.hasAccess(audioChannelDestination)) {
+                            for (Member memberToMove : audioChannelOfSender.getMembers()) {
+                                guild.moveVoiceMember(memberToMove, audioChannelDestination).queue();
+                                logger.info(Utils.getFormattedLogString(eventSlash.getGuild(), "Déplacement de " + memberToMove.getUser().getName() + " de " + audioChannelOfSender.getName() + " vers " + audioChannelDestination.getName()));
                             }
-                            eventSlash.replyEmbeds(EmbedGenerator.generate(user, "\uD83D\uDE80 MoveAll", StringsConst.COMMAND_MOVEALL_SUCCESS)).setEphemeral(true).queue();
+                            eventSlash.replyEmbeds(EmbedGenerator.generate(user, StringsConst.COMMAND_MOVEALL_TITLE, StringsConst.COMMAND_MOVEALL_SUCCESS)).setEphemeral(true).queue();
                         } else {
-                            eventSlash.replyEmbeds(EmbedGenerator.generate(user, "\uD83D\uDE80 MoveAll", StringsConst.COMMAND_MOVEALL_PERM))
+                            eventSlash.replyEmbeds(EmbedGenerator.generate(user, StringsConst.COMMAND_MOVEALL_TITLE, StringsConst.COMMAND_MOVEALL_PERM))
                                     .setEphemeral(true).queue();
                         }
                     } else {
-                        eventSlash.replyEmbeds(EmbedGenerator.generate(user, "\uD83D\uDE80 MoveAll", StringsConst.MESSAGE_NOT_CONNECTED))
+                        eventSlash.replyEmbeds(EmbedGenerator.generate(user, StringsConst.COMMAND_MOVEALL_TITLE, StringsConst.MESSAGE_NOT_CONNECTED))
                                 .setEphemeral(true).queue();
                     }
                 } else {
-                    eventSlash.replyEmbeds(EmbedGenerator.generate(user, "\uD83D\uDE80 MoveAll", StringsConst.MESSAGE_UNKNOWN_CHANNEL))
+                    eventSlash.replyEmbeds(EmbedGenerator.generate(user, StringsConst.COMMAND_MOVEALL_TITLE, StringsConst.MESSAGE_UNKNOWN_CHANNEL))
                             .setEphemeral(true).queue();
                 }
 
             } else {
-                eventSlash.replyEmbeds(EmbedGenerator.generate(user, "\uD83D\uDE80MoveAll", StringsConst.MESSAGE_NOT_CONNECTED))
+                eventSlash.replyEmbeds(EmbedGenerator.generate(user, StringsConst.COMMAND_MOVEALL_TITLE, StringsConst.MESSAGE_NOT_CONNECTED))
                         .setEphemeral(true).queue();
             }
         } else {

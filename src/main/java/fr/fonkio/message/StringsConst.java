@@ -72,6 +72,7 @@ public class StringsConst {
     public static final String COMMAND_SHUFFLE_DESC = "Mélanger la liste de lecture";
     public static final String COMMAND_SHUFFLE_SUCCESS = "Mélange de la liste \uD83D\uDD00";
 
+    public static final String COMMAND_MOVEALL_TITLE = "\uD83D\uDE80 MoveAll";
     public static final String COMMAND_MOVEALL_DESC = "Déplacer tous les utilisateurs du channel actuel";
     public static final String COMMAND_MOVEALL_SUCCESS = "J'ai déplacé tout le monde ! \uD83D\uDE80\u200B";
     public static final String COMMAND_MOVEALL_PARAM = "Channel de destination";
@@ -102,6 +103,7 @@ public class StringsConst {
     public static final String MESSAGE_THE_TRACK = "La piste ";
     public static final String MESSAGE_NOT_FOUND = " n'a pas été trouvée.";
     public static final String MESSAGE_CANT_PLAY_RESON = "Impossible de jouer la piste (raison:";
+    public static final String MESSAGE_SUNO_FAILED = "Le lien suno n'est pas valide. Pour information, les musiques en cours de génération ne peuvent pas être lues, merci d'attendre la fin du chargement pour réessayer.";
     public static final String MESSAGE_ADD_LYRIC_TO_SEARCH = "SI C'EST UNE MUSIQUE ESSAYE D'AJOUTER \"LYRICS\" A TA RECHERCHE";
     public static final String MESSAGE_LOADING_TITLE = "Chargement";
     public static final String MESSAGE_LOADING = "Chargement...";

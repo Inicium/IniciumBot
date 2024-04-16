@@ -1,6 +1,8 @@
 package fr.fonkio.listener.impl;
 
+import fr.fonkio.command.AbstractCommand;
 import fr.fonkio.inicium.Inicium;
+import fr.fonkio.inicium.Utils;
 import fr.fonkio.message.EmbedGenerator;
 import fr.fonkio.message.StringsConst;
 import fr.fonkio.utils.ConfigurationEnum;
@@ -8,9 +10,12 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class EventSelectMenuInteraction extends ListenerAdapter {
 
+    private final Logger logger = LoggerFactory.getLogger(EventSelectMenuInteraction.class);
     @Override
     public void onStringSelectInteraction(StringSelectInteractionEvent event) {
         Guild guild = event.getGuild();
@@ -18,6 +23,7 @@ public class EventSelectMenuInteraction extends ListenerAdapter {
             return;
         }
         String guildId = guild.getId();
+        logger.info(Utils.getFormattedLogString(guild, "Composant :"+ event.getComponentId() + " / Choix : " + event.getValues()));
         switch (event.getComponentId()) {
             case "choix-channel-goodbye":
                 if (event.getValues().isEmpty()) {

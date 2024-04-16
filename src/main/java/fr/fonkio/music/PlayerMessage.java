@@ -11,6 +11,8 @@ import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.ItemComponent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -19,6 +21,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class PlayerMessage {
+    private final Logger logger = LoggerFactory.getLogger(PlayerMessage.class);
     private Message messageEnCours;
     private User author;
     private String command;
@@ -44,7 +47,7 @@ public class PlayerMessage {
                 try {
                     timerTask.cancel();
                 } catch (IllegalStateException e) {
-                    System.err.println("Le timer est déjà arrêté");
+                    logger.error("Le timer est déjà arrêté", e);
                 }
             }
         }
@@ -56,11 +59,17 @@ public class PlayerMessage {
 
         this.messageEnCours = hook.editOriginalEmbeds(getEmbed()).setComponents(addButtons()).complete();
 
-        timerTask = new PlayerUpdater();
-        if (timer == null || timer.isCancelled()) {
-            timer = new IniciumTimer("timerUpdate");
+        if (afficherQueue) {
+            timerTask = new PlayerUpdater();
+            if (timer == null || timer.isCancelled()) {
+                timer = new IniciumTimer("timerUpdate");
+            }
+            timer.scheduleAtFixedRate(timerTask, DELAY, PERIOD);
+        } else {
+            if (timer != null && !timer.isCancelled()) {
+                timer.cancel();
+            }
         }
-        timer.scheduleAtFixedRate(timerTask, DELAY, PERIOD);
     }
 
     private MessageEmbed getEmbed() {
@@ -204,20 +213,20 @@ public class PlayerMessage {
         @Override
         public void run() {
             if (musicPlayer.isPause()) {
-                System.out.println("En pause : Timer cancel");
+                logger.debug("En pause : Timer cancel");
                 cancel();
             } else if (musicPlayer.getAudioPlayer().getPlayingTrack() == null) {
-                System.out.println("getPlayingTrack null : Timer cancel");
+                logger.debug("getPlayingTrack null : Timer cancel");
                 messageEnCours = messageEnCours.editMessageEmbeds(getEmbed()).setActionRow(addTrackEndButtons()).complete();
                 cancel();
             }
             else {
                 if (musicPlayer.getQueue().isEmpty()) {
-                    System.out.println("getQueue().isEmpty() : Timer cancel");
+                    logger.debug("getQueue().isEmpty() : Timer cancel");
                     messageEnCours = messageEnCours.editMessageEmbeds(getEmbed()).setActionRow(addTrackEndButtons()).complete();
                     cancel();
                 } else {
-                    System.out.println("Timer");
+                    logger.debug("Timer");
                     messageEnCours = messageEnCours.editMessageEmbeds(getEmbed()).complete();
                 }
             }
