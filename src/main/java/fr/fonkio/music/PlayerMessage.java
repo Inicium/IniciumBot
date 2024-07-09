@@ -129,7 +129,7 @@ public class PlayerMessage {
                 } else {
                     duration = Utils.convertLongToString(at.getDuration());
                 }
-                builder.addField(""+convertIntEmoji(i+2)+" "+at.getInfo().title,
+                builder.addField(convertIntEmoji(i+2)+" "+at.getInfo().title,
                         "**" + StringsConst.MESSAGE_DURATION + "** ``"+duration +
                         "``\n**"+ StringsConst.MESSAGE_AUTHOR +"** ``"+at.getInfo().author+"``",
                         false);
@@ -199,7 +199,10 @@ public class PlayerMessage {
 
     private void barGenerator(EmbedBuilder builder, AudioTrack np, String duration) {
         String position = Utils.convertLongToString(np.getPosition());
-        builder.addField("\uD83C\uDFB6 1️⃣ "+np.getInfo().title + " \uD83D\uDD0A", "**" + StringsConst.MESSAGE_DURATION + "** ``"+position+" / "+duration + "``\n**" + StringsConst.MESSAGE_AUTHOR + "** ``"+np.getInfo().author+"``", false);
+        builder.addField(
+                "🔊 1️⃣ "+np.getInfo().title + " 🎶",
+                "**" + StringsConst.MESSAGE_DURATION + "** ``"+position+" / "+duration + "``\n**" + StringsConst.MESSAGE_AUTHOR + "** ``"+np.getInfo().author+"``",
+                false);
         double posF;
         if (np.getInfo().isStream) {
             posF = 100D;

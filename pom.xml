@@ -6,7 +6,7 @@
 
     <groupId>fr.fonkio</groupId>
     <artifactId>Inicium</artifactId>
-    <version>2.3.5</version>
+    <version>2.3.6</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -35,6 +35,10 @@
             <url>https://m2.dv8tion.net/releases</url>
         </repository>
         <repository>
+            <id>lavalink-releases</id>
+            <url>https://maven.lavalink.dev/releases</url>
+        </repository>
+        <repository>
             <id>maven_central</id>
             <name>Maven Central</name>
             <url>https://repo.maven.apache.org/maven2/</url>
@@ -56,7 +60,12 @@
         <dependency>
             <groupId>com.github.devoxin</groupId>
             <artifactId>lavaplayer</artifactId>
-            <version>1.8.0</version>
+            <version>1.9.1</version>
+        </dependency>
+        <dependency>
+            <groupId>dev.lavalink.youtube</groupId>
+            <artifactId>common</artifactId>
+            <version>1.4.0</version>
         </dependency>
         <dependency>
             <groupId>com.google.apis</groupId>
