@@ -37,6 +37,7 @@ jobs:
     needs: build
     steps:
     - name: Cleanup destination folder
+      continue-on-error: true
       run: rm ./*.jar
     - name: Download JAR
       uses: actions/download-artifact@v2
