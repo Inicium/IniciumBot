@@ -35,7 +35,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: IniciumBot
-        path: target/*shaded.jar
+        path: target/Inicium-*.jar
   deploy:
     runs-on: self-hosted
     needs: build
@@ -50,5 +50,5 @@ jobs:
         path: ./
     - name: Deploy JAR
       run: |
-        mv ./*-shaded.jar /home/ubuntu/IniciumBot/Inicium.jar
+        mv ./Inicium-*.jar /home/ubuntu/IniciumBot/Inicium.jar
         sudo systemctl restart IniciumBot.service
