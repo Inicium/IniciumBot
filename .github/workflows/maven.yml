@@ -50,5 +50,5 @@ jobs:
         path: ./
     - name: Deploy JAR
       run: |
-        mv ./Inicium-*.jar /home/inicium/IniciumBot/Inicium.jar
+        mv ./Inicium-*.jar /home/inicium/IniciumBot/IniciumBot.jar
         sudo systemctl restart iniciumbot.service
