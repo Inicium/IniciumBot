@@ -32,12 +32,12 @@ jobs:
         ls -al
         ls -al target/
     - name: Upload JAR
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: IniciumBot
         path: target/Inicium-*.jar
   deploy:
-    runs-on: self-hosted
+    runs-on: [self-hosted, raspberrypi]
     needs: build
     steps:
     - name: Cleanup destination folder
@@ -50,5 +50,5 @@ jobs:
         path: ./
     - name: Deploy JAR
       run: |
-        mv ./Inicium-*.jar /home/ubuntu/IniciumBot/Inicium.jar
-        sudo systemctl restart IniciumBot.service
+        mv ./Inicium-*.jar /home/inicium/IniciumBot/Inicium.jar
+        sudo systemctl restart iniciumbot.service
