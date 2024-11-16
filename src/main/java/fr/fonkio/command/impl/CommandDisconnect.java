@@ -3,7 +3,7 @@ package fr.fonkio.command.impl;
 import fr.fonkio.command.AbstractCommand;
 import fr.fonkio.inicium.Inicium;
 import fr.fonkio.inicium.Utils;
-import fr.fonkio.message.MusicPlayer;
+import fr.fonkio.music.MusicPlayer;
 import fr.fonkio.message.StringsConst;
 import fr.fonkio.enums.ConfigurationBotEnum;
 import fr.fonkio.enums.ConfigurationGuildEnum;

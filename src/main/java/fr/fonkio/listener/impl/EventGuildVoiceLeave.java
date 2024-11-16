@@ -2,7 +2,7 @@ package fr.fonkio.listener.impl;
 
 import fr.fonkio.inicium.Inicium;
 import fr.fonkio.inicium.Utils;
-import fr.fonkio.message.MusicPlayer;
+import fr.fonkio.music.MusicPlayer;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.middleman.AudioChannel;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;

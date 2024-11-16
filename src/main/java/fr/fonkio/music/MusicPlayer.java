@@ -1,10 +1,9 @@
-package fr.fonkio.message;
+package fr.fonkio.music;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fr.fonkio.inicium.Utils;
-import fr.fonkio.music.AudioHandler;
-import fr.fonkio.music.AudioListener;
+import fr.fonkio.message.PlayerMessage;
 import net.dv8tion.jda.api.entities.Guild;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

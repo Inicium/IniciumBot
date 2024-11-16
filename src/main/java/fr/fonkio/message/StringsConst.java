@@ -107,7 +107,7 @@ public class StringsConst {
     public static final String COMMAND_PLAYLIST_ADD_MODAL_TITLE = "Ajouter à la playlist";
     public static final String COMMAND_PLAYLIST_ADD_MODAL_LABEL = "Nom de la musique";
     public static final String COMMAND_PLAYLIST_ADD_MODAL_LABEL_PLACEHOLDER = "Ma musique";
-    public static final String COMMAND_PLAYLIST_ADD_MODAL_URL = "Nom du titre à ajouter";
+    public static final String COMMAND_PLAYLIST_ADD_MODAL_URL = "Lien de la musique";
     public static final String COMMAND_PLAYLIST_ADD_MODAL_URL_PLACEHOLDER = "https://www.youtube.com/watch?v=xxxxxxxxxxx";
 
     public static final String MESSAGE_NOT_CONNECTED = "Tu dois être connecté sur un channel vocal pour demander ça.";

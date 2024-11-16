@@ -2,6 +2,7 @@ package fr.fonkio.message;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fr.fonkio.inicium.Utils;
+import fr.fonkio.music.MusicPlayer;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.interactions.InteractionHook;
@@ -208,13 +209,6 @@ public class PlayerMessage {
                 "🔊 1️⃣ "+np.getInfo().title + " 🎶",
                 "**" + StringsConst.MESSAGE_DURATION + "** ``"+position+" / "+duration + "``\n**" + StringsConst.MESSAGE_AUTHOR + "** ``"+np.getInfo().author+"``",
                 false);
-        double posF;
-        if (np.getInfo().isStream) {
-            posF = 100D;
-        } else {
-            posF = ((double)np.getPosition()/np.getInfo().length)*100;
-        }
-        builder.setImage("http://www.yarntomato.com/percentbarmaker/button.php?barPosition="+ (int) posF +"&leftFill=%2300FF00");
     }
 
     private class PlayerUpdater extends TimerTask {

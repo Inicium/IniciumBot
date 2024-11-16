@@ -41,7 +41,7 @@ public class CommandHelp extends AbstractCommand {
             eb.addField("Boutons d'action", "Vous pouvez effectuer des actions avec les boutons d'action", false);
             eb.setFooter("Pour voir les commandes admin : " + prefix+"helpadmin");
             eb.setColor(Color.GREEN);
-            eb.setImage("https://cdn.discordapp.com/attachments/297407304871968768/854394142761943060/unknown.png");
+            eb.setImage("https://github.com/user-attachments/assets/040bffdc-23f0-4b1e-b73a-51fab8991e24");
             eb.setAuthor(user.getName(), null, user.getAvatarUrl());
 
             eventSlash.replyEmbeds(
