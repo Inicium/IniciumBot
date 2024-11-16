@@ -4,7 +4,7 @@ import fr.fonkio.inicium.Inicium;
 import fr.fonkio.inicium.Utils;
 import fr.fonkio.message.EmbedGenerator;
 import fr.fonkio.message.StringsConst;
-import fr.fonkio.utils.ConfigurationEnum;
+import fr.fonkio.enums.ConfigurationGuildEnum;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
@@ -24,7 +24,7 @@ public class EventGuildMemberRemoveJoin extends ListenerAdapter {
     public void onGuildMemberRemove(GuildMemberRemoveEvent event) {
         Guild guild = event.getGuild();
         User user = event.getUser();
-        sendWelcomeQuitMessage(ConfigurationEnum.QUIT_CHANNEL, StringsConst.MESSAGE_GOODBYE_TITLE, user.getName() + StringsConst.MESSAGE_GOODBYE, guild, user);
+        sendWelcomeQuitMessage(ConfigurationGuildEnum.QUIT_CHANNEL, StringsConst.MESSAGE_GOODBYE_TITLE, user.getName() + StringsConst.MESSAGE_GOODBYE, guild, user);
         logger.info(Utils.getFormattedLogString(guild, "L'utilisateur " + user.getName() + " a quitté le serveur"));
     }
 
@@ -32,13 +32,13 @@ public class EventGuildMemberRemoveJoin extends ListenerAdapter {
     public void onGuildMemberJoin(GuildMemberJoinEvent event) {
         Guild guild = event.getGuild();
         User user = event.getUser();
-        sendWelcomeQuitMessage(ConfigurationEnum.WELCOME_CHANNEL, StringsConst.MESSAGE_WELCOME_TITLE, user.getAsMention() + StringsConst.MESSAGE_WELCOME +guild.getName()+".", guild, user);
+        sendWelcomeQuitMessage(ConfigurationGuildEnum.WELCOME_CHANNEL, StringsConst.MESSAGE_WELCOME_TITLE, user.getAsMention() + StringsConst.MESSAGE_WELCOME +guild.getName()+".", guild, user);
         giveDefaultRole(guild, user);
         logger.info(Utils.getFormattedLogString(guild, "L'utilisateur " + user.getName() + " a rejoint le serveur"));
     }
 
     private void giveDefaultRole(Guild guild, User user) {
-        String roleId = Inicium.CONFIGURATION.getGuildConfig(guild.getId(), ConfigurationEnum.DEFAULT_ROLE);
+        String roleId = Inicium.CONFIGURATION.getGuildConfig(guild.getId(), ConfigurationGuildEnum.DEFAULT_ROLE);
         if (!"".equals(roleId)) {
             Role role = guild.getRoleById(roleId);
             if (role != null) {
@@ -48,7 +48,7 @@ public class EventGuildMemberRemoveJoin extends ListenerAdapter {
         }
     }
 
-    private void sendWelcomeQuitMessage(ConfigurationEnum configChannel, String title, String message, Guild guild, User user) {
+    private void sendWelcomeQuitMessage(ConfigurationGuildEnum configChannel, String title, String message, Guild guild, User user) {
         String idTC = Inicium.CONFIGURATION.getGuildConfig(guild.getId(), configChannel);
         if (!"".equals(idTC)) {
             if (guild.getSelfMember().hasPermission(Permission.MESSAGE_SEND)) {

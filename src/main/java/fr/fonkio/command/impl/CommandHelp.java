@@ -12,8 +12,6 @@ import java.awt.*;
 
 public class CommandHelp extends AbstractCommand {
 
-
-
     @Override
     public boolean run(SlashCommandInteractionEvent eventSlash, ButtonInteractionEvent eventButton) {
         if (eventSlash == null) {
@@ -38,6 +36,7 @@ public class CommandHelp extends AbstractCommand {
             eb.addField(StringsConst.COMMAND_QUEUE_EMOTE + prefix+"queue, "+prefix+"np", StringsConst.COMMAND_QUEUE_DESC, true);
             eb.addField(StringsConst.COMMAND_SHUFFLE_EMOTE + prefix+"shuffle", StringsConst.COMMAND_SHUFFLE_DESC, false);
             eb.addField(StringsConst.COMMAND_MOVEALL_EMOTE + prefix+"moveall [Destination], "+prefix+"mva [...]", StringsConst.COMMAND_MOVEALL_DESC, false);
+            eb.addField(StringsConst.COMMAND_PLAYLIST_EMOTE + prefix+"playlist", StringsConst.COMMAND_PLAYLIST_DESC, false);
             eb.addBlankField(false);
             eb.addField("Boutons d'action", "Vous pouvez effectuer des actions avec les boutons d'action", false);
             eb.setFooter("Pour voir les commandes admin : " + prefix+"helpadmin");
@@ -50,5 +49,10 @@ public class CommandHelp extends AbstractCommand {
             ).setEphemeral(true).queue();
         }
         return true;
+    }
+
+    @Override
+    public boolean isBlacklistable() {
+        return false;
     }
 }

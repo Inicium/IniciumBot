@@ -89,11 +89,10 @@ public class MusicManager {
                     if ((source.contains("suno.ai") || source.contains("suno.com"))) {
                         message = StringsConst.MESSAGE_SUNO_FAILED;
                     } else {
-                        message = StringsConst.MESSAGE_CANT_PLAY_RESON + exception.getMessage() + ")\n**" + StringsConst.MESSAGE_ADD_LYRIC_TO_SEARCH + "**";
+                        message = StringsConst.MESSAGE_CANT_PLAY_RESON + exception.getMessage() + ")";
                     }
                     player.getPlayerMessage().updatePlayerMessage(StringsConst.COMMAND_PLAY_TITLE,
                             message, author, true, hook);
-
                 }
             }
         });

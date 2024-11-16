@@ -12,14 +12,10 @@ import net.dv8tion.jda.api.interactions.InteractionHook;
 
 public class CommandQueue extends AbstractCommand {
 
-    public CommandQueue() {
-        blacklistable = true;
-    }
-
     @Override
     public boolean run(SlashCommandInteractionEvent eventSlash, ButtonInteractionEvent eventButton) {
         GenericInteractionCreateEvent event = eventSlash != null ? eventSlash : eventButton;
-        InteractionHook hook = eventSlash != null ? eventSlash.deferReply().complete() : eventButton.getHook();
+        InteractionHook hook = eventSlash != null ? eventSlash.deferReply().complete() : eventButton.deferReply().complete();
         Guild guild = event.getGuild();
         User user = event.getUser();
 
@@ -31,6 +27,11 @@ public class CommandQueue extends AbstractCommand {
             }
         }
 
+        return true;
+    }
+
+    @Override
+    public boolean isBlacklistable() {
         return true;
     }
 }

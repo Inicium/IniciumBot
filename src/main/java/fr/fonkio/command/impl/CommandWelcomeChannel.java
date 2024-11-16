@@ -3,7 +3,7 @@ package fr.fonkio.command.impl;
 import fr.fonkio.command.AbstractCommand;
 import fr.fonkio.message.EmbedGenerator;
 import fr.fonkio.message.StringsConst;
-import fr.fonkio.utils.ConfigurationEnum;
+import fr.fonkio.enums.ConfigurationGuildEnum;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -19,6 +19,7 @@ public class CommandWelcomeChannel extends AbstractCommand {
         if (eventSlash == null) {
             return false;
         }
+
         Guild guild = eventSlash.getGuild();
         User user = eventSlash.getUser();
         if(guild != null) {
@@ -28,17 +29,21 @@ public class CommandWelcomeChannel extends AbstractCommand {
                     permissionCheck(eventSlash, user);
                     return true;
                 }
-                List<SelectOption> optionList = getSelectOptionsChannelList(guild, ConfigurationEnum.WELCOME_CHANNEL);
+                List<SelectOption> optionList = getSelectOptionsChannelList(guild, ConfigurationGuildEnum.WELCOME_CHANNEL);
                 eventSlash.replyEmbeds(EmbedGenerator.generate(user, StringsConst.COMMAND_WELCOME_TITLE, StringsConst.COMMAND_WELCOME_SUCCESS))
                         .addActionRow(
                                 StringSelectMenu.create("choix-channel-welcome")
                                         .setMinValues(0)
                                         .setMaxValues(1)
                                         .addOptions(optionList).build()
-                        )
-                        .setEphemeral(true).queue();
+                        ).setEphemeral(true).queue();
             }
         }
         return true;
+    }
+
+    @Override
+    public boolean isBlacklistable() {
+        return false;
     }
 }

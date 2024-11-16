@@ -1,16 +1,15 @@
-package fr.fonkio.utils;
+package fr.fonkio.enums;
 
-public enum ConfigurationEnum {
+public enum ConfigurationGuildEnum {
     QUIT_CHANNEL("quit", ""),
     WELCOME_CHANNEL("welcome", ""),
     SERVER_NAME("name", "undefined"),
     DEFAULT_ROLE("defaultrole", ""),
     DC_SONG("dcsong", "true"),
-    BLACK_LIST("blacklist", null);
+    BLACK_LIST("blacklist", null),
+    PLAYLIST("playlist", null);
 
-
-
-    ConfigurationEnum(String key, String defaultValue) {
+    ConfigurationGuildEnum(String key, String defaultValue) {
         this.key = key;
         this.defaultValue = defaultValue;
     }

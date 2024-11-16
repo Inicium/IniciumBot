@@ -7,7 +7,6 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.middleman.AudioChannel;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +14,7 @@ public class EventGuildVoiceLeave extends ListenerAdapter {
     private final Logger logger = LoggerFactory.getLogger(EventGuildVoiceLeave.class);
 
     @Override
-    public void onGuildVoiceUpdate(@NotNull GuildVoiceUpdateEvent event) {
+    public void onGuildVoiceUpdate(GuildVoiceUpdateEvent event) {
         AudioChannel voiceChannel = event.getChannelLeft();
         if (voiceChannel == null) {
             return;

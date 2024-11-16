@@ -1,8 +1,9 @@
-package fr.fonkio.utils;
+package fr.fonkio.message;
 
 import java.util.Timer;
 
 public class IniciumTimer extends Timer {
+
     private boolean isCancelled = false;
 
     public IniciumTimer(String timerName) {

@@ -29,7 +29,7 @@ public class AudioHandler implements AudioSendHandler {
     public ByteBuffer provide20MsAudio() {
         byte[] data = canProvide() ? lastFrame.getData() : null;
         lastFrame = null;
-        return ByteBuffer.wrap(data);
+        return data != null ? ByteBuffer.wrap(data) : null;
     }
 
     @Override

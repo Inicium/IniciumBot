@@ -66,7 +66,6 @@ public class StringsConst {
     public static final String COMMAND_RESUME_ALREDY_PLAYING = "Déjà en cours de lecture...";
 
     public static final String COMMAND_PLAYSKIP_EMOTE = "▶️⏭️️";
-    public static final String COMMAND_PLAYSKIP_TITLE = COMMAND_PLAYSKIP_EMOTE + " PlaySkip";
     public static final String COMMAND_PLAYSKIP_DESC = "Lancer la lecture d'une musique avec un lien ou une recherche et passer la musique en cours";
 
     public static final String COMMAND_SEEK_EMOTE = "⏭️";
@@ -93,6 +92,24 @@ public class StringsConst {
     public static final String COMMAND_MOVEALL_PARAM = "Channel de destination";
     public static final String COMMAND_MOVEALL_PERM = "Tu n'as pas les permissions nécessaires pour déplacer des membres ou pour accéder à ce channel";
 
+    public static final String COMMAND_PLAYLIST_EMOTE = "⭐";
+    public static final String COMMAND_PLAYLIST_TITLE = COMMAND_PLAYLIST_EMOTE + " Playlist";
+    public static final String COMMAND_PLAYLIST_DESC = "Gérer la playlist";
+    public static final String COMMAND_PLAYLIST_SUCCESS = "Sélectionner une musique de la playlist pour l'ajouter à la liste de lecture";
+    public static final String COMMAND_PLAYLIST_PARAM = "Action à réaliser";
+    public static final String COMMAND_PLAYLIST_REMOVE_EMOTE = "❌";
+    public static final String COMMAND_PLAYLIST_REMOVE_TITLE = COMMAND_PLAYLIST_REMOVE_EMOTE + " Playlist remove";
+    public static final String COMMAND_PLAYLIST_REMOVE_SUCCESS = "Sélectionner les musiques à supprimer de la playlist";
+    public static final String COMMAND_PLAYLIST_EMPTY_ERROR = "Il n'y a pas encore de musique dans la playlist";
+    public static final String COMMAND_PLAYLIST_ADD_FULL = "La playlist est pleine";
+    public static final String COMMAND_PLAYLIST_ADD_ALREADY_EXIST = "L'URL est déjà enregistrée dans la playlist";
+    public static final String COMMAND_PLAYLIST_ADD_SUCCESS = "%s a bien été ajouté à la playlist !";
+    public static final String COMMAND_PLAYLIST_ADD_MODAL_TITLE = "Ajouter à la playlist";
+    public static final String COMMAND_PLAYLIST_ADD_MODAL_LABEL = "Nom de la musique";
+    public static final String COMMAND_PLAYLIST_ADD_MODAL_LABEL_PLACEHOLDER = "Ma musique";
+    public static final String COMMAND_PLAYLIST_ADD_MODAL_URL = "Nom du titre à ajouter";
+    public static final String COMMAND_PLAYLIST_ADD_MODAL_URL_PLACEHOLDER = "https://www.youtube.com/watch?v=xxxxxxxxxxx";
+
     public static final String MESSAGE_NOT_CONNECTED = "Tu dois être connecté sur un channel vocal pour demander ça.";
     public static final String MESSAGE_UNKNOWN_CHANNEL = "Le channel est introuvable";
     public static final String MESSAGE_NO_MUSIC_IN_PROGRESS = "Aucune musique n'est en cours de lecture";
@@ -117,9 +134,9 @@ public class StringsConst {
     public static final String MESSAGE_ADDING_PLAYLIST = "Ajout de la playlist ";
     public static final String MESSAGE_THE_TRACK = "La piste ";
     public static final String MESSAGE_NOT_FOUND = " n'a pas été trouvée.";
-    public static final String MESSAGE_CANT_PLAY_RESON = "Impossible de jouer la piste (raison:";
+    public static final String MESSAGE_CANT_PLAY_RESON = "Impossible de jouer la piste, merci de prévenir <@287268866147483649> (Message d'erreur : ";
     public static final String MESSAGE_SUNO_FAILED = "Le lien suno n'est pas valide. Pour information, les musiques en cours de génération ne peuvent pas être lues, merci d'attendre la fin du chargement pour réessayer.";
-    public static final String MESSAGE_ADD_LYRIC_TO_SEARCH = "SI C'EST UNE MUSIQUE ESSAYE D'AJOUTER \"LYRICS\" A TA RECHERCHE";
+
     public static final String MESSAGE_LOADING_TITLE = "Chargement";
     public static final String MESSAGE_LOADING = "Chargement...";
     public static final String BUTTON_DONE = "✅ Terminé !";
@@ -133,4 +150,5 @@ public class StringsConst {
     public static final String MESSAGE_OTHER_TRACK = " autre piste";
     public static final String MESSAGE_ERROR_TITLE = "Erreur";
     public static final String MESSAGE_ERROR = "Erreur lors de l'exécution de la commande. Merci de réessayer plus tard.";
+
 }

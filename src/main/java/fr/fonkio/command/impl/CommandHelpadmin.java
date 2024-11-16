@@ -7,6 +7,8 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import org.jetbrains.annotations.NotNull;
+
 import java.awt.*;
 
 public class CommandHelpadmin extends AbstractCommand {
@@ -26,23 +28,33 @@ public class CommandHelpadmin extends AbstractCommand {
                     permissionCheck(eventSlash, user);
                     return true;
                 }
-                EmbedBuilder eb = new EmbedBuilder();
-                eb.setTitle(StringsConst.COMMAND_HELPADMIN_TITLE);
-                String prefix = "/";
-                eb.addBlankField(false);
-                eb.addField(prefix+"welcome", StringsConst.COMMAND_WELCOME_DESC, false);
-                eb.addField(prefix+"goodbye", StringsConst.COMMAND_GOODBYE_DESC, false);
-                eb.addField(prefix+"blacklist", StringsConst.COMMAND_BLACKLIST_DESC, false);
-                eb.addField(prefix+"disconnectsong" + ", " + prefix + "dcsong", StringsConst.COMMAND_DISCONNECT_SONG_DESC, false);
-
-                eb.setColor(Color.GREEN);
+                EmbedBuilder eb = getHelpadminEmbedBuilder();
                 eb.setAuthor(user.getName(), null, user.getAvatarUrl());
                 eventSlash.replyEmbeds(
                         eb.build()
                 ).setEphemeral(true).queue();
-
             }
         }
         return true;
+    }
+
+    @Override
+    public boolean isBlacklistable() {
+        return false;
+    }
+
+    @NotNull
+    private static EmbedBuilder getHelpadminEmbedBuilder() {
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setTitle(StringsConst.COMMAND_HELPADMIN_TITLE);
+        String prefix = "/";
+        eb.addBlankField(false);
+        eb.addField(prefix+"welcome", StringsConst.COMMAND_WELCOME_DESC, false);
+        eb.addField(prefix+"goodbye", StringsConst.COMMAND_GOODBYE_DESC, false);
+        eb.addField(prefix+"blacklist", StringsConst.COMMAND_BLACKLIST_DESC, false);
+        eb.addField(prefix+"disconnectsong" + ", " + prefix + "dcsong", StringsConst.COMMAND_DISCONNECT_SONG_DESC, false);
+
+        eb.setColor(Color.GREEN);
+        return eb;
     }
 }

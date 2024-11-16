@@ -61,4 +61,9 @@ public class CommandMoveAll extends AbstractCommand {
         }
         return true;
     }
+
+    @Override
+    public boolean isBlacklistable() {
+        return false;
+    }
 }

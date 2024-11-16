@@ -3,7 +3,7 @@ package fr.fonkio.command.impl;
 import fr.fonkio.command.AbstractCommand;
 import fr.fonkio.message.EmbedGenerator;
 import fr.fonkio.message.StringsConst;
-import fr.fonkio.utils.ConfigurationEnum;
+import fr.fonkio.enums.ConfigurationGuildEnum;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -14,6 +14,7 @@ import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
 import java.util.List;
 
 public class CommandGoodbyeChannel extends AbstractCommand {
+
     @Override
     public boolean run(SlashCommandInteractionEvent eventSlash, ButtonInteractionEvent eventButton) {
         if (eventSlash == null) {
@@ -31,7 +32,7 @@ public class CommandGoodbyeChannel extends AbstractCommand {
                     return true;
                 }
 
-                List<SelectOption> optionList = getSelectOptionsChannelList(guild, ConfigurationEnum.QUIT_CHANNEL);
+                List<SelectOption> optionList = getSelectOptionsChannelList(guild, ConfigurationGuildEnum.QUIT_CHANNEL);
                 eventSlash.replyEmbeds(EmbedGenerator.generate(user, StringsConst.COMMAND_GOODBYE_TITLE, StringsConst.COMMAND_GOODBYE_SUCCESS))
                         .addActionRow(
                                 StringSelectMenu.create("choix-channel-goodbye")
@@ -45,6 +46,8 @@ public class CommandGoodbyeChannel extends AbstractCommand {
         return true;
     }
 
-
-
+    @Override
+    public boolean isBlacklistable() {
+        return false;
+    }
 }

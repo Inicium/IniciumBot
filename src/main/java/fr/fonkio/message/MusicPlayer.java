@@ -5,7 +5,6 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fr.fonkio.inicium.Utils;
 import fr.fonkio.music.AudioHandler;
 import fr.fonkio.music.AudioListener;
-import fr.fonkio.music.PlayerMessage;
 import net.dv8tion.jda.api.entities.Guild;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,11 +12,12 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 public class MusicPlayer {
+
     private final Logger logger = LoggerFactory.getLogger(MusicPlayer.class);
     private final AudioPlayer audioPlayer;
     private final AudioListener listener;
     private final Guild guild;
-    private PlayerMessage playerMessage;
+    private final PlayerMessage playerMessage;
 
     public MusicPlayer(AudioPlayer audioPlayer, Guild guild) {
         this.audioPlayer = audioPlayer;
@@ -96,10 +96,6 @@ public class MusicPlayer {
 
     public PlayerMessage getPlayerMessage() {
         return playerMessage;
-    }
-
-    public void setPlayerMessage(PlayerMessage playerMessage) {
-        this.playerMessage = playerMessage;
     }
 
 }

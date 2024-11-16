@@ -4,7 +4,7 @@ import fr.fonkio.command.AbstractCommand;
 import fr.fonkio.inicium.Inicium;
 import fr.fonkio.message.EmbedGenerator;
 import fr.fonkio.message.StringsConst;
-import fr.fonkio.utils.ConfigurationEnum;
+import fr.fonkio.enums.ConfigurationGuildEnum;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -26,6 +26,11 @@ public class CommandDisconnectSong extends AbstractCommand {
         return true;
     }
 
+    @Override
+    public boolean isBlacklistable() {
+        return false;
+    }
+
     private static void runButtonCommand(ButtonInteractionEvent eventButton) {
         Guild guild = eventButton.getGuild();
         if(guild == null) {
@@ -35,7 +40,7 @@ public class CommandDisconnectSong extends AbstractCommand {
         if (ButtonStyle.SUCCESS.equals(eventButton.getComponent().getStyle())) {
             newParam = "true";
         }
-        Inicium.CONFIGURATION.setGuildConfig(guild.getId(), ConfigurationEnum.DC_SONG, newParam);
+        Inicium.CONFIGURATION.setGuildConfig(guild.getId(), ConfigurationGuildEnum.DC_SONG, newParam);
         eventButton.getHook().editOriginalEmbeds(EmbedGenerator.generate(eventButton.getUser(), StringsConst.MESSAGE_CONFIRM_TITLE, StringsConst.MESSAGE_CONFIRM)).setActionRow(Button.success("saved",StringsConst.BUTTON_SAVED).asDisabled()).queue();
     }
 
@@ -50,7 +55,7 @@ public class CommandDisconnectSong extends AbstractCommand {
                     return;
                 }
                 ItemComponent ic;
-                if ("false".equals(Inicium.CONFIGURATION.getGuildConfig(guild.getId(), ConfigurationEnum.DC_SONG))) {
+                if ("false".equals(Inicium.CONFIGURATION.getGuildConfig(guild.getId(), ConfigurationGuildEnum.DC_SONG))) {
                     ic = Button.success("disconnectsong", "Activer");
                 } else {
                     ic = Button.danger("disconnectsong", "Désactiver");

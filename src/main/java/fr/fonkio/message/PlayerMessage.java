@@ -1,10 +1,7 @@
-package fr.fonkio.music;
+package fr.fonkio.message;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fr.fonkio.inicium.Utils;
-import fr.fonkio.message.MusicPlayer;
-import fr.fonkio.message.StringsConst;
-import fr.fonkio.utils.IniciumTimer;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.interactions.InteractionHook;
@@ -17,14 +14,14 @@ import org.slf4j.LoggerFactory;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
 import java.util.TimerTask;
 
 public class PlayerMessage {
+
     private final Logger logger = LoggerFactory.getLogger(PlayerMessage.class);
     private Message messageEnCours;
     private User author;
-    private String command;
+    private String title;
     private String message;
     private boolean afficherQueue;
     private final MusicPlayer musicPlayer;
@@ -39,34 +36,37 @@ public class PlayerMessage {
         this.musicPlayer = musicPlayer;
     }
 
-    public void updatePlayerMessage(String command, String message, User author, boolean afficherQueue, InteractionHook hook) {
+    public void updatePlayerMessage(String title, String message, User author, boolean afficherQueue, InteractionHook hook) {
 
         if (messageEnCours != null && !messageEnCours.equals(hook.retrieveOriginal().complete())) {
+            logger.info("Changement du message d'affichage du lecteur... Suppression des boutons d'action de l'ancien message...");
             messageEnCours.editMessageEmbeds(oldEmbed).setActionRow(Button.success("done", StringsConst.BUTTON_DONE).asDisabled()).queue();
             if(timerTask != null) {
-                try {
-                    timerTask.cancel();
-                } catch (IllegalStateException e) {
-                    logger.error("Le timer est déjà arrêté", e);
-                }
+                logger.info("Arrêt de la task");
+                timerTask.cancel();
             }
         }
 
-        this.command = command;
+        this.title = title;
         this.message = message;
         this.afficherQueue = afficherQueue;
         this.author = author;
-
         this.messageEnCours = hook.editOriginalEmbeds(getEmbed()).setComponents(addButtons()).complete();
 
         if (afficherQueue) {
+            logger.info("Le nouveau message du lecteur doit afficher la queue");
+            logger.info("Création de la tache");
             timerTask = new PlayerUpdater();
             if (timer == null || timer.isCancelled()) {
+                logger.info("Le timer n'existe pas... Création du timer");
                 timer = new IniciumTimer("timerUpdate");
             }
             timer.scheduleAtFixedRate(timerTask, DELAY, PERIOD);
+            logger.info("Tâche programmée sur le timer");
         } else {
+            logger.info("Le nouveau message du lecteur n'affiche pas la queue");
             if (timer != null && !timer.isCancelled()) {
+                logger.info("Arrêt du timer");
                 timer.cancel();
             }
         }
@@ -75,7 +75,7 @@ public class PlayerMessage {
     private MessageEmbed getEmbed() {
         EmbedBuilder builder = new EmbedBuilder();
         builder.setAuthor(StringsConst.MESSAGE_MUSIC_BOT, null, "https://cdn.dribbble.com/users/2011679/screenshots/5816471/____2.gif");
-        builder.setTitle(this.command);
+        builder.setTitle(this.title);
         builder.setDescription(this.message);
         builder.setColor(Color.GREEN);
         builder.setFooter(this.author.getEffectiveName(), this.author.getAvatarUrl());
@@ -89,7 +89,7 @@ public class PlayerMessage {
     }
 
     private void addFields(EmbedBuilder builder, List<AudioTrack> queue) {
-        if (queue.size()==0) { //Pas de musique dans la file
+        if (queue.isEmpty()) { //Pas de musique dans la file
             builder.addField(StringsConst.MESSAGE_MUSIC, StringsConst.MESSAGE_NO_MUSIC_IN_PROGRESS, false);
         } else if (queue.size()==1) { //1 musique dans la file
             AudioTrack np = queue.get(0);
@@ -165,12 +165,13 @@ public class PlayerMessage {
 
     public List<ActionRow> addButtons() {
         List<ActionRow> actionRowList = new ArrayList<>();
-        List<ItemComponent> itemComponentLine1List = new ArrayList<>();
-        if (musicPlayer.getAudioPlayer().getPlayingTrack() == null) {
-            itemComponentLine1List.add(Button.success("done", StringsConst.BUTTON_DONE).asDisabled());
-            actionRowList.add(ActionRow.of(itemComponentLine1List));
+
+        if (StringsConst.COMMAND_DISCONNECT_TITLE.equals(this.title) || musicPlayer.getAudioPlayer().getPlayingTrack() == null) {
+            actionRowList.add(ActionRow.of(addTrackEndButtons()));
             return actionRowList;
         }
+
+        List<ItemComponent> itemComponentLine1List = new ArrayList<>();
         List<ItemComponent> itemComponentLine2List = new ArrayList<>();
         if (musicPlayer.isPause()) {
             itemComponentLine1List.add(Button.success("resume", StringsConst.COMMAND_PLAY_TITLE));
@@ -179,11 +180,12 @@ public class PlayerMessage {
         }
         itemComponentLine1List.add(Button.primary("skip", StringsConst.COMMAND_SKIP_TITLE));
         itemComponentLine1List.add(Button.primary("shuffle", StringsConst.COMMAND_SHUFFLE_TITLE));
-        Button button = Button.danger("clear", StringsConst.COMMAND_CLEAR_TITLE);
+        Button buttonClear = Button.danger("clear", StringsConst.COMMAND_CLEAR_TITLE);
         if (musicPlayer.getQueue().size()<2) {
-            button = button.asDisabled();
+            buttonClear = buttonClear.asDisabled();
         }
-        itemComponentLine2List.add(button);
+        itemComponentLine1List.add(Button.primary("playlist", StringsConst.COMMAND_PLAYLIST_TITLE));
+        itemComponentLine2List.add(buttonClear);
         itemComponentLine2List.add(Button.danger("disconnect", StringsConst.COMMAND_DISCONNECT_TITLE));
         actionRowList.add(ActionRow.of(itemComponentLine1List));
         actionRowList.add(ActionRow.of(itemComponentLine2List));
@@ -193,7 +195,10 @@ public class PlayerMessage {
     public List<ItemComponent> addTrackEndButtons() {
         List<ItemComponent> buttons = new ArrayList<>();
         buttons.add(Button.success("done", StringsConst.BUTTON_DONE).asDisabled());
-        buttons.add(Button.danger("disconnect", StringsConst.COMMAND_DISCONNECT_TITLE));
+        if (!StringsConst.COMMAND_DISCONNECT_TITLE.equals(this.title)) {
+            buttons.add(Button.danger("disconnect", StringsConst.COMMAND_DISCONNECT_TITLE));
+        }
+        buttons.add(Button.primary("playlist", StringsConst.COMMAND_PLAYLIST_TITLE));
         return buttons;
     }
 

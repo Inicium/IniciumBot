@@ -5,14 +5,17 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.SearchResult;
 import fr.fonkio.inicium.Inicium;
+import fr.fonkio.enums.ConfigurationBotEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.List;
 
 public class YoutubeSearch {
-    private final Logger logger = LoggerFactory.getLogger(YoutubeSearch.class);
 
+    private final Logger logger = LoggerFactory.getLogger(YoutubeSearch.class);
     private final YouTube youtube;
 
     public YoutubeSearch() {
@@ -24,8 +27,8 @@ public class YoutubeSearch {
                     null)
                     .setApplicationName("API YouTube BOT")
                     .build();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (GeneralSecurityException | IOException e) {
+            logger.error(e.getLocalizedMessage(), e);
         }
         this.youtube = temp;
     }
@@ -39,7 +42,7 @@ public class YoutubeSearch {
     }
 
     private String searchYoutube(String input) {
-        logger.info("Recherche sur YouTube de \"" + input + "\"...");
+        logger.info("Recherche sur YouTube de \"{}\"...", input);
         try {
             List<SearchResult> result = youtube.search()
                     .list("id,snippet")
@@ -47,13 +50,13 @@ public class YoutubeSearch {
                     .setMaxResults(1L)
                     .setType("video")
                     .setFields("items(id/kind,id/videoId,snippet/title,snippet/thumbnails/default/url)")
-                    .setKey(Inicium.CONFIGURATION.getYtapi())
+                    .setKey(Inicium.CONFIGURATION.getGlobalParam(ConfigurationBotEnum.YOUTUBE_API))
                     .execute()
                     .getItems();
             if (!result.isEmpty()) {
                 String videoId = result.get(0).getId().getVideoId();
                 String urlResult = "https://www.youtube.com/watch?v=" + videoId;
-                logger.info("Résultat trouvé : " + urlResult);
+                logger.info("Résultat trouvé : {}", urlResult);
                 return urlResult;
             }
         } catch (Exception e) {

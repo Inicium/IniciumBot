@@ -26,9 +26,6 @@ public class AudioListener extends AudioEventAdapter {
         return tracks;
     }
 
-    public int getTrackSize() {
-        return tracks.size();
-    }
 
     public void shuffle() {
         List<AudioTrack> queue = new ArrayList<>(tracks);

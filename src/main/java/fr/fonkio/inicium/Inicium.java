@@ -1,5 +1,6 @@
 package fr.fonkio.inicium;
 
+import dev.lavalink.youtube.clients.Web;
 import fr.fonkio.IniciumActivity;
 import fr.fonkio.command.AbstractCommand;
 import fr.fonkio.command.impl.*;
@@ -7,18 +8,18 @@ import fr.fonkio.listener.impl.*;
 import fr.fonkio.message.StringsConst;
 import fr.fonkio.music.MusicManager;
 import fr.fonkio.utils.Configuration;
+import fr.fonkio.enums.ConfigurationBotEnum;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
+import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.security.auth.login.LoginException;
 import java.io.IOException;
 import java.util.*;
 
@@ -37,14 +38,16 @@ public class Inicium {
         try {
             configuration = new Configuration("data.json");
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getLocalizedMessage(), e);
         }
         CONFIGURATION = configuration;
     }
 
-
-    public static void main(String[] args) throws LoginException {
+    public static void main(String[] args) {
         logger.info("Démarrage du bot ...");
+        logger.info("Ajout du PO_TOKEN et du VISITOR_DATA ...");
+        Web.setPoTokenAndVisitorData(Inicium.CONFIGURATION.getGlobalParam(ConfigurationBotEnum.PO_TOKEN),
+                Inicium.CONFIGURATION.getGlobalParam(ConfigurationBotEnum.VISITOR_DATA));
         logger.info("Création des commandes...");
         AbstractCommand clear = new CommandClear();
         AbstractCommand disconnect = new CommandDisconnect();
@@ -64,6 +67,7 @@ public class Inicium {
         AbstractCommand shuffle = new CommandShuffle();
         AbstractCommand defaultRole = new CommandDefaultRole();
         AbstractCommand disconnectsong = new CommandDisconnectSong();
+        AbstractCommand playlist = new CommandPlaylist();
 
         commands.put("play", play);
         commands.put("p", play);
@@ -93,9 +97,10 @@ public class Inicium {
         commands.put("defaultrole", defaultRole);
         commands.put("disconnectsong", disconnectsong);
         commands.put("dcsong", disconnectsong);
+        commands.put("playlist", playlist);
         logger.info("Démarrage JDA...");
         Set<GatewayIntent> intents = new HashSet<>(EnumSet.allOf(GatewayIntent.class));
-        jda = JDABuilder.create(CONFIGURATION.getToken(), intents).setAutoReconnect(true).build();
+        jda = JDABuilder.create(CONFIGURATION.getGlobalParam(ConfigurationBotEnum.DISCORD_TOKEN), intents).setAutoReconnect(true).build();
         logger.info("JDA : Démarré ! Connexion au token OK.");
         CONFIGURATION.save();
         logger.info("JDA : Enregistrement des listeners...");
@@ -105,10 +110,13 @@ public class Inicium {
         jda.addEventListener(new EventGuildVoiceLeave());
         jda.addEventListener(new EventSlashCommandInteraction());
         jda.addEventListener(new EventSelectMenuInteraction());
+        jda.addEventListener(new EventModalInteraction());
         logger.info("JDA : Lancement de l'activité Discord...");
         Activity act = new IniciumActivity();
         jda.getPresence().setActivity(act);
         logger.info("JDA : Mise à jour des commandes...");
+        OptionData favoriteOptionData = new OptionData(OptionType.STRING, "action", StringsConst.COMMAND_PLAYLIST_PARAM, false)
+                .addChoices(new Command.Choice("remove", "remove"), new Command.Choice("add", "add"));
         jda.updateCommands().addCommands(
                 Commands.slash("play", StringsConst.COMMAND_PLAY_DESC)
                         .addOption(OptionType.STRING, "musique", StringsConst.COMMAND_PLAY_PARAM, true),
@@ -138,8 +146,11 @@ public class Inicium {
                 Commands.slash("goodbye", StringsConst.COMMAND_GOODBYE_DESC),
                 Commands.slash("disconnectsong", StringsConst.COMMAND_DISCONNECT_SONG_DESC),
                 Commands.slash("dcsong", StringsConst.COMMAND_DISCONNECT_SONG_DESC),
+                Commands.slash("playlist", StringsConst.COMMAND_PLAYLIST_DESC)
+                        .addOptions(favoriteOptionData),
                 Commands.slash("mva", StringsConst.COMMAND_MOVEALL_DESC)
-                        .addOptions(new OptionData(OptionType.CHANNEL, "destination", StringsConst.COMMAND_MOVEALL_PARAM, true).setChannelTypes(ChannelType.VOICE, ChannelType.STAGE)),
+                        .addOptions(new OptionData(OptionType.CHANNEL, "destination", StringsConst.COMMAND_MOVEALL_PARAM, true)
+                                .setChannelTypes(ChannelType.VOICE, ChannelType.STAGE)),
                 Commands.slash("moveall", StringsConst.COMMAND_MOVEALL_DESC)
                         .addOptions(new OptionData(OptionType.CHANNEL, "destination", StringsConst.COMMAND_MOVEALL_PARAM, true).setChannelTypes(ChannelType.VOICE, ChannelType.STAGE)),
                 Commands.slash("shuffle", StringsConst.COMMAND_SHUFFLE_DESC),
