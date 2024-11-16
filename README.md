@@ -5,6 +5,7 @@ Pour avoir un accès hébergé au bot, merci de me le demander
 # Présentation
 ## Table des matières
 - [Commandes gestion musique](#commandes-gestion-musique)
+  - `(new)`[Playlist](#playlist) 
   - [Play](#play)
   - [Skip](#skip)
   - [PlaySkip](#playskip)
@@ -30,7 +31,27 @@ Les commandes et les arguments sont autocomplétés
 ![image](https://user-images.githubusercontent.com/28084726/167290108-b0b627a8-1ccc-40ef-b348-4a680ed57965.png)
 
 # Commandes gestion musique
-
+## Playlist
+### Description
+Lancer, supprimer ou ajouter une musique sur la playlist d'un serveur Discord
+### Commande
+/playlist</br>
+/playlist `[action]`
+### Paramètre
+`[action]` : `add` ou `remove` pour ajouter ou supprimer</br>
+Facultatif, si rien n'est renseigné, ouvre la playlist (équivalent au bouton suivant)
+### Bouton
+![image](https://github.com/user-attachments/assets/a17448f0-617b-4c3c-a448-2282ee0b1cac)
+### Exemples
+#### Afficher la playlist
+```/playlist```</br></br>
+![image](https://github.com/user-attachments/assets/c6c47b0b-6774-4603-8b71-661b43291f08)
+#### Ajouter un musique à la playlist
+```/playlist action: add```</br></br>
+![image](https://github.com/user-attachments/assets/7460a208-98f0-4645-a984-359b4bf92220)
+#### Supprimer des musiques de la playlist
+```/playlist action: remove```</br></br>
+![image](https://github.com/user-attachments/assets/5f3d761d-757b-41e5-be9a-4e951cc6c23e)
 ## Play
 ### Description
 Jouer une piste sur le channel vocal (YouTube, Twitch, SoundCloud, ...)
