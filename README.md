@@ -25,11 +25,6 @@ Pour avoir un accès hébergé au bot, merci de me le demander
   - [Goodbye](#goodbye)
   - [HelpAdmin](#helpadmin)
 
-## Screenshots
-![image](https://user-images.githubusercontent.com/28084726/167290097-1c4755ae-9352-4651-b4d2-5ba95054d377.png)
-![image](https://user-images.githubusercontent.com/28084726/167290108-b0b627a8-1ccc-40ef-b348-4a680ed57965.png)
-![image](https://github.com/user-attachments/assets/040bffdc-23f0-4b1e-b73a-51fab8991e24)
-
 # Commandes gestion musique
 ## Playlist
 ### Description
@@ -240,3 +235,7 @@ Voir la liste des commandes administrateur
 ```/helpadmin```</br></br>
 ![image](https://user-images.githubusercontent.com/28084726/167289698-3042fec4-f458-4cc6-8396-6cadf6d19788.png)
 
+# Screenshots
+![image](https://user-images.githubusercontent.com/28084726/167290097-1c4755ae-9352-4651-b4d2-5ba95054d377.png)
+![image](https://user-images.githubusercontent.com/28084726/167290108-b0b627a8-1ccc-40ef-b348-4a680ed57965.png)
+![image](https://github.com/user-attachments/assets/040bffdc-23f0-4b1e-b73a-51fab8991e24)
