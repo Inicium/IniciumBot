@@ -2,8 +2,9 @@ package fr.fonkio.inicium;
 
 import dev.lavalink.youtube.clients.Web;
 import fr.fonkio.IniciumActivity;
-import fr.fonkio.command.AbstractCommand;
-import fr.fonkio.command.impl.*;
+import fr.fonkio.reply.AbstractReply;
+import fr.fonkio.reply.impl.*;
+import fr.fonkio.enums.InterractionIdEnum;
 import fr.fonkio.listener.impl.*;
 import fr.fonkio.message.StringsConst;
 import fr.fonkio.music.MusicManager;
@@ -13,7 +14,6 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
-import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
@@ -29,7 +29,7 @@ public class Inicium {
 
     public static Configuration CONFIGURATION;
     private static JDA jda;
-    public static Map<String, AbstractCommand> commands = new HashMap<>();
+    public static Map<InterractionIdEnum, AbstractReply> replies = new HashMap<>();
 
     public static MusicManager manager = new MusicManager();
 
@@ -48,61 +48,74 @@ public class Inicium {
         logger.info("Ajout du PO_TOKEN et du VISITOR_DATA ...");
         Web.setPoTokenAndVisitorData(Inicium.CONFIGURATION.getGlobalParam(ConfigurationBotEnum.PO_TOKEN),
                 Inicium.CONFIGURATION.getGlobalParam(ConfigurationBotEnum.VISITOR_DATA));
-        logger.info("Création des commandes...");
-        AbstractCommand clear = new CommandClear();
-        AbstractCommand disconnect = new CommandDisconnect();
-        AbstractCommand pause = new CommandPause();
-        AbstractCommand play = new CommandPlay();
-        AbstractCommand playSkip = new CommandPlaySkip();
-        AbstractCommand queue = new CommandQueue();
-        AbstractCommand resume = new CommandResume();
-        AbstractCommand seek = new CommandSeek();
-        AbstractCommand skip = new CommandSkip();
-        AbstractCommand helpadmin = new CommandHelpadmin();
-        AbstractCommand help = new CommandHelp();
-        AbstractCommand blacklist = new CommandBlacklist();
-        AbstractCommand welcome = new CommandWelcomeChannel();
-        AbstractCommand goodbye = new CommandGoodbyeChannel();
-        AbstractCommand moveall = new CommandMoveAll();
-        AbstractCommand shuffle = new CommandShuffle();
-        AbstractCommand defaultRole = new CommandDefaultRole();
-        AbstractCommand disconnectsong = new CommandDisconnectSong();
-        AbstractCommand playlist = new CommandPlaylist();
 
-        commands.put("play", play);
-        commands.put("p", play);
-        commands.put("ps", playSkip);
-        commands.put("skip", skip);
-        commands.put("s", skip);
-        commands.put("pause", pause);
-        commands.put("resume", resume);
-        commands.put("seek", seek);
-        commands.put("leave", disconnect);
-        commands.put("quit", disconnect);
-        commands.put("disconnect", disconnect);
-        commands.put("dc", disconnect);
-        commands.put("clear", clear);
-        commands.put("clean", clear);
-        commands.put("clr", clear);
-        commands.put("queue", queue);
-        commands.put("np", queue);
-        commands.put("helpadmin", helpadmin);
-        commands.put("help", help);
-        commands.put("blacklist", blacklist);
-        commands.put("welcome", welcome);
-        commands.put("goodbye", goodbye);
-        commands.put("moveall", moveall);
-        commands.put("mva", moveall);
-        commands.put("shuffle", shuffle);
-        commands.put("defaultrole", defaultRole);
-        commands.put("disconnectsong", disconnectsong);
-        commands.put("dcsong", disconnectsong);
-        commands.put("playlist", playlist);
+        logger.info("Création des replies...");
+        AbstractReply clearReply = new ClearReply();
+        AbstractReply disconnectReply = new DisconnectReply();
+        AbstractReply pauseReply = new PauseReply();
+        AbstractReply playReply = new PlayReply();
+        AbstractReply playSkipReply = new PlaySkipReply();
+        AbstractReply queueReply = new QueueReply();
+        AbstractReply resumeReply = new ResumeReply();
+        AbstractReply seekReply = new SeekReply();
+        AbstractReply skipReply = new SkipReply();
+        AbstractReply helpAdminReply = new HelpAdminReply();
+        AbstractReply helpReply = new HelpReply();
+        AbstractReply blacklistReply = new BlacklistReply();
+        AbstractReply blacklistSelectMenuReply = new BlacklistStringSelectMenuReply();
+        AbstractReply welcomeReply = new WelcomeReply();
+        AbstractReply welcomeStringSelectMenuReply = new WelcomeStringSelectMenuReply();
+        AbstractReply goodbyeReply = new GoodbyeReply();
+        AbstractReply goodbyeStringSelectMenuReply = new GoodbyeStringSelectMenuReply();
+        AbstractReply moveAllReply = new MoveAllReply();
+        AbstractReply shuffleReply = new ShuffleReply();
+        AbstractReply defaultRoleReply = new DefaultRoleReply();
+        AbstractReply defaultRoleStringSelectMenuReply = new DefaultRoleStringSelectMenuReply();
+        AbstractReply disconnectSongReply = new DisconnectSongReply();
+        AbstractReply disconnectSongButtonReply = new DisconnectSongButtonReply();
+        AbstractReply playlistReply = new PlaylistReply();
+        AbstractReply playlistStringSelectMenuReply = new PlaylistStringSelectMenuReply();
+        AbstractReply playlistAddReply = new PlaylistAddReply();
+        AbstractReply playlistAddModal = new PlaylistAddModalReply();
+        AbstractReply playlistRemoveReply = new PlaylistRemoveReply();
+        AbstractReply playlistRemoveStringSelectMenuReply = new PlaylistRemoveStringSelectMenuReply();
+
+        replies.put(InterractionIdEnum.PLAY, playReply);
+        replies.put(InterractionIdEnum.SKIP, skipReply);
+        replies.put(InterractionIdEnum.PLAY_SKIP, playSkipReply);
+        replies.put(InterractionIdEnum.PAUSE, pauseReply);
+        replies.put(InterractionIdEnum.RESUME, resumeReply);
+        replies.put(InterractionIdEnum.SEEK, seekReply);
+        replies.put(InterractionIdEnum.DISCONNECT, disconnectReply);
+        replies.put(InterractionIdEnum.CLEAR, clearReply);
+        replies.put(InterractionIdEnum.QUEUE, queueReply);
+        replies.put(InterractionIdEnum.HELP_ADMIN, helpAdminReply);
+        replies.put(InterractionIdEnum.HELP, helpReply);
+        replies.put(InterractionIdEnum.BLACKLIST, blacklistReply);
+        replies.put(InterractionIdEnum.BLACKLIST_SELECT_MENU, blacklistSelectMenuReply);
+        replies.put(InterractionIdEnum.WELCOME, welcomeReply);
+        replies.put(InterractionIdEnum.WELCOME_SELECT_MENU, welcomeStringSelectMenuReply);
+        replies.put(InterractionIdEnum.GOODBYE, goodbyeReply);
+        replies.put(InterractionIdEnum.GOODBYE_SELECT_MENU, goodbyeStringSelectMenuReply);
+        replies.put(InterractionIdEnum.MOVE_ALL, moveAllReply);
+        replies.put(InterractionIdEnum.SHUFFLE, shuffleReply);
+        replies.put(InterractionIdEnum.DEFAULT_ROLE, defaultRoleReply);
+        replies.put(InterractionIdEnum.DEFAULT_ROLE_SELECT_MENU, defaultRoleStringSelectMenuReply);
+        replies.put(InterractionIdEnum.DISCONNECT_SONG, disconnectSongReply);
+        replies.put(InterractionIdEnum.DISCONNECT_SONG_BUTTON, disconnectSongButtonReply);
+        replies.put(InterractionIdEnum.PLAYLIST, playlistReply);
+        replies.put(InterractionIdEnum.PLAYLIST_SELECT_MENU, playlistStringSelectMenuReply);
+        replies.put(InterractionIdEnum.PLAYLIST_ADD, playlistAddReply);
+        replies.put(InterractionIdEnum.PLAYLIST_ADD_MODAL, playlistAddModal);
+        replies.put(InterractionIdEnum.PLAYLIST_REMOVE, playlistRemoveReply);
+        replies.put(InterractionIdEnum.PLAYLIST_REMOVE_SELECT_MENU, playlistRemoveStringSelectMenuReply);
+
         logger.info("Démarrage JDA...");
         Set<GatewayIntent> intents = new HashSet<>(EnumSet.allOf(GatewayIntent.class));
         jda = JDABuilder.create(CONFIGURATION.getGlobalParam(ConfigurationBotEnum.DISCORD_TOKEN), intents).setAutoReconnect(true).build();
         logger.info("JDA : Démarré ! Connexion au token OK.");
         CONFIGURATION.save();
+
         logger.info("JDA : Enregistrement des listeners...");
         jda.addEventListener(new EventButtonInteraction());
         jda.addEventListener(new EventGuildJoin());
@@ -111,12 +124,12 @@ public class Inicium {
         jda.addEventListener(new EventSlashCommandInteraction());
         jda.addEventListener(new EventSelectMenuInteraction());
         jda.addEventListener(new EventModalInteraction());
+
         logger.info("JDA : Lancement de l'activité Discord...");
         Activity act = new IniciumActivity();
         jda.getPresence().setActivity(act);
+
         logger.info("JDA : Mise à jour des commandes...");
-        OptionData favoriteOptionData = new OptionData(OptionType.STRING, "action", StringsConst.COMMAND_PLAYLIST_PARAM, false)
-                .addChoices(new Command.Choice("remove", "remove"), new Command.Choice("add", "add"));
         jda.updateCommands().addCommands(
                 Commands.slash("play", StringsConst.COMMAND_PLAY_DESC)
                         .addOption(OptionType.STRING, "musique", StringsConst.COMMAND_PLAY_PARAM, true),
@@ -146,8 +159,7 @@ public class Inicium {
                 Commands.slash("goodbye", StringsConst.COMMAND_GOODBYE_DESC),
                 Commands.slash("disconnectsong", StringsConst.COMMAND_DISCONNECT_SONG_DESC),
                 Commands.slash("dcsong", StringsConst.COMMAND_DISCONNECT_SONG_DESC),
-                Commands.slash("playlist", StringsConst.COMMAND_PLAYLIST_DESC)
-                        .addOptions(favoriteOptionData),
+                Commands.slash("playlist", StringsConst.COMMAND_PLAYLIST_DESC),
                 Commands.slash("mva", StringsConst.COMMAND_MOVEALL_DESC)
                         .addOptions(new OptionData(OptionType.CHANNEL, "destination", StringsConst.COMMAND_MOVEALL_PARAM, true)
                                 .setChannelTypes(ChannelType.VOICE, ChannelType.STAGE)),
@@ -156,6 +168,7 @@ public class Inicium {
                 Commands.slash("shuffle", StringsConst.COMMAND_SHUFFLE_DESC),
                 Commands.slash("defaultrole", StringsConst.COMMAND_DEFAULT_ROLE_DESC)
                 ).queue();
+
         logger.info("Bot connecté");
         CONFIGURATION.save();
     }

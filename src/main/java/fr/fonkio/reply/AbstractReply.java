@@ -1,7 +1,6 @@
-package fr.fonkio.command;
+package fr.fonkio.reply;
 
 import fr.fonkio.inicium.Inicium;
-import fr.fonkio.inicium.Utils;
 import fr.fonkio.message.EmbedGenerator;
 import fr.fonkio.message.StringsConst;
 import fr.fonkio.enums.ConfigurationGuildEnum;
@@ -10,9 +9,7 @@ import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.StandardGuildMessageChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.OptionMapping;
+import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,31 +17,28 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractCommand {
+public abstract class AbstractReply {
 
-    protected Logger logger = LoggerFactory.getLogger(AbstractCommand.class);
+    protected Logger logger = LoggerFactory.getLogger(AbstractReply.class);
 
-    protected abstract boolean run(SlashCommandInteractionEvent event, ButtonInteractionEvent eventButton);
+    protected abstract boolean reply(IReplyCallback event, Guild guild, User user);
 
+    /**
+     * Indique si la commande est soumise ou non à la restriction de la blacklist
+     * @return true si la commande ne peut pas être envoyée dans un channel blacklisté
+     */
     public abstract boolean isBlacklistable();
 
-    public boolean execute(SlashCommandInteractionEvent eventSlash, ButtonInteractionEvent eventButton) {
-        if (eventSlash != null) {
-            StringBuilder log = new StringBuilder("eventSlash : " + eventSlash.getName() + " ");
-            if (!eventSlash.getOptions().isEmpty()) {
-                for (OptionMapping optionMapping : eventSlash.getOptions()) {
-                    log.append(optionMapping.getName()).append("=").append(optionMapping.getAsString());
-                }
-            }
-            log.append(" par ").append(eventSlash.getUser().getName());
-            logger.info(Utils.getFormattedLogString(eventSlash.getGuild(), log.toString()));
-        } else if (eventButton != null) {
-            logger.info(Utils.getFormattedLogString(eventButton.getGuild(),"eventButton : " + eventButton.getComponent().getLabel() + " par " + eventButton.getUser().getName()));
-        } else {
+    public boolean execute(IReplyCallback event) {
+        if (event == null) {
             logger.error("Execution sans event impossible !");
             return false;
         }
-        return this.run(eventSlash, eventButton);
+        if (event.getGuild() == null) {
+            logger.error("Execution sans guild ou sans user impossible !");
+            return false;
+        }
+        return this.reply(event, event.getGuild(), event.getUser());
     }
 
     /** Recupère la liste des musiques de la playlist du serveur sous forme de liste de SelectOption
@@ -109,7 +103,7 @@ public abstract class AbstractCommand {
         return optionList;
     }
 
-    protected void permissionCheck(SlashCommandInteractionEvent event, User user) {
+    protected void permissionCheck(IReplyCallback event, User user) {
         event.replyEmbeds(
                 EmbedGenerator.generate(user, StringsConst.MESSAGE_ADMIN_PERM, StringsConst.MESSAGE_NO_ADMIN_PERM)
         ).setEphemeral(true).queue();

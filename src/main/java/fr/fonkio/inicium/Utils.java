@@ -1,11 +1,15 @@
 package fr.fonkio.inicium;
 
+import fr.fonkio.enums.InterractionIdEnum;
 import fr.fonkio.message.EmbedGenerator;
 import fr.fonkio.message.StringsConst;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.middleman.AudioChannel;
 import net.dv8tion.jda.api.interactions.InteractionHook;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class Utils {
@@ -69,6 +73,27 @@ public class Utils {
         }
         hook.editOriginalEmbeds(messageEmbed).queue();
         return true;
+    }
+
+    public static List<Button> getPlaylistButtons(InterractionIdEnum selectMenu) {
+        List<Button> buttons = new ArrayList<>();
+        Button buttonAdd = Button.success("playlistadd", "Ajouter");
+        Button buttonRemove = Button.danger("playlistremove", "Supprimer");
+        Button buttonPlaylist = Button.primary("playlist", StringsConst.COMMAND_PLAYLIST_TITLE);
+        if (selectMenu != null) {
+            switch (selectMenu) {
+                case PLAYLIST_REMOVE:
+                    buttonRemove = buttonRemove.asDisabled();
+                    break;
+                case PLAYLIST:
+                    buttonPlaylist = buttonPlaylist.asDisabled();
+                    break;
+            }
+        }
+        buttons.add(buttonAdd);
+        buttons.add(buttonRemove);
+        buttons.add(buttonPlaylist);
+        return buttons;
     }
 
 }

@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.ItemComponent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +32,7 @@ public class PlayerMessage {
 
     private static final long DELAY  = 5000L;
     private static final long PERIOD = 5000L;
+    private static final int MAX_QUEUE_SIZE = 23;
     private MessageEmbed oldEmbed;
 
     public PlayerMessage(MusicPlayer musicPlayer) {
@@ -80,7 +82,6 @@ public class PlayerMessage {
         builder.setDescription(this.message);
         builder.setColor(Color.GREEN);
         builder.setFooter(this.author.getEffectiveName(), this.author.getAvatarUrl());
-
         if (this.afficherQueue) {
             List <AudioTrack> queue = this.musicPlayer.getQueue();
             addFields(builder, queue);
@@ -90,63 +91,71 @@ public class PlayerMessage {
     }
 
     private void addFields(EmbedBuilder builder, List<AudioTrack> queue) {
-        if (queue.isEmpty()) { //Pas de musique dans la file
+        if (queue.isEmpty() || queue.get(0) == null) { //Pas de musique dans la file
             builder.addField(StringsConst.MESSAGE_MUSIC, StringsConst.MESSAGE_NO_MUSIC_IN_PROGRESS, false);
-        } else if (queue.size()==1) { //1 musique dans la file
-            AudioTrack np = queue.get(0);
-            if (np == null) { //Si elle est nulle
-                builder.addField(StringsConst.MESSAGE_MUSIC, StringsConst.MESSAGE_NO_MUSIC_IN_PROGRESS, false);
-            } else { //Si elle n'est pas nulle
-                if (np.getInfo().uri.contains("youtube.com")) {
-                    builder.setThumbnail("http://i3.ytimg.com/vi/"+np.getInfo().uri.split("v=")[1].split("&")[0]+"/maxresdefault.jpg");
-                }
-                String duration;
-                if(np.getInfo().isStream) {
-                    duration = "STREAM";
-                } else {
-                    duration = Utils.convertLongToString(np.getDuration());
-                }
-                barGenerator(builder, np, duration);
-                builder.addField(StringsConst.MESSAGE_WAITLIST, StringsConst.MESSAGE_NO_MUSIC_IN_WAITLIST, false);
-            }
-
         } else {
             AudioTrack np = queue.get(0);
-            String duration;
-            if(np.getInfo().isStream) {
-                duration = "STREAM";
+            addThumbnail(builder, np);
+            addNowPlaying(builder, np);
+            if (queue.size()==1) { //1 seule musique dans la file
+                builder.addField(StringsConst.MESSAGE_WAITLIST, StringsConst.MESSAGE_NO_MUSIC_IN_WAITLIST, false);
             } else {
-                duration = Utils.convertLongToString(np.getInfo().length);
-            }
-            barGenerator(builder, np, duration);
-            queue.remove(0);
-            int i;
-            //Limite de 25 Fields
-            // 23 + 1 en cours + 1 message à ajouter
-            for(i = 0; i < queue.size() && i < 23; i++) {
-                AudioTrack at = queue.get(i);
-                if(at.getInfo().isStream) {
-                    duration = "STREAM";
-                } else {
-                    duration = Utils.convertLongToString(at.getDuration());
+                queue.remove(0);
+                int i;
+                //Limite de 25 Fields
+                // MAX_QUEUE_SIZE = 23
+                // car 25 = 23 + 1 en cours de lecture déjà ajouté + 1 message à ajouter à la fin si il y en a + de 25
+                for(i = 0; i < queue.size() && i < MAX_QUEUE_SIZE; i++) {
+                    AudioTrack at = queue.get(i);
+                    builder.addField(convertIntEmoji(i+2)+" "+at.getInfo().title,
+                            "**" + StringsConst.MESSAGE_DURATION + "** ``"+ getDuration(at) +
+                                    "``\n**"+ StringsConst.MESSAGE_AUTHOR +"** ``"+at.getInfo().author+"``",
+                            false);
                 }
-                builder.addField(convertIntEmoji(i+2)+" "+at.getInfo().title,
-                        "**" + StringsConst.MESSAGE_DURATION + "** ``"+duration +
-                        "``\n**"+ StringsConst.MESSAGE_AUTHOR +"** ``"+at.getInfo().author+"``",
-                        false);
-            }
-            if (i == 23) {
-                int trackLeft = queue.size()-23;
-                if (trackLeft > 1) {
-                    builder.addField("+" + trackLeft + StringsConst.MESSAGE_OTHER_TRACKS, "", false);
-                } else if (trackLeft == 1){
-                    builder.addField("+" + trackLeft + StringsConst.MESSAGE_OTHER_TRACK, "", false);
+                if (i == MAX_QUEUE_SIZE) {
+                    int trackLeft = queue.size() - MAX_QUEUE_SIZE;
+                    if (trackLeft > 1) {
+                        builder.addField("+" + trackLeft + StringsConst.MESSAGE_OTHER_TRACKS, "", false);
+                    } else if (trackLeft == 1){
+                        builder.addField("+" + trackLeft + StringsConst.MESSAGE_OTHER_TRACK, "", false);
+                    }
                 }
+            }
+        }
+    }
 
-            }
-            if (np.getInfo().uri.contains("youtube.com")) {
-                builder.setThumbnail("http://i3.ytimg.com/vi/"+np.getInfo().uri.split("v=")[1].split("&")[0]+"/maxresdefault.jpg");
-            }
+    private String progressBarGenerator(AudioTrack np) {
+        String emptyChar = "▱";
+        String fullChar = "▰";
+        int nbChar = 25;
+        int percent = np.getInfo().isStream ? 100 : (int)(((double) np.getPosition() / np.getInfo().length) * 100);
+        int nbFullChar = (int) ((percent / 100.0) * nbChar);
+        int nbEmptyChar = nbChar - nbFullChar;
+        StringBuilder progressBar = new StringBuilder();
+        for (int i = 0; i < nbFullChar; i ++) {
+            progressBar.append(fullChar);
+        }
+        for (int i = 0; i < nbEmptyChar; i ++) {
+            progressBar.append(emptyChar);
+        }
+        progressBar.append(" ").append(percent).append(" %");
+        return progressBar.toString();
+    }
+
+    @NotNull
+    private static String getDuration(AudioTrack np) {
+        String duration;
+        if(np.getInfo().isStream) {
+            duration = "STREAM";
+        } else {
+            duration = Utils.convertLongToString(np.getDuration());
+        }
+        return duration;
+    }
+
+    private static void addThumbnail(EmbedBuilder builder, AudioTrack np) {
+        if (np.getInfo().uri.contains("youtube.com")) {
+            builder.setThumbnail("http://i3.ytimg.com/vi/"+ np.getInfo().uri.split("v=")[1].split("&")[0]+"/maxresdefault.jpg");
         }
     }
 
@@ -203,11 +212,12 @@ public class PlayerMessage {
         return buttons;
     }
 
-    private void barGenerator(EmbedBuilder builder, AudioTrack np, String duration) {
+    private void addNowPlaying(EmbedBuilder builder, AudioTrack np) {
         String position = Utils.convertLongToString(np.getPosition());
         builder.addField(
                 "🔊 1️⃣ "+np.getInfo().title + " 🎶",
-                "**" + StringsConst.MESSAGE_DURATION + "** ``"+position+" / "+duration + "``\n**" + StringsConst.MESSAGE_AUTHOR + "** ``"+np.getInfo().author+"``",
+                "**" + StringsConst.MESSAGE_DURATION + "** ``"+position+" / "+ getDuration(np) + "``\n**" + StringsConst.MESSAGE_AUTHOR + "** ``"+np.getInfo().author+"``\n" +
+                      progressBarGenerator(np),
                 false);
     }
 

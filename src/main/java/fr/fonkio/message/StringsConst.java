@@ -11,6 +11,7 @@ public class StringsConst {
     public static final String COMMAND_BLACKLIST_TITLE = COMMAND_BLACKLIST_EMOTE + " Blacklist";
     public static final String COMMAND_BLACKLIST_SUCCESS = "Sélectionner les channels dans lesquels les commandes sont interdites";
     public static final String COMMAND_BLACKLIST_DESC = "Définir les channels où l'on ne peut pas executer de commande";
+    public static final String SELECT_BLACKLIST_SUCCESS = "La blacklist a été mise à jour";
 
     public static final String COMMAND_CLEAR_EMOTE = "🗑️";
     public static final String COMMAND_CLEAR_TITLE = COMMAND_CLEAR_EMOTE + " Clear";
@@ -28,6 +29,7 @@ public class StringsConst {
     public static final String COMMAND_GOODBYE_TITLE = COMMAND_GOODBYE_EMOTE + " Goodbye channel";
     public static final String COMMAND_GOODBYE_DESC = "Définir un channel pour l'affichage d'un message lors d'un départ";
     public static final String COMMAND_GOODBYE_SUCCESS = "Sélectionner le channel dans lequel les messages de leave seront postés";
+    public static final String SELECT_GOODBYE_SUCCESS = "Le channel a été modifié";
 
     public static final String COMMAND_HELP_TITLE = "Liste des commandes";
     public static final String COMMAND_HELP_DESC = "Voir la liste des commandes du bot musique";
@@ -39,16 +41,19 @@ public class StringsConst {
     public static final String COMMAND_WELCOME_TITLE = COMMAND_WELCOME_EMOTE + " Welcome channel";
     public static final String COMMAND_WELCOME_DESC = "Définir un channel pour l'affichage d'un message de bienvenue";
     public static final String COMMAND_WELCOME_SUCCESS = "Sélectionner le channel dans lequel les messages de bienvenue seront postés";
+    public static final String SELECT_WELCOME_SUCCESS = "Le channel a été modifié";
 
     public static final String COMMAND_DISCONNECT_SONG_EMOTE = "🚪";
     public static final String COMMAND_DISCONNECT_SONG_TITLE = COMMAND_DISCONNECT_SONG_EMOTE + " Son de déconnexion";
     public static final String COMMAND_DISCONNECT_SONG_DESC = "Activer ou désactiver le son de déconnexion du bot musique";
-    public static final String COMMAND_DISCONNECT_SONG_SUCCESS = "Voulez-vous que le bot vous dise au revoir quand il part ? (La politesse c'est important)";
+    public static final String COMMAND_DISCONNECT_SONG_SUCCESS = "Voulez-vous que le bot vous dise au revoir quand il part ? (La politesse c'est important)\n Actuellement la fonctionnalité est %s";
+    public static final String BUTTON_DISCONNECT_SONG_SUCCESS = "Le son de déconnexion a été %s";
 
     public static final String COMMAND_DEFAULT_ROLE_EMOTE = "👤";
     public static final String COMMAND_DEFAULT_ROLE_TITLE = COMMAND_DEFAULT_ROLE_EMOTE + " Default role";
     public static final String COMMAND_DEFAULT_ROLE_DESC = "Définir le rôle par défaut attribué aux nouveaux arrivant";
     public static final String COMMAND_DEFAULT_ROLE_SUCCESS = "Sélectionner rôle attribué par défaut";
+    public static final String SELECT_DEFAULT_ROLE_SUCCESS = "Le rôle attribué par défaut a été modifié";
 
     public static final String COMMAND_SKIP_EMOTE = "⏭️";
     public static final String COMMAND_SKIP_TITLE = COMMAND_SKIP_EMOTE + " Skip";
@@ -96,14 +101,14 @@ public class StringsConst {
     public static final String COMMAND_PLAYLIST_TITLE = COMMAND_PLAYLIST_EMOTE + " Playlist";
     public static final String COMMAND_PLAYLIST_DESC = "Gérer la playlist";
     public static final String COMMAND_PLAYLIST_SUCCESS = "Sélectionner une musique de la playlist pour l'ajouter à la liste de lecture";
-    public static final String COMMAND_PLAYLIST_PARAM = "Action à réaliser";
     public static final String COMMAND_PLAYLIST_REMOVE_EMOTE = "❌";
     public static final String COMMAND_PLAYLIST_REMOVE_TITLE = COMMAND_PLAYLIST_REMOVE_EMOTE + " Playlist remove";
     public static final String COMMAND_PLAYLIST_REMOVE_SUCCESS = "Sélectionner les musiques à supprimer de la playlist";
+    public static final String SELECT_PLAYLIST_REMOVE_SUCCESS = "Suppression de(s) musique(s) OK";
     public static final String COMMAND_PLAYLIST_EMPTY_ERROR = "Il n'y a pas encore de musique dans la playlist";
     public static final String COMMAND_PLAYLIST_ADD_FULL = "La playlist est pleine";
     public static final String COMMAND_PLAYLIST_ADD_ALREADY_EXIST = "L'URL est déjà enregistrée dans la playlist";
-    public static final String COMMAND_PLAYLIST_ADD_SUCCESS = "%s a bien été ajouté à la playlist !";
+    public static final String MODAL_PLAYLIST_ADD_SUCCESS = "%s a bien été ajouté à la playlist !";
     public static final String COMMAND_PLAYLIST_ADD_MODAL_TITLE = "Ajouter à la playlist";
     public static final String COMMAND_PLAYLIST_ADD_MODAL_LABEL = "Nom de la musique";
     public static final String COMMAND_PLAYLIST_ADD_MODAL_LABEL_PLACEHOLDER = "Ma musique";
@@ -125,8 +130,6 @@ public class StringsConst {
     public static final String SELECT_OPTION_DEFINE = "Définir ";
     public static final String MESSAGE_ADMIN_PERM = "Permissions manquantes";
     public static final String MESSAGE_NO_ADMIN_PERM = "Vous n'êtes pas administrateur de ce serveur";
-    public static final String MESSAGE_CONFIRM_TITLE = "Choix validé !";
-    public static final String MESSAGE_CONFIRM = "Votre choix est enregistré";
     public static final String BUTTON_SAVED = "Enregistré !";
     public static final String MESSAGE_BLACKLISTED_CHANNEL_TITLE = "Channel blacklisté";
     public static final String MESSAGE_BLACKLISTED = "Ce channel est dans la blacklist pour l'envoi de commande. Merci d'envoyer des commandes dans les channels prévus à cet effet";
