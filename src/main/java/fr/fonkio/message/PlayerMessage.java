@@ -3,13 +3,14 @@ package fr.fonkio.message;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fr.fonkio.inicium.Utils;
 import fr.fonkio.music.MusicPlayer;
+import fr.fonkio.utils.AudioTrackUtils;
+import fr.fonkio.utils.SunoUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.ItemComponent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -102,14 +103,14 @@ public class PlayerMessage {
             } else {
                 queue.remove(0);
                 int i;
-                //Limite de 25 Fields
+                // Limite de 25 Fields
                 // MAX_QUEUE_SIZE = 23
                 // car 25 = 23 + 1 en cours de lecture déjà ajouté + 1 message à ajouter à la fin si il y en a + de 25
                 for(i = 0; i < queue.size() && i < MAX_QUEUE_SIZE; i++) {
                     AudioTrack at = queue.get(i);
-                    builder.addField(convertIntEmoji(i+2)+" "+at.getInfo().title,
-                            "**" + StringsConst.MESSAGE_DURATION + "** ``"+ getDuration(at) +
-                                    "``\n**"+ StringsConst.MESSAGE_AUTHOR +"** ``"+at.getInfo().author+"``",
+                    builder.addField(convertIntEmoji(i+2)+" "+ AudioTrackUtils.getTitle(at),
+                            "**" + StringsConst.MESSAGE_DURATION + "** ``" + AudioTrackUtils.getDuration(at) +
+                                    "``\n**"+ StringsConst.MESSAGE_AUTHOR +"** ``" + AudioTrackUtils.getAuthor(at) + "``",
                             false);
                 }
                 if (i == MAX_QUEUE_SIZE) {
@@ -140,17 +141,6 @@ public class PlayerMessage {
         }
         progressBar.append(" ").append(percent).append(" %");
         return progressBar.toString();
-    }
-
-    @NotNull
-    private static String getDuration(AudioTrack np) {
-        String duration;
-        if(np.getInfo().isStream) {
-            duration = "STREAM";
-        } else {
-            duration = Utils.convertLongToString(np.getDuration());
-        }
-        return duration;
     }
 
     private static void addThumbnail(EmbedBuilder builder, AudioTrack np) {
@@ -215,8 +205,9 @@ public class PlayerMessage {
     private void addNowPlaying(EmbedBuilder builder, AudioTrack np) {
         String position = Utils.convertLongToString(np.getPosition());
         builder.addField(
-                "🔊 1️⃣ "+np.getInfo().title + " 🎶",
-                "**" + StringsConst.MESSAGE_DURATION + "** ``"+position+" / "+ getDuration(np) + "``\n**" + StringsConst.MESSAGE_AUTHOR + "** ``"+np.getInfo().author+"``\n" +
+                "🔊 1️⃣ " + AudioTrackUtils.getTitle(np) + " 🎶",
+                "**" + StringsConst.MESSAGE_DURATION + "** ``" + position + " / " + AudioTrackUtils.getDuration(np) +
+                        "``\n**" + StringsConst.MESSAGE_AUTHOR + "** ``" + AudioTrackUtils.getAuthor(np) + "``\n" +
                       progressBarGenerator(np),
                 false);
     }

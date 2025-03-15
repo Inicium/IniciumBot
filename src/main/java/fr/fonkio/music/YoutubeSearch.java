@@ -1,7 +1,7 @@
 package fr.fonkio.music;
 
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
-import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.SearchResult;
 import fr.fonkio.inicium.Inicium;
@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class YoutubeSearch {
@@ -23,7 +25,7 @@ public class YoutubeSearch {
         try {
             temp = new YouTube.Builder(
                     GoogleNetHttpTransport.newTrustedTransport(),
-                    JacksonFactory.getDefaultInstance(),
+                    GsonFactory.getDefaultInstance(),
                     null)
                     .setApplicationName("API YouTube BOT")
                     .build();
@@ -45,10 +47,10 @@ public class YoutubeSearch {
         logger.info("Recherche sur YouTube de \"{}\"...", input);
         try {
             List<SearchResult> result = youtube.search()
-                    .list("id,snippet")
+                    .list(Arrays.asList("id","snippet"))
                     .setQ(input)
                     .setMaxResults(1L)
-                    .setType("video")
+                    .setType(Collections.singletonList("video"))
                     .setFields("items(id/kind,id/videoId,snippet/title,snippet/thumbnails/default/url)")
                     .setKey(Inicium.CONFIGURATION.getGlobalParam(ConfigurationBotEnum.YOUTUBE_API))
                     .execute()

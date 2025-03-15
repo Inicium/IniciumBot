@@ -27,7 +27,7 @@ public class EventGuildVoiceLeave extends ListenerAdapter {
             if(voiceChannel.getMembers().size() == 1) {//Si il ne reste plus que le bot
                 logger.info(Utils.getFormattedLogString(guild, "Il ne reste plus que le bot connecté dans le channel " + voiceChannel.getName()));
                 MusicPlayer player = Inicium.manager.getPlayer(guild);
-                player.getListener().getTracks().clear();
+                player.getListener().getAudioTrackBlockingQueue().clear();
                 player.getAudioPlayer().stopTrack();
                 guild.getAudioManager().closeAudioConnection();
                 logger.info(Utils.getFormattedLogString(guild, "Bot déconnecté du channel vocal"));

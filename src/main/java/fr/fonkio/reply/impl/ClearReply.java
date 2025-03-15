@@ -19,11 +19,11 @@ public class ClearReply extends AbstractReply {
             return true;
         }
         MusicPlayer player = Inicium.manager.getPlayer(guild);
-        if(player.getListener().getTracks().isEmpty()) {
+        if(player.getListener().getAudioTrackBlockingQueue().isEmpty()) {
             player.getPlayerMessage().updatePlayerMessage(StringsConst.COMMAND_CLEAR_TITLE, StringsConst.COMMAND_CLEAR_ALREADY_EMPTY, user, true, hook);
             return true;
         }
-        player.getListener().getTracks().clear();
+        player.getListener().getAudioTrackBlockingQueue().clear();
         player.getPlayerMessage().updatePlayerMessage(StringsConst.COMMAND_CLEAR_TITLE, StringsConst.COMMAND_CLEAR_SUCCESS, user, true, hook);
 
         return true;

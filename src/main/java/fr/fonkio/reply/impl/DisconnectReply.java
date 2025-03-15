@@ -31,7 +31,7 @@ public class DisconnectReply extends AbstractReply {
         }
 
         MusicPlayer player = Inicium.manager.getPlayer(guild);
-        player.getListener().getTracks().clear();
+        player.getListener().getAudioTrackBlockingQueue().clear();
         player.getAudioPlayer().stopTrack();
 
         if("true".equals(Inicium.CONFIGURATION.getGuildConfig(guild.getId(), ConfigurationGuildEnum.DC_SONG))) {
@@ -40,7 +40,7 @@ public class DisconnectReply extends AbstractReply {
             TimerTask task = new TimerTask() {
                 public void run() {
                     guild.getAudioManager().closeAudioConnection();
-                    player.getListener().getTracks().clear();
+                    player.getListener().getAudioTrackBlockingQueue().clear();
                     Inicium.manager.getPlayer(guild).getAudioPlayer().stopTrack();
                 }
             };

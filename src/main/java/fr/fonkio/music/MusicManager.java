@@ -7,12 +7,13 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fr.fonkio.message.StringsConst;
+import fr.fonkio.utils.AudioTrackUtils;
+import fr.fonkio.utils.SunoUtils;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,9 +44,8 @@ public class MusicManager {
         guild.getAudioManager().setSendingHandler(player.getAudioHandler());
         player.getPlayerMessage().updatePlayerMessage("\uD83D\uDD03 " + StringsConst.MESSAGE_LOADING_TITLE, StringsConst.MESSAGE_LOADING, author, false, hook);
         String updatedSource = source;
-        if ((source.contains("suno.ai") || source.contains("suno.com")) && !source.contains("audiopipe") && !source.contains(".mp3")) {
-            String[] stringParts = source.split("/");
-            updatedSource = "https://cdn1.suno.ai/"+ stringParts[stringParts.length - 1] +".mp3";
+        if (SunoUtils.isSunoUrl(source) && !SunoUtils.isAudiopipeUrl(source) && !SunoUtils.isMp3Url(source)) {
+            updatedSource = SunoUtils.convertSunoUrlToSunoMp3Url(source);
         }
         playerManager.loadItemOrdered(player, updatedSource, new AudioLoadResultHandler() {
 
@@ -56,8 +56,8 @@ public class MusicManager {
                     player.getPlayerMessage().updatePlayerMessage(StringsConst.COMMAND_PLAY_TITLE,
                             "📀 **"+ StringsConst.MESSAGE_ADDING_TRACK +"**" +
                                     "\n🔗 " + source +
-                                    "\n🎼 " + track.getInfo().title +
-                                    "\n🎤 " + track.getInfo().author
+                                    "\n🎼 " + AudioTrackUtils.getTitle(track) +
+                                    "\n🎤 " + AudioTrackUtils.getAuthor(track)
                             , author, true, hook);
                 }
             }
@@ -85,7 +85,7 @@ public class MusicManager {
                 logger.warn("loadFailed", exception);
                 if (message) {
                     String message;
-                    if ((source.contains("suno.ai") || source.contains("suno.com"))) {
+                    if (SunoUtils.isSunoUrl(source)) {
                         message = StringsConst.MESSAGE_SUNO_FAILED;
                     } else {
                         message = StringsConst.MESSAGE_CANT_PLAY_RESON + exception.getMessage() + ")";

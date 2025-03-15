@@ -14,33 +14,32 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class AudioListener extends AudioEventAdapter {
 
-    private final BlockingQueue<AudioTrack> tracks = new LinkedBlockingQueue<>();
-    private final MusicPlayer player;
+    private final BlockingQueue<AudioTrack> audioTrackBlockingQueue = new LinkedBlockingQueue<>();
+    private final MusicPlayer musicPlayer;
 
-    public AudioListener(MusicPlayer player) {
-        this.player = player;
+    public AudioListener(MusicPlayer musicPlayer) {
+        this.musicPlayer = musicPlayer;
     }
 
-    public BlockingQueue<AudioTrack> getTracks() {
-        return tracks;
+    public BlockingQueue<AudioTrack> getAudioTrackBlockingQueue() {
+        return audioTrackBlockingQueue;
     }
-
 
     public void shuffle() {
-        List<AudioTrack> queue = new ArrayList<>(tracks);
+        List<AudioTrack> queue = new ArrayList<>(audioTrackBlockingQueue);
         Collections.shuffle(queue);
-        tracks.clear();
-        tracks.addAll(queue);
+        audioTrackBlockingQueue.clear();
+        audioTrackBlockingQueue.addAll(queue);
     }
 
     public void nextTrack() {
-        if(tracks.isEmpty()) {
-            if(player.getGuild().getAudioManager().getConnectedChannel() != null) {
-                player.getAudioPlayer().destroy();
+        if(audioTrackBlockingQueue.isEmpty()) {
+            if(musicPlayer.getGuild().getAudioManager().getConnectedChannel() != null) {
+                musicPlayer.getAudioPlayer().destroy();
             }
             return;
         }
-        player.getAudioPlayer().startTrack(tracks.poll(), false);
+        musicPlayer.getAudioPlayer().startTrack(audioTrackBlockingQueue.poll(), false);
     }
 
     @Override
@@ -51,16 +50,16 @@ public class AudioListener extends AudioEventAdapter {
     }
 
     public void queue(AudioTrack track) {
-        if (!player.getAudioPlayer().startTrack(track, true)) {
-            tracks.add(track);
+        if (!musicPlayer.getAudioPlayer().startTrack(track, true)) {
+            audioTrackBlockingQueue.add(track);
         }
     }
 
     public List<AudioTrack> getQueue() {
 
         List<AudioTrack> queue = new LinkedList<>();
-        queue.add(player.getAudioPlayer().getPlayingTrack());
-        queue.addAll(tracks);
+        queue.add(musicPlayer.getAudioPlayer().getPlayingTrack());
+        queue.addAll(audioTrackBlockingQueue);
 
         return queue;
     }

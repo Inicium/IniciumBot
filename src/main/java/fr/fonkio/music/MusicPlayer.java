@@ -77,7 +77,7 @@ public class MusicPlayer {
         AudioTrack track = audioPlayer.getPlayingTrack();
         if (track == null) return;
         track.setPosition(l);
-        logger.info(Utils.getFormattedLogString(guild, "Siked to " + position));
+        logger.info(Utils.getFormattedLogString(guild, "Seeked to " + position));
     }
 
     public List<AudioTrack> getQueue() {
