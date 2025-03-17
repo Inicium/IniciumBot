@@ -115,6 +115,12 @@ public class StringsConst {
     public static final String COMMAND_PLAYLIST_ADD_MODAL_URL = "Lien de la musique";
     public static final String COMMAND_PLAYLIST_ADD_MODAL_URL_PLACEHOLDER = "https://www.youtube.com/watch?v=xxxxxxxxxxx";
 
+    public static final String COMMAND_PROTECTME_EMOTE = "🛡️";
+    public static final String COMMAND_PROTECTME_TITLE = COMMAND_PROTECTME_EMOTE + " Protect me";
+    public static final String COMMAND_PROTECTME_DESC = "Se protéger des mute/deafen";
+    public static final String COMMAND_PROTECTME_PROTECTED_SUCCESS = "Protection activée";
+    public static final String COMMAND_PROTECTME_UNPROTECTED_SUCCESS = "Protection désactivée";
+
     public static final String MESSAGE_NOT_CONNECTED = "Tu dois être connecté sur un channel vocal pour demander ça.";
     public static final String MESSAGE_UNKNOWN_CHANNEL = "Le channel est introuvable";
     public static final String MESSAGE_NO_MUSIC_IN_PROGRESS = "Aucune musique n'est en cours de lecture";

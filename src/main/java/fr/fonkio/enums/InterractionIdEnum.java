@@ -32,7 +32,8 @@ public enum InterractionIdEnum {
     PLAYLIST_REMOVE("playlistremove"),
     PLAYLIST_REMOVE_SELECT_MENU("playlistremoveselectmenu"),
     PLAYLIST_ADD("playlistadd"),
-    PLAYLIST_ADD_MODAL("playlistaddmodal"),;
+    PLAYLIST_ADD_MODAL("playlistaddmodal"),
+    PROTECTME("protectme"),;
 
     private final List<String> ids;
 

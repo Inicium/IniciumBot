@@ -30,6 +30,7 @@ public class Inicium {
     public static Configuration CONFIGURATION;
     private static JDA jda;
     public static Map<InterractionIdEnum, AbstractReply> replies = new HashMap<>();
+    public static Set<User> protectedUserSet = new HashSet<>();
 
     public static MusicManager manager = new MusicManager();
 
@@ -79,6 +80,7 @@ public class Inicium {
         AbstractReply playlistAddModal = new PlaylistAddModalReply();
         AbstractReply playlistRemoveReply = new PlaylistRemoveReply();
         AbstractReply playlistRemoveStringSelectMenuReply = new PlaylistRemoveStringSelectMenuReply();
+        AbstractReply protectMeReply = new ProtectMeReply();
 
         replies.put(InterractionIdEnum.PLAY, playReply);
         replies.put(InterractionIdEnum.SKIP, skipReply);
@@ -109,6 +111,7 @@ public class Inicium {
         replies.put(InterractionIdEnum.PLAYLIST_ADD_MODAL, playlistAddModal);
         replies.put(InterractionIdEnum.PLAYLIST_REMOVE, playlistRemoveReply);
         replies.put(InterractionIdEnum.PLAYLIST_REMOVE_SELECT_MENU, playlistRemoveStringSelectMenuReply);
+        replies.put(InterractionIdEnum.PROTECTME, protectMeReply);
 
         logger.info("Démarrage JDA...");
         Set<GatewayIntent> intents = new HashSet<>(EnumSet.allOf(GatewayIntent.class));
@@ -124,6 +127,7 @@ public class Inicium {
         jda.addEventListener(new EventSlashCommandInteraction());
         jda.addEventListener(new EventSelectMenuInteraction());
         jda.addEventListener(new EventModalInteraction());
+        jda.addEventListener(new EventGuildVoiceGuild());
 
         logger.info("JDA : Lancement de l'activité Discord...");
         Activity act = new IniciumActivity();
@@ -166,7 +170,8 @@ public class Inicium {
                 Commands.slash("moveall", StringsConst.COMMAND_MOVEALL_DESC)
                         .addOptions(new OptionData(OptionType.CHANNEL, "destination", StringsConst.COMMAND_MOVEALL_PARAM, true).setChannelTypes(ChannelType.VOICE, ChannelType.STAGE)),
                 Commands.slash("shuffle", StringsConst.COMMAND_SHUFFLE_DESC),
-                Commands.slash("defaultrole", StringsConst.COMMAND_DEFAULT_ROLE_DESC)
+                Commands.slash("defaultrole", StringsConst.COMMAND_DEFAULT_ROLE_DESC),
+                Commands.slash("protectme", StringsConst.COMMAND_PROTECTME_DESC)
                 ).queue();
 
         logger.info("Bot connecté");

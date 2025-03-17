@@ -10,4 +10,6 @@ public class EventButtonInteraction extends ListenerAdapter {
     public void onButtonInteraction(ButtonInteractionEvent event) {
         Inicium.replies.get(InterractionIdEnum.getInterractionIdEnum(event.getComponentId())).execute(event);
     }
+
+
 }
