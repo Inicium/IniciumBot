@@ -6,21 +6,21 @@
 
     <groupId>fr.fonkio</groupId>
     <artifactId>Inicium</artifactId>
-    <version>2.7.0</version>
+    <version>2.7.1</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <jda.version>5.3.0</jda.version> <!-- https://github.com/discord-jda/JDA/releases -->
         <slf4j.version>2.0.17</slf4j.version> <!-- https://www.slf4j.org/download.html -->
-        <youtube-source.version>1.11.5</youtube-source.version> <!-- https://github.com/lavalink-devs/youtube-source/releases -->
+        <youtube-source.version>1.12.0</youtube-source.version> <!-- https://github.com/lavalink-devs/youtube-source/releases -->
         <devoxin-lavaplayer.version>1.9.1</devoxin-lavaplayer.version> <!-- https://github.com/devoxin/lavaplayer/releases -->
         <google-api-services-youtube.version>v3-rev20250224-2.0.0</google-api-services-youtube.version> <!-- https://central.sonatype.com/artifact/com.google.apis/google-api-services-youtube -->
         <json.version>20250107</json.version> <!-- https://central.sonatype.com/artifact/org.json/json -->
         <jsoup.version>1.19.1</jsoup.version> <!-- https://github.com/jhy/jsoup/releases -->
     </properties>
 
-    <repositories>
+<repositories>
         <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
