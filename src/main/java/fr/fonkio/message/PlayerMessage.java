@@ -4,7 +4,6 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fr.fonkio.inicium.Utils;
 import fr.fonkio.music.MusicPlayer;
 import fr.fonkio.utils.AudioTrackUtils;
-import fr.fonkio.utils.SunoUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.interactions.InteractionHook;
@@ -110,7 +109,9 @@ public class PlayerMessage {
                     AudioTrack at = queue.get(i);
                     builder.addField(convertIntEmoji(i+2)+" "+ AudioTrackUtils.getTitle(at),
                             "**" + StringsConst.MESSAGE_DURATION + "** ``" + AudioTrackUtils.getDuration(at) +
-                                    "``\n**"+ StringsConst.MESSAGE_AUTHOR +"** ``" + AudioTrackUtils.getAuthor(at) + "``",
+                                    "``\n" + AudioTrackUtils.getStyle(at) +
+                                    "**"+ StringsConst.MESSAGE_AUTHOR +"** ``" + AudioTrackUtils.getAuthor(at) +
+                                    "``",
                             false);
                 }
                 if (i == MAX_QUEUE_SIZE) {
@@ -144,9 +145,7 @@ public class PlayerMessage {
     }
 
     private static void addThumbnail(EmbedBuilder builder, AudioTrack np) {
-        if (np.getInfo().uri.contains("youtube.com")) {
-            builder.setThumbnail("http://i3.ytimg.com/vi/"+ np.getInfo().uri.split("v=")[1].split("&")[0]+"/maxresdefault.jpg");
-        }
+        builder.setThumbnail(AudioTrackUtils.getThumbnailUrl(np));
     }
 
     private String convertIntEmoji(int i) {
@@ -207,8 +206,10 @@ public class PlayerMessage {
         builder.addField(
                 "🔊 1️⃣ " + AudioTrackUtils.getTitle(np) + " 🎶",
                 "**" + StringsConst.MESSAGE_DURATION + "** ``" + position + " / " + AudioTrackUtils.getDuration(np) +
-                        "``\n**" + StringsConst.MESSAGE_AUTHOR + "** ``" + AudioTrackUtils.getAuthor(np) + "``\n" +
-                      progressBarGenerator(np),
+                        "``\n" + AudioTrackUtils.getStyle(np) +
+                        "**" + StringsConst.MESSAGE_AUTHOR + "** ``" + AudioTrackUtils.getAuthor(np) +
+                        "``\n" +
+                        progressBarGenerator(np),
                 false);
     }
 

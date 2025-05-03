@@ -13,9 +13,27 @@ public class AudioTrackUtils {
         return audioTrack.getInfo().title;
     }
 
+    public static String getThumbnailUrl(AudioTrack audioTrack) {
+        String url = audioTrack.getInfo().uri;
+        if (url.contains("youtube.com")) {
+            return "http://i3.ytimg.com/vi/"+ url.split("v=")[1].split("&")[0] + "/maxresdefault.jpg";
+        } else if (SunoUtils.isSunoUrl(url)) {
+            return SunoUtils.getThumbnailUrlFromUrl(url);
+        }
+        return "";
+    }
+
+    public static String getStyle(AudioTrack audioTrack) {
+        String url = audioTrack.getInfo().uri;
+        if (SunoUtils.isSunoUrl(url)) {
+            return SunoUtils.getStyleFromUrl(url);
+        }
+        return null;
+    }
+
     public static String getDuration(AudioTrack audioTrack) {
         String duration;
-        if(audioTrack.getInfo().isStream) {
+        if (audioTrack.getInfo().isStream) {
             duration = "STREAM";
         } else {
             duration = Utils.convertLongToString(audioTrack.getDuration());
