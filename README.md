@@ -1,6 +1,6 @@
 # IniciumBot
 Bot musique pour Discord<br/>
-Pour avoir un accès hébergé au bot, merci de me le demander
+Pour avoir un accès hébergé au bot, merci de me le demander -> fonkio31+github@pm.me
 
 # Présentation
 ## Table des matières
