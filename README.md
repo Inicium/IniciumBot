@@ -5,7 +5,7 @@ Pour avoir un accès hébergé au bot, merci de me le demander -> fonkio31+githu
 # Présentation
 ## Table des matières
 - [Commandes musicales](#commandes-gestion-musique)
-  - `(new)`[Playlist](#playlist) 
+  - [Playlist](#playlist) `(new)`
   - [Play](#play)
   - [Skip](#skip)
   - [PlaySkip](#playskip)
