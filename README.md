@@ -31,22 +31,19 @@ Pour avoir un accès hébergé au bot, merci de me le demander -> fonkio31+githu
 Lancer, supprimer ou ajouter une musique sur la playlist d'un serveur Discord
 ### Commande
 /playlist</br>
-/playlist `[action]`
-### Paramètre
-`[action]` : `add` ou `remove` pour ajouter ou supprimer</br>
-Facultatif, si rien n'est renseigné, ouvre la playlist (équivalent au bouton suivant)
+/playlist
 ### Bouton
 ![image](https://github.com/user-attachments/assets/a17448f0-617b-4c3c-a448-2282ee0b1cac)
 ### Exemples
 #### Afficher la playlist
 ```/playlist```</br></br>
-![image](https://github.com/user-attachments/assets/c6c47b0b-6774-4603-8b71-661b43291f08)
+![image](https://github.com/user-attachments/assets/f8708d81-1b1f-48f0-98f3-83ab6ee3d4cb)
 #### Ajouter un musique à la playlist
-```/playlist action: add```</br></br>
-![image](https://github.com/user-attachments/assets/7460a208-98f0-4645-a984-359b4bf92220)
+![image](https://github.com/user-attachments/assets/c47e99e4-85cb-440b-8861-208435c0eee0)</br>
+![image](https://github.com/user-attachments/assets/4d8bd127-17b3-455e-970c-26945fdc6295)
 #### Supprimer des musiques de la playlist
-```/playlist action: remove```</br></br>
-![image](https://github.com/user-attachments/assets/5f3d761d-757b-41e5-be9a-4e951cc6c23e)
+![image](https://github.com/user-attachments/assets/3ed37299-a7be-40ae-9d50-e018168134b3)</br>
+![image](https://github.com/user-attachments/assets/e6edf1e3-f301-42a7-8259-5a989cd92773)
 ## Play
 ### Description
 Jouer une piste sur le channel vocal (YouTube, Twitch, SoundCloud, ...)
@@ -56,13 +53,13 @@ Jouer une piste sur le channel vocal (YouTube, Twitch, SoundCloud, ...)
 ### Paramètre
 `[musique]` : Lien/Recherche de la musique
 ### Exemples
-#### ➡️ Avec un lien Youtube
+#### ➡️ Avec un lien Youtube / Youtube Music
 ```/play musique: https://www.youtube.com/watch?v=LuGAWR2eRyQ```</br></br>
 ![image](https://user-images.githubusercontent.com/28084726/166140199-fb2c8de4-6e15-4538-8fa2-69c20ba4a22a.png)
-#### ➡️ Avec une recherche youtube
+#### ➡️ Avec une recherche Youtube
 ```/play musique: djomb wow```</br></br>
 ![image](https://user-images.githubusercontent.com/28084726/166140293-59c509c9-b505-4e89-95f4-d500091b2b7a.png)
-#### ➡️ Avec une playlist Youtube ⚠️publique ou non répertoriée⚠️
+#### ➡️ Avec une playlist Youtube / Youtube Music ⚠️ publique ou non répertoriée ⚠️
 ```/p musique: https://www.youtube.com/watch?v=cDSFtfz3o5A&list=PLKwY3kIzGxRm9sDhYDDZAqm5Q9OO_2M5i```</br></br>
 ![image](https://user-images.githubusercontent.com/28084726/166140761-beea4b57-9baa-49fe-b92d-4affba9700b4.png)
 #### ➡️ Avec un lien Twitch
