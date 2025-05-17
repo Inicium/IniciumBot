@@ -47,6 +47,6 @@ public class AudioTrackUtils {
         if (SunoUtils.isSunoUrl(url)) {
             return SunoUtils.getAuthorFromUrl(url);
         }
-        return audioTrack.getInfo().title;
+        return audioTrack.getInfo().author;
     }
 }
