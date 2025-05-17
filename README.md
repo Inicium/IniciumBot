@@ -30,7 +30,6 @@ Pour avoir un accès hébergé au bot, merci de me le demander -> fonkio31+githu
 ### Description
 Lancer, supprimer ou ajouter une musique sur la playlist d'un serveur Discord
 ### Commande
-/playlist</br>
 /playlist
 ### Bouton
 ![image](https://github.com/user-attachments/assets/a17448f0-617b-4c3c-a448-2282ee0b1cac)
