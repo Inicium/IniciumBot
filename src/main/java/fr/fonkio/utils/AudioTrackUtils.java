@@ -2,6 +2,7 @@ package fr.fonkio.utils;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import fr.fonkio.inicium.Utils;
+import org.apache.commons.lang3.StringUtils;
 
 public class AudioTrackUtils {
 
@@ -28,7 +29,7 @@ public class AudioTrackUtils {
         if (SunoUtils.isSunoUrl(url)) {
             return SunoUtils.getStyleFromUrl(url);
         }
-        return null;
+        return StringUtils.EMPTY;
     }
 
     public static String getDuration(AudioTrack audioTrack) {
