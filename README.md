@@ -4,7 +4,7 @@ Pour avoir un accès hébergé au bot, merci de me le demander -> fonkio31+githu
 
 # Présentation
 ## Table des matières
-- [Commandes gestion musique](#commandes-gestion-musique)
+- [Commandes musicales](#commandes-gestion-musique)
   - `(new)`[Playlist](#playlist) 
   - [Play](#play)
   - [Skip](#skip)
@@ -25,7 +25,7 @@ Pour avoir un accès hébergé au bot, merci de me le demander -> fonkio31+githu
   - [Goodbye](#goodbye)
   - [HelpAdmin](#helpadmin)
 
-# Commandes gestion musique
+# Commandes musicales
 ## Playlist
 ### Description
 Lancer, supprimer ou ajouter une musique sur la playlist d'un serveur Discord
