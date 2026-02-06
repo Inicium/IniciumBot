@@ -5,6 +5,7 @@ import fr.fonkio.inicium.Inicium;
 import fr.fonkio.message.EmbedGenerator;
 import fr.fonkio.message.StringsConst;
 import fr.fonkio.reply.AbstractStringSelectMenuReply;
+import net.dv8tion.jda.api.components.actionrow.ActionRow;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
@@ -20,7 +21,7 @@ public class DefaultRoleStringSelectMenuReply extends AbstractStringSelectMenuRe
         StringSelectInteractionEvent stringSelectEvent = (StringSelectInteractionEvent) event;
         Inicium.CONFIGURATION.setGuildConfig(guild.getId(), ConfigurationGuildEnum.DEFAULT_ROLE, stringSelectEvent.getValues().isEmpty() ? "" : stringSelectEvent.getValues().get(0));
         stringSelectEvent.editMessageEmbeds(EmbedGenerator.generate(event.getUser(), StringsConst.COMMAND_DEFAULT_ROLE_TITLE, StringsConst.SELECT_DEFAULT_ROLE_SUCCESS))
-                .setActionRow(getButtonSaved())
+                .setComponents(ActionRow.of(getButtonSaved()))
                 .queue();
         return false;
     }

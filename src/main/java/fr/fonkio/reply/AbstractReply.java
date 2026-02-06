@@ -5,12 +5,12 @@ import fr.fonkio.message.EmbedGenerator;
 import fr.fonkio.message.StringsConst;
 import fr.fonkio.enums.ConfigurationGuildEnum;
 import fr.fonkio.utils.PlaylistItem;
+import net.dv8tion.jda.api.components.selections.SelectOption;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.StandardGuildMessageChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
-import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

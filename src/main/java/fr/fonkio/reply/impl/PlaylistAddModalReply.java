@@ -5,6 +5,7 @@ import fr.fonkio.inicium.Utils;
 import fr.fonkio.message.EmbedGenerator;
 import fr.fonkio.message.StringsConst;
 import fr.fonkio.reply.AbstractReply;
+import net.dv8tion.jda.api.components.actionrow.ActionRow;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
@@ -21,7 +22,7 @@ public class PlaylistAddModalReply extends AbstractReply {
         String url = "";
         String label = "";
         for(ModalMapping modalMapping : modalEvent.getValues()) {
-            switch (modalMapping.getId()) {
+            switch (modalMapping.getCustomId()) {
                 case "url":
                     url = modalMapping.getAsString();
                     break;
@@ -41,7 +42,7 @@ public class PlaylistAddModalReply extends AbstractReply {
                                             label)
                             )
                     ).setEphemeral(true)
-                    .addActionRow(Utils.getPlaylistButtons(null))
+                    .setComponents(ActionRow.of(Utils.getPlaylistButtons(null)))
                     .queue();
         } catch (IllegalStateException exception) {
             event.replyEmbeds(EmbedGenerator.generate(event.getUser(), StringsConst.COMMAND_PLAYLIST_TITLE, exception.getMessage())).setEphemeral(true).queue();

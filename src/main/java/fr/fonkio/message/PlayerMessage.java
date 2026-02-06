@@ -5,11 +5,11 @@ import fr.fonkio.inicium.Utils;
 import fr.fonkio.music.MusicPlayer;
 import fr.fonkio.utils.AudioTrackUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.components.MessageTopLevelComponent;
+import net.dv8tion.jda.api.components.actionrow.ActionRow;
+import net.dv8tion.jda.api.components.buttons.Button;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.interactions.InteractionHook;
-import net.dv8tion.jda.api.interactions.components.ActionRow;
-import net.dv8tion.jda.api.interactions.components.ItemComponent;
-import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +43,7 @@ public class PlayerMessage {
 
         if (messageEnCours != null && !messageEnCours.equals(hook.retrieveOriginal().complete())) {
             logger.info("Changement du message d'affichage du lecteur... Suppression des boutons d'action de l'ancien message...");
-            messageEnCours.editMessageEmbeds(oldEmbed).setActionRow(Button.success("done", StringsConst.BUTTON_DONE).asDisabled()).queue();
+            messageEnCours.editMessageEmbeds(oldEmbed).setComponents(ActionRow.of(Button.success("done", StringsConst.BUTTON_DONE).asDisabled())).queue();
             if(timerTask != null) {
                 logger.info("Arrêt de la task");
                 timerTask.cancel();
@@ -162,16 +162,16 @@ public class PlayerMessage {
                 .replaceAll("9", "9️⃣");
     }
 
-    public List<ActionRow> addButtons() {
-        List<ActionRow> actionRowList = new ArrayList<>();
+    public List<MessageTopLevelComponent> addButtons() {
+        List<MessageTopLevelComponent> actionRowList = new ArrayList<>();
 
         if (StringsConst.COMMAND_DISCONNECT_TITLE.equals(this.title) || musicPlayer.getAudioPlayer().getPlayingTrack() == null) {
-            actionRowList.add(ActionRow.of(addTrackEndButtons()));
+            actionRowList.add(addTrackEndButtons());
             return actionRowList;
         }
 
-        List<ItemComponent> itemComponentLine1List = new ArrayList<>();
-        List<ItemComponent> itemComponentLine2List = new ArrayList<>();
+        List<Button> itemComponentLine1List = new ArrayList<>();
+        List<Button> itemComponentLine2List = new ArrayList<>();
         if (musicPlayer.isPause()) {
             itemComponentLine1List.add(Button.success("resume", StringsConst.COMMAND_PLAY_TITLE));
         } else {
@@ -191,14 +191,14 @@ public class PlayerMessage {
         return actionRowList;
     }
 
-    public List<ItemComponent> addTrackEndButtons() {
-        List<ItemComponent> buttons = new ArrayList<>();
+    public ActionRow addTrackEndButtons() {
+        List<Button> buttons = new ArrayList<>();
         buttons.add(Button.success("done", StringsConst.BUTTON_DONE).asDisabled());
         if (!StringsConst.COMMAND_DISCONNECT_TITLE.equals(this.title)) {
             buttons.add(Button.danger("disconnect", StringsConst.COMMAND_DISCONNECT_TITLE));
         }
         buttons.add(Button.primary("playlist", StringsConst.COMMAND_PLAYLIST_TITLE));
-        return buttons;
+        return ActionRow.of(buttons);
     }
 
     private void addNowPlaying(EmbedBuilder builder, AudioTrack np) {
@@ -221,13 +221,13 @@ public class PlayerMessage {
                 cancel();
             } else if (musicPlayer.getAudioPlayer().getPlayingTrack() == null) {
                 logger.debug("getPlayingTrack null : Timer cancel");
-                messageEnCours = messageEnCours.editMessageEmbeds(getEmbed()).setActionRow(addTrackEndButtons()).complete();
+                messageEnCours = messageEnCours.editMessageEmbeds(getEmbed()).setComponents(addTrackEndButtons()).complete();
                 cancel();
             }
             else {
                 if (musicPlayer.getQueue().isEmpty()) {
                     logger.debug("getQueue().isEmpty() : Timer cancel");
-                    messageEnCours = messageEnCours.editMessageEmbeds(getEmbed()).setActionRow(addTrackEndButtons()).complete();
+                    messageEnCours = messageEnCours.editMessageEmbeds(getEmbed()).setComponents(addTrackEndButtons()).complete();
                     cancel();
                 } else {
                     logger.debug("Timer");

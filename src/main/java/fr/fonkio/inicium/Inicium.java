@@ -1,5 +1,6 @@
 package fr.fonkio.inicium;
 
+import club.minnced.discord.jdave.interop.JDaveSessionFactory;
 import dev.lavalink.youtube.clients.Web;
 import fr.fonkio.IniciumActivity;
 import fr.fonkio.reply.AbstractReply;
@@ -12,6 +13,7 @@ import fr.fonkio.utils.Configuration;
 import fr.fonkio.enums.ConfigurationBotEnum;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.audio.AudioModuleConfig;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -115,7 +117,12 @@ public class Inicium {
 
         logger.info("Démarrage JDA...");
         Set<GatewayIntent> intents = new HashSet<>(EnumSet.allOf(GatewayIntent.class));
-        jda = JDABuilder.create(CONFIGURATION.getGlobalParam(ConfigurationBotEnum.DISCORD_TOKEN), intents).setAutoReconnect(true).build();
+        jda = JDABuilder.create(CONFIGURATION.getGlobalParam(ConfigurationBotEnum.DISCORD_TOKEN), intents)
+                .setAutoReconnect(true)
+                .setAudioModuleConfig(
+                        new AudioModuleConfig().withDaveSessionFactory(new JDaveSessionFactory())
+                )
+                .build();
         logger.info("JDA : Démarré ! Connexion au token OK.");
         CONFIGURATION.save();
 

@@ -6,10 +6,11 @@ import fr.fonkio.message.EmbedGenerator;
 import fr.fonkio.message.StringsConst;
 import fr.fonkio.enums.ConfigurationGuildEnum;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.components.actionrow.ActionRow;
+import net.dv8tion.jda.api.components.selections.SelectOption;
+import net.dv8tion.jda.api.components.selections.StringSelectMenu;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
-import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
-import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
 
 import java.util.List;
 
@@ -28,11 +29,13 @@ public class WelcomeReply extends AbstractReply {
 
         List<SelectOption> optionList = getSelectOptionsChannelList(guild, ConfigurationGuildEnum.WELCOME_CHANNEL);
         event.replyEmbeds(EmbedGenerator.generate(user, StringsConst.COMMAND_WELCOME_TITLE, StringsConst.COMMAND_WELCOME_SUCCESS))
-                .addActionRow(
-                        StringSelectMenu.create(InterractionIdEnum.WELCOME_SELECT_MENU.getMainId())
-                                .setMinValues(0)
-                                .setMaxValues(1)
-                                .addOptions(optionList).build()
+                .setComponents(
+                        ActionRow.of(
+                                StringSelectMenu.create(InterractionIdEnum.WELCOME_SELECT_MENU.getMainId())
+                                        .setMinValues(0)
+                                        .setMaxValues(1)
+                                        .addOptions(optionList).build()
+                        )
                 ).setEphemeral(true).queue();
         return true;
     }

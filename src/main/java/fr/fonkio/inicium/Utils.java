@@ -3,10 +3,10 @@ package fr.fonkio.inicium;
 import fr.fonkio.enums.InterractionIdEnum;
 import fr.fonkio.message.EmbedGenerator;
 import fr.fonkio.message.StringsConst;
+import net.dv8tion.jda.api.components.buttons.Button;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.middleman.AudioChannel;
 import net.dv8tion.jda.api.interactions.InteractionHook;
-import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 import java.util.ArrayList;
 import java.util.List;

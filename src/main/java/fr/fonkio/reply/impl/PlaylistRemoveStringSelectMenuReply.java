@@ -5,6 +5,7 @@ import fr.fonkio.inicium.Utils;
 import fr.fonkio.message.EmbedGenerator;
 import fr.fonkio.message.StringsConst;
 import fr.fonkio.reply.AbstractStringSelectMenuReply;
+import net.dv8tion.jda.api.components.actionrow.ActionRow;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
@@ -25,7 +26,7 @@ public class PlaylistRemoveStringSelectMenuReply extends AbstractStringSelectMen
                                 StringsConst.SELECT_PLAYLIST_REMOVE_SUCCESS
                         )
                 ).setEphemeral(true)
-                .addActionRow(Utils.getPlaylistButtons(null))
+                .setComponents(ActionRow.of(Utils.getPlaylistButtons(null)))
                 .queue();
         return true;
     }
